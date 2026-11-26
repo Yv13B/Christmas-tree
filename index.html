@@ -72,6 +72,30 @@
   button[data-en]::after { font-size: .62em; margin-top: 2px; opacity: .75; }
   .toast-en { display: block; font-size: 11px; opacity: .55; margin-top: 4px; }
 
+  /* ---------- Identity ---------- */
+  #identity {
+    background-color: #050810;
+    background-image:
+      linear-gradient(180deg, rgba(5,8,16,.58) 0%, rgba(5,8,16,.30) 42%, rgba(5,8,16,.74) 100%),
+      radial-gradient(ellipse at 50% 0%, rgba(232,201,122,.10), transparent 62%),
+      var(--bg-noise),
+      var(--bg-img);
+    background-position: center, center, 0 0, center;
+    background-size: cover, cover, 170px 170px, cover;
+    background-repeat: no-repeat, no-repeat, repeat, no-repeat;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .identity-card.selected {
+    border-color: rgba(232,201,122,.7) !important;
+    box-shadow: 0 0 30px rgba(232,201,122,.25), inset 0 1px 0 rgba(255,255,255,.15) !important;
+    transform: scale(1.02);
+  }
+  .identity-card.selected .id-check {
+    background: var(--gold); border-color: var(--gold); color: #1a1205;
+  }
+  .identity-card.selected .id-check::after { content: '✓'; }
+
   /* ---------- Landing ---------- */
   /* 中文不再单独设字体，直接用系统中文（PingFang / 微软雅黑），英文走本地字体 */
   #landing, #landing *, #landing *::before, #landing *::after {
@@ -344,6 +368,38 @@
     <div class="note" data-en="Everything stays on your device — no data is uploaded. Based on 128 years of color-emotion psychology research (Jonauskaite & Mohr 2025).">一切数据仅在你的设备本地处理。<br>色彩映射基于128年色-情绪心理学研究综述（Jonauskaite & Mohr 2025）。</div>
   </section>
 
+  <!-- ============ Identity 身份选择 ============ -->
+  <section id="identity" class="screen">
+    <div style="text-align:center;margin-bottom:30px;">
+      <div class="badge" style="margin-bottom:14px;">STEP 0 · WHO ARE YOU</div>
+      <div style="font-size:clamp(24px,6vw,32px);font-weight:700;" data-en="Which life did you live this year?">这一年，你是哪种身份？</div>
+      <div style="font-size:14px;color:var(--sub);margin-top:8px;line-height:1.6;" data-en="Different lives, different questions">不同身份，不同问题，不同颜色。</div>
+    </div>
+    <div id="identityCards" style="display:flex;flex-direction:column;gap:16px;max-width:360px;margin:0 auto;width:100%;">
+      <div class="identity-card" data-identity="student" style="cursor:pointer;padding:24px 22px;border-radius:20px;border:1.5px solid rgba(255,255,255,.2);background:linear-gradient(135deg,rgba(100,180,255,.12),rgba(100,180,255,.04));backdrop-filter:blur(12px);transition:all .25s;position:relative;overflow:hidden;">
+        <div style="font-size:32px;margin-bottom:8px;">🎓</div>
+        <div style="font-size:19px;font-weight:700;margin-bottom:4px;" data-en="Student">学生党</div>
+        <div style="font-size:12.5px;color:var(--sub);line-height:1.5;" data-en="Exams, deadlines, dorm life, libraries">考试周、图书馆、社团、DDL</div>
+        <div class="id-check" style="position:absolute;top:14px;right:14px;width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .25s;"></div>
+      </div>
+      <div class="identity-card" data-identity="worker" style="cursor:pointer;padding:24px 22px;border-radius:20px;border:1.5px solid rgba(255,255,255,.2);background:linear-gradient(135deg,rgba(255,180,100,.12),rgba(255,180,100,.04));backdrop-filter:blur(12px);transition:all .25s;position:relative;overflow:hidden;">
+        <div style="font-size:32px;margin-bottom:8px;">💼</div>
+        <div style="font-size:19px;font-weight:700;margin-bottom:4px;" data-en="Office worker">上班族</div>
+        <div style="font-size:12.5px;color:var(--sub);line-height:1.5;" data-en="KPIs, commutes, deadlines, promotions">KPI、通勤、甲方、晋升</div>
+        <div class="id-check" style="position:absolute;top:14px;right:14px;width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .25s;"></div>
+      </div>
+      <div class="identity-card" data-identity="freelance" style="cursor:pointer;padding:24px 22px;border-radius:20px;border:1.5px solid rgba(255,255,255,.2);background:linear-gradient(135deg,rgba(180,120,255,.12),rgba(180,120,255,.04));backdrop-filter:blur(12px);transition:all .25s;position:relative;overflow:hidden;">
+        <div style="font-size:32px;margin-bottom:8px;">🎨</div>
+        <div style="font-size:19px;font-weight:700;margin-bottom:4px;" data-en="Freelancer">自由职业者</div>
+        <div style="font-size:12.5px;color:var(--sub);line-height:1.5;" data-en="Inspiration, gigs, income swings, solitude">灵感、接单、收入波动、独处创作</div>
+        <div class="id-check" style="position:absolute;top:14px;right:14px;width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .25s;"></div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:22px;">
+      <button class="ghost" id="btnBackLandingFromId" style="padding:10px 24px;font-size:14px;" data-en="← Back">← 返回首页</button>
+    </div>
+  </section>
+
   <!-- ============ Memory Tag ============ -->
   <section id="memory" class="screen">
     <div class="topbar">
@@ -379,6 +435,7 @@
     <div class="top-actions">
       <button id="btnRestart" style="padding:6px 10px; font-size:12px;" data-en="Replay">重新生成</button>
       <button id="btnSave" style="padding:6px 10px; font-size:12px;" data-en="Save PNG">保存图片</button>
+      <button id="btnDecode" style="padding:6px 10px; font-size:12px;" data-en="Decode">🧠 记忆解码</button>
     </div>
     <div id="gestureHint">
       <div class="big" id="hintBig" data-en="Tap to wake up ✨">点击屏幕，让记忆点亮 ✨</div>
@@ -413,6 +470,18 @@
     </div>
     <div id="ccColorVal" style="font-size:10px;opacity:.65;margin-bottom:8px;font-family:'EnOther',monospace;letter-spacing:.5px;"></div>
     <div id="ccBody" style="font-size:11.5px;line-height:1.65;opacity:.95;"></div>
+  </div>
+
+  <!-- 记忆解码面板（点击"记忆解码"按钮弹出） -->
+  <div id="decodePanel" style="position:absolute;inset:0;z-index:20;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;padding:16px;">
+    <div class="glass-card" id="decodePanelInner" style="max-width:400px;max-height:80vh;overflow-y:auto;padding:20px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <div style="font-size:16px;font-weight:700;" data-en="Your choices → your tree">🧠 记忆解码</div>
+        <div id="decodeClose" style="font-size:18px;opacity:.6;cursor:pointer;padding:4px 8px;">✕</div>
+      </div>
+      <div style="font-size:12px;color:rgba(255,255,255,.6);margin-bottom:16px;line-height:1.5;" data-en="Every choice you made became a color on your tree">你的每一个选择，都变成了树上的一种颜色</div>
+      <div id="decodeList"></div>
+    </div>
   </div>
 
   <div id="toast"></div>
@@ -482,65 +551,114 @@ function setBilingual(id, zh, en) {
    { zh, en, emotion: Plutchik基本情绪,
      primary: {h,s,l} 情绪主色, valence: 'pos'|'neg', arousal: 'low'|'high',
      comfort: [{h,s,l}] 慰藉色（负情绪才需要） } */
-const MEMORY_PAGES = [
-  {
-    key: 'study', title: '学业 / 工作', titleEn: 'Study / Work',
-    subtitle: '这一年你把主要精力放在哪里？', subtitleEn: 'Where did this year go?',
+/* ---------- 身份分流的学业/工作维度 ---------- */
+const IDENTITY_STUDY = {
+  student: {
+    title: '学业状态', titleEn: 'Study life',
+    subtitle: '这一年你的学业节奏是怎样的？', subtitleEn: 'How was your study year?',
     chips: [
-      { zh: '深度学习', en: 'Deep focus', emotion: 'trust+anticipation',
-        primary: {h: 175, s: 0.65, l: 0.45}, valence: 'pos', arousal: 'low',
-        comfort: [{h: 40, s: 0.55, l: 0.78}] },   // 青绿（信任）+ 柔金（成就慰藉）
-      { zh: '稳扎稳打', en: 'Steady progress', emotion: 'trust',
-        primary: {h: 160, s: 0.50, l: 0.50}, valence: 'pos', arousal: 'low',
-        comfort: [{h: 45, s: 0.60, l: 0.80}] },  // 青绿+淡金
-      { zh: '多方尝试', en: 'Trying many paths', emotion: 'surprise+anticipation',
-        primary: {h: 200, s: 0.70, l: 0.55}, valence: 'pos', arousal: 'high',
-        comfort: [{h: 170, s: 0.55, l: 0.65}] }, // 亮青+柔青绿
-      { zh: '探索边界', en: 'Pushing boundaries', emotion: 'anticipation',
-        primary: {h: 30, s: 0.80, l: 0.55}, valence: 'pos', arousal: 'high',
-        comfort: [{h: 25, s: 0.70, l: 0.70}] },  // 暖橙（期待）+ 柔粉橙
-      { zh: '需要更多方向', en: 'Seeking direction', emotion: 'fear+anticipation',
-        primary: {h: 250, s: 0.35, l: 0.35}, valence: 'neg', arousal: 'high',
-        comfort: [{h: 180, s: 0.55, l: 0.60}, {h: 35, s: 0.45, l: 0.80}] }, // 暗紫（不确定）+ 柔青绿+柔米（慰藉）
-      { zh: '节奏卡顿', en: 'Felt stuck', emotion: 'sadness+disgust',
-        primary: {h: 240, s: 0.25, l: 0.30}, valence: 'neg', arousal: 'low',
-        comfort: [{h: 165, s: 0.50, l: 0.65}, {h: 50, s: 0.50, l: 0.85}] },  // 暗蓝（悲伤）+ 柔青绿+柔白（慰藉）
-      { zh: '成果超出预期', en: 'Exceeded goals', emotion: 'joy+trust',
-        primary: {h: 45, s: 0.90, l: 0.60}, valence: 'pos', arousal: 'high',
-        comfort: [{h: 170, s: 0.60, l: 0.70}] }, // 金黄（快乐）+ 青绿（持久支撑）
+      { zh: '图书馆常客', en: 'Library regular', emotion: 'trust+anticipation',
+        primary: {h:175,s:.65,l:.45}, valence:'pos', arousal:'low', comfort:[{h:40,s:.55,l:.78}] },
+      { zh: '绩点提升', en: 'GPA up', emotion: 'joy+trust',
+        primary: {h:45,s:.90,l:.60}, valence:'pos', arousal:'high', comfort:[{h:170,s:.60,l:.70}] },
+      { zh: '考试周突击', en: 'Exam cramming', emotion: 'fear+anticipation',
+        primary: {h:270,s:.40,l:.32}, valence:'neg', arousal:'high', comfort:[{h:175,s:.55,l:.60},{h:40,s:.50,l:.82}] },
+      { zh: '社团/实践丰富', en: 'Active in clubs', emotion: 'surprise+joy',
+        primary: {h:200,s:.70,l:.55}, valence:'pos', arousal:'high', comfort:[{h:170,s:.55,l:.65}] },
+      { zh: '考研/保研路上', en: 'Postgrad journey', emotion: 'anticipation',
+        primary: {h:30,s:.80,l:.55}, valence:'pos', arousal:'high', comfort:[{h:25,s:.70,l:.70}] },
+      { zh: '学业迷茫中', en: 'Lost in studies', emotion: 'fear+anticipation',
+        primary: {h:250,s:.35,l:.35}, valence:'neg', arousal:'high', comfort:[{h:180,s:.55,l:.60},{h:35,s:.45,l:.80}] },
+      { zh: '被DDL追着跑', en: 'Chasing deadlines', emotion: 'fear+sadness',
+        primary: {h:240,s:.25,l:.30}, valence:'neg', arousal:'low', comfort:[{h:165,s:.50,l:.65},{h:50,s:.50,l:.85}] },
       { zh: '学到了但很累', en: 'Learned but drained', emotion: 'trust+sadness',
-        primary: {h: 155, s: 0.40, l: 0.45}, valence: 'neg', arousal: 'low',
-        comfort: [{h: 35, s: 0.65, l: 0.75}, {h: 0, s: 0, l: 0.92}] }   // 暗青绿（疲惫信任）+ 柔暖粉+白（恢复）
+        primary: {h:155,s:.40,l:.45}, valence:'neg', arousal:'low', comfort:[{h:35,s:.65,l:.75},{h:0,s:0,l:.92}] },
+      { zh: '实习初体验', en: 'First internship', emotion: 'surprise+joy',
+        primary: {h:50,s:.85,l:.60}, valence:'pos', arousal:'high', comfort:[{h:340,s:.60,l:.75}] },
+      { zh: '毕业告别', en: 'Graduation farewell', emotion: 'sadness+trust',
+        primary: {h:230,s:.40,l:.42}, valence:'neg', arousal:'low', comfort:[{h:175,s:.55,l:.60},{h:40,s:.45,l:.82}] }
     ]
   },
+  worker: {
+    title: '工作状态', titleEn: 'Work life',
+    subtitle: '这一年你的职场节奏是怎样的？', subtitleEn: 'How was your work year?',
+    chips: [
+      { zh: '项目超预期', en: 'Exceeded targets', emotion: 'joy+trust',
+        primary: {h:45,s:.90,l:.60}, valence:'pos', arousal:'high', comfort:[{h:170,s:.60,l:.70}] },
+      { zh: '深耕专业', en: 'Deep expertise', emotion: 'trust+anticipation',
+        primary: {h:175,s:.65,l:.45}, valence:'pos', arousal:'low', comfort:[{h:40,s:.55,l:.78}] },
+      { zh: '跨界尝试', en: 'Cross-field try', emotion: 'surprise+anticipation',
+        primary: {h:200,s:.70,l:.55}, valence:'pos', arousal:'high', comfort:[{h:170,s:.55,l:.65}] },
+      { zh: '晋升/转岗', en: 'Promoted / moved', emotion: 'anticipation',
+        primary: {h:30,s:.80,l:.55}, valence:'pos', arousal:'high', comfort:[{h:25,s:.70,l:.70}] },
+      { zh: '职业迷茫', en: 'Career lost', emotion: 'fear+anticipation',
+        primary: {h:250,s:.35,l:.35}, valence:'neg', arousal:'high', comfort:[{h:180,s:.55,l:.60},{h:35,s:.45,l:.80}] },
+      { zh: '加班内耗', en: 'Overtime burnout', emotion: 'sadness+disgust',
+        primary: {h:240,s:.25,l:.30}, valence:'neg', arousal:'low', comfort:[{h:165,s:.50,l:.65},{h:50,s:.50,l:.85}] },
+      { zh: '学到了但很累', en: 'Learned but drained', emotion: 'trust+sadness',
+        primary: {h:155,s:.40,l:.45}, valence:'neg', arousal:'low', comfort:[{h:35,s:.65,l:.75},{h:0,s:0,l:.92}] },
+      { zh: '稳定输出', en: 'Steady output', emotion: 'trust',
+        primary: {h:160,s:.50,l:.50}, valence:'pos', arousal:'low', comfort:[{h:45,s:.60,l:.80}] },
+      { zh: '带团队/带新人', en: 'Leading a team', emotion: 'trust+joy',
+        primary: {h:25,s:.75,l:.60}, valence:'pos', arousal:'low', comfort:[{h:165,s:.50,l:.68}] },
+      { zh: '换了赛道', en: 'Switched track', emotion: 'anticipation+trust',
+        primary: {h:175,s:.70,l:.55}, valence:'pos', arousal:'medium', comfort:[{h:40,s:.55,l:.78}] }
+    ]
+  },
+  freelance: {
+    title: '创作 / 事业状态', titleEn: 'Creative life',
+    subtitle: '这一年你的自由职业节奏？', subtitleEn: 'How was your freelance year?',
+    chips: [
+      { zh: '灵感爆发', en: 'Burst of ideas', emotion: 'anticipation+joy',
+        primary: {h:30,s:.80,l:.55}, valence:'pos', arousal:'high', comfort:[{h:25,s:.70,l:.70}] },
+      { zh: '接单稳定', en: 'Steady gigs', emotion: 'trust',
+        primary: {h:160,s:.50,l:.50}, valence:'pos', arousal:'low', comfort:[{h:45,s:.60,l:.80}] },
+      { zh: '多线创作', en: 'Multi-project', emotion: 'surprise+anticipation',
+        primary: {h:200,s:.70,l:.55}, valence:'pos', arousal:'high', comfort:[{h:170,s:.55,l:.65}] },
+      { zh: '收入超预期', en: 'Income exceeded', emotion: 'joy+trust',
+        primary: {h:45,s:.90,l:.60}, valence:'pos', arousal:'high', comfort:[{h:170,s:.60,l:.70}] },
+      { zh: '方向探索中', en: 'Exploring direction', emotion: 'fear+anticipation',
+        primary: {h:250,s:.35,l:.35}, valence:'neg', arousal:'high', comfort:[{h:180,s:.55,l:.60},{h:35,s:.45,l:.80}] },
+      { zh: '创作瓶颈', en: 'Creative block', emotion: 'sadness+disgust',
+        primary: {h:240,s:.25,l:.30}, valence:'neg', arousal:'low', comfort:[{h:165,s:.50,l:.65},{h:50,s:.50,l:.85}] },
+      { zh: '学到了但很累', en: 'Learned but drained', emotion: 'trust+sadness',
+        primary: {h:155,s:.40,l:.45}, valence:'neg', arousal:'low', comfort:[{h:35,s:.65,l:.75},{h:0,s:0,l:.92}] },
+      { zh: '自律且自由', en: 'Disciplined freedom', emotion: 'trust',
+        primary: {h:185,s:.50,l:.58}, valence:'pos', arousal:'low', comfort:[{h:45,s:.45,l:.82}] },
+      { zh: '接到大单', en: 'Big client landed', emotion: 'joy+trust',
+        primary: {h:45,s:.90,l:.60}, valence:'pos', arousal:'high', comfort:[{h:170,s:.60,l:.70}] },
+      { zh: '独处创作', en: 'Solo creation', emotion: 'trust+anticipation',
+        primary: {h:200,s:.60,l:.55}, valence:'pos', arousal:'low', comfort:[{h:170,s:.55,l:.70}] }
+    ]
+  }
+};
+
+/* ---------- 共用维度（社交/心态/关键词） ---------- */
+const COMMON_PAGES = [
   {
     key: 'social', title: '社交节奏', titleEn: 'Social rhythm',
     subtitle: '这一年你和朋友、同事的相处状态？', subtitleEn: 'How did social life feel?',
     chips: [
       { zh: '热热闹闹', en: 'Lively', emotion: 'joy',
-        primary: {h: 15, s: 0.85, l: 0.55}, valence: 'pos', arousal: 'high',
-        comfort: [{h: 340, s: 0.65, l: 0.70}] },  // 暖红橙（快乐）+ 柔粉
+        primary: {h:15,s:.85,l:.55}, valence:'pos', arousal:'high', comfort:[{h:340,s:.65,l:.70}] },
       { zh: '偶尔小聚', en: 'Occasional meetups', emotion: 'trust',
-        primary: {h: 160, s: 0.55, l: 0.55}, valence: 'pos', arousal: 'low',
-        comfort: [{h: 40, s: 0.50, l: 0.80}] },  // 青绿（舒适信任）+ 柔金
+        primary: {h:160,s:.55,l:.55}, valence:'pos', arousal:'low', comfort:[{h:40,s:.50,l:.80}] },
       { zh: '独处充电', en: 'Recharging alone', emotion: 'trust+anticipation',
-        primary: {h: 200, s: 0.60, l: 0.55}, valence: 'pos', arousal: 'low',
-        comfort: [{h: 170, s: 0.55, l: 0.70}] }, // 冷蓝绿（独处平静）+ 柔青绿
+        primary: {h:200,s:.60,l:.55}, valence:'pos', arousal:'low', comfort:[{h:170,s:.55,l:.70}] },
       { zh: '新友相遇', en: 'New connections', emotion: 'surprise+joy',
-        primary: {h: 50, s: 0.85, l: 0.60}, valence: 'pos', arousal: 'high',
-        comfort: [{h: 340, s: 0.60, l: 0.75}] }, // 亮黄（惊讶快乐）+ 柔粉
+        primary: {h:50,s:.85,l:.60}, valence:'pos', arousal:'high', comfort:[{h:340,s:.60,l:.75}] },
       { zh: '联系变少了', en: 'Distanced', emotion: 'sadness',
-        primary: {h: 250, s: 0.30, l: 0.32}, valence: 'neg', arousal: 'low',
-        comfort: [{h: 175, s: 0.50, l: 0.65}, {h: 40, s: 0.45, l: 0.82}] }, // 暗蓝紫（失落）+ 柔青绿+柔米
+        primary: {h:250,s:.30,l:.32}, valence:'neg', arousal:'low', comfort:[{h:175,s:.50,l:.65},{h:40,s:.45,l:.82}] },
       { zh: '小圈子很暖', en: 'Warm small circle', emotion: 'trust+joy',
-        primary: {h: 25, s: 0.75, l: 0.60}, valence: 'pos', arousal: 'low',
-        comfort: [{h: 165, s: 0.50, l: 0.68}] }, // 暖橙（温暖）+ 青绿（稳定）
+        primary: {h:25,s:.75,l:.60}, valence:'pos', arousal:'low', comfort:[{h:165,s:.50,l:.68}] },
       { zh: '社交消耗大', en: 'Socially drained', emotion: 'fear+sadness',
-        primary: {h: 270, s: 0.25, l: 0.28}, valence: 'neg', arousal: 'high',
-        comfort: [{h: 180, s: 0.55, l: 0.62}, {h: 340, s: 0.55, l: 0.78}] }, // 暗紫（压力恐惧）+ 柔青绿+柔粉（平衡唤醒）
+        primary: {h:270,s:.25,l:.28}, valence:'neg', arousal:'high', comfort:[{h:180,s:.55,l:.62},{h:340,s:.55,l:.78}] },
       { zh: '保持中立挺好', en: 'Balanced', emotion: 'trust',
-        primary: {h: 150, s: 0.45, l: 0.55}, valence: 'pos', arousal: 'low',
-        comfort: [{h: 50, s: 0.45, l: 0.80}] }   // 柔绿（平衡）+ 柔淡金
+        primary: {h:150,s:.45,l:.55}, valence:'pos', arousal:'low', comfort:[{h:50,s:.45,l:.80}] },
+      { zh: '线上聊得火热', en: 'Chatting online a lot', emotion: 'joy+surprise',
+        primary: {h:20,s:.80,l:.58}, valence:'pos', arousal:'high', comfort:[{h:340,s:.60,l:.72}] },
+      { zh: '老朋友重聚', en: 'Old friends reunited', emotion: 'joy+trust',
+        primary: {h:48,s:.88,l:.62}, valence:'pos', arousal:'high', comfort:[{h:165,s:.55,l:.68}] }
     ]
   },
   {
@@ -548,50 +666,56 @@ const MEMORY_PAGES = [
     subtitle: '回望这一年，你的底色是？', subtitleEn: 'Looking back — how did you feel inside?',
     chips: [
       { zh: '充实满足', en: 'Fulfilled', emotion: 'joy+trust',
-        primary: {h: 48, s: 0.88, l: 0.62}, valence: 'pos', arousal: 'high',
-        comfort: [{h: 165, s: 0.55, l: 0.68}] }, // 金黄（快乐+成就）+ 青绿（稳定感）
+        primary: {h:48,s:.88,l:.62}, valence:'pos', arousal:'high', comfort:[{h:165,s:.55,l:.68}] },
       { zh: '稳步成长', en: 'Growing steadily', emotion: 'trust+anticipation',
-        primary: {h: 165, s: 0.60, l: 0.52}, valence: 'pos', arousal: 'low',
-        comfort: [{h: 42, s: 0.55, l: 0.78}] }, // 青绿（成长+信任）+ 柔金（方向感）
+        primary: {h:165,s:.60,l:.52}, valence:'pos', arousal:'low', comfort:[{h:42,s:.55,l:.78}] },
       { zh: '经历低谷', en: 'Hit a low point', emotion: 'sadness+anger',
-        primary: {h: 230, s: 0.40, l: 0.32}, valence: 'neg', arousal: 'high',
-        comfort: [{h: 175, s: 0.55, l: 0.60}, {h: 340, s: 0.55, l: 0.75}, {h: 0, s: 0, l: 0.92}] }, // 暗蓝（悲伤）+ 青绿(平静)+柔粉(自我关怀)+白(解脱)
+        primary: {h:230,s:.40,l:.32}, valence:'neg', arousal:'high', comfort:[{h:175,s:.55,l:.60},{h:340,s:.55,l:.75},{h:0,s:0,l:.92}] },
       { zh: '寻找自己', en: 'Searching for self', emotion: 'anticipation+trust',
-        primary: {h: 200, s: 0.55, l: 0.50}, valence: 'pos', arousal: 'low',
-        comfort: [{h: 170, s: 0.55, l: 0.68}] }, // 冷蓝（探索）+ 青绿（锚点）
+        primary: {h:200,s:.55,l:.50}, valence:'pos', arousal:'low', comfort:[{h:170,s:.55,l:.68}] },
       { zh: '平静如水', en: 'Like calm water', emotion: 'trust',
-        primary: {h: 185, s: 0.50, l: 0.58}, valence: 'pos', arousal: 'low',
-        comfort: [{h: 45, s: 0.45, l: 0.82}] }, // 柔青（平静）+ 柔淡金（温暖加持）
+        primary: {h:185,s:.50,l:.58}, valence:'pos', arousal:'low', comfort:[{h:45,s:.45,l:.82}] },
       { zh: '焦虑辗转', en: 'Anxious nights', emotion: 'fear+anger',
-        primary: {h: 275, s: 0.35, l: 0.30}, valence: 'neg', arousal: 'high',
-        comfort: [{h: 175, s: 0.55, l: 0.58}, {h: 35, s: 0.50, l: 0.80}] }, // 暗紫（焦虑恐惧）+ 青绿(平静)+柔米(缓冲)
+        primary: {h:275,s:.35,l:.30}, valence:'neg', arousal:'high', comfort:[{h:175,s:.55,l:.58},{h:35,s:.50,l:.80}] },
       { zh: '想通了一些事', en: 'Clarity arrived', emotion: 'trust+surprise',
-        primary: {h: 190, s: 0.70, l: 0.60}, valence: 'pos', arousal: 'medium',
-        comfort: [{h: 40, s: 0.55, l: 0.78}] }, // 亮青（清晰）+ 柔金（顿悟）
+        primary: {h:190,s:.70,l:.60}, valence:'pos', arousal:'medium', comfort:[{h:40,s:.55,l:.78}] },
       { zh: '接受了不完美', en: 'Accepted imperfection', emotion: 'trust',
-        primary: {h: 160, s: 0.42, l: 0.58}, valence: 'pos', arousal: 'low',
-        comfort: [{h: 50, s: 0.40, l: 0.85}] }   // 柔绿（接纳）+ 柔白（包容）
+        primary: {h:160,s:.42,l:.58}, valence:'pos', arousal:'low', comfort:[{h:50,s:.40,l:.85}] },
+      { zh: '压力山大', en: 'Overwhelmed', emotion: 'fear+anger',
+        primary: {h:275,s:.35,l:.30}, valence:'neg', arousal:'high', comfort:[{h:175,s:.55,l:.58},{h:35,s:.50,l:.80}] },
+      { zh: '慢慢疗愈', en: 'Slowly healing', emotion: 'trust+surprise',
+        primary: {h:190,s:.70,l:.60}, valence:'pos', arousal:'medium', comfort:[{h:40,s:.55,l:.78}] }
     ]
   },
   {
     key: 'keyword', title: '年度关键词', titleEn: 'Year keyword',
     subtitle: '如果用一个词总结这一年？（选一个或自己写）', subtitleEn: 'One word to sum it up?',
     chips: [
-      { zh: '成长', en: 'Growth', emotion: 'trust+anticipation', primary: {h: 160, s: 0.70, l: 0.48}, valence: 'pos', arousal: 'low' },
-      { zh: '变化', en: 'Change', emotion: 'surprise', primary: {h: 200, s: 0.80, l: 0.55}, valence: 'pos', arousal: 'high' },
-      { zh: '坚持', en: 'Persistence', emotion: 'trust+anticipation', primary: {h: 35, s: 0.85, l: 0.52}, valence: 'pos', arousal: 'medium' },
-      { zh: '遇见', en: 'Encounter', emotion: 'joy+surprise', primary: {h: 48, s: 0.88, l: 0.60}, valence: 'pos', arousal: 'high' },
-      { zh: '重启', en: 'Reboot', emotion: 'anticipation+trust', primary: {h: 175, s: 0.70, l: 0.55}, valence: 'pos', arousal: 'medium' },
-      { zh: '自由', en: 'Freedom', emotion: 'joy', primary: {h: 135, s: 0.72, l: 0.55}, valence: 'pos', arousal: 'medium' },
-      { zh: '专注', en: 'Focus', emotion: 'trust', primary: {h: 225, s: 0.60, l: 0.52}, valence: 'pos', arousal: 'low' },
-      { zh: '感谢', en: 'Gratitude', emotion: 'joy+trust', primary: {h: 32, s: 0.78, l: 0.62}, valence: 'pos', arousal: 'medium' },
-      { zh: '告别', en: 'Letting go', emotion: 'sadness+trust', primary: {h: 230, s: 0.40, l: 0.42}, valence: 'neg', arousal: 'low' }
+      { zh: '成长', en: 'Growth', emotion: 'trust+anticipation', primary: {h:160,s:.70,l:.48}, valence:'pos', arousal:'low' },
+      { zh: '变化', en: 'Change', emotion: 'surprise', primary: {h:200,s:.80,l:.55}, valence:'pos', arousal:'high' },
+      { zh: '坚持', en: 'Persistence', emotion: 'trust+anticipation', primary: {h:35,s:.85,l:.52}, valence:'pos', arousal:'medium' },
+      { zh: '遇见', en: 'Encounter', emotion: 'joy+surprise', primary: {h:48,s:.88,l:.60}, valence:'pos', arousal:'high' },
+      { zh: '重启', en: 'Reboot', emotion: 'anticipation+trust', primary: {h:175,s:.70,l:.55}, valence:'pos', arousal:'medium' },
+      { zh: '自由', en: 'Freedom', emotion: 'joy', primary: {h:135,s:.72,l:.55}, valence:'pos', arousal:'medium' },
+      { zh: '专注', en: 'Focus', emotion: 'trust', primary: {h:225,s:.60,l:.52}, valence:'pos', arousal:'low' },
+      { zh: '感谢', en: 'Gratitude', emotion: 'joy+trust', primary: {h:32,s:.78,l:.62}, valence:'pos', arousal:'medium' },
+      { zh: '告别', en: 'Letting go', emotion: 'sadness+trust', primary: {h:230,s:.40,l:.42}, valence:'neg', arousal:'low' }
     ],
     allowCustom: true,
-    /* 自定义关键词 → 根据用户输入情绪关键词匹配，或随机一个积极色 */
-    customColorFallback: {h: 170, s: 0.65, l: 0.55} // 青绿（未知但向好的方向）
+    customColorFallback: {h:170,s:.65,l:.55}
   }
 ];
+
+/* 动态构建 MEMORY_PAGES（选完身份后调用） */
+let MEMORY_PAGES = [];
+function buildMemoryPages() {
+  const id = state.identity || 'student';
+  const study = IDENTITY_STUDY[id];
+  MEMORY_PAGES = [
+    { key:'study', title:study.title, titleEn:study.titleEn, subtitle:study.subtitle, subtitleEn:study.subtitleEn, chips:study.chips },
+    ...COMMON_PAGES
+  ];
+}
 
 /* ---------- 颜色聚合引擎 ----------
    输入：4维度选择的 chip 数据
@@ -992,6 +1116,7 @@ document.addEventListener('pointerdown', autoStartMusic); document.addEventListe
    状态
    ============================================================ */
 const state = {
+  identity: null,
   stage: 0, spinning: false, treeRotation: 0, animating: true,
   tags: { study: null, social: null, mindset: null, keyword: null },
   colors: null
@@ -1001,6 +1126,11 @@ let currentMemoryPage = 0;
 /* ============================================================
    Memory 标签选择
    ============================================================ */
+function chipColor(c) {
+  if (!c || !c.primary) return {r:200,g:200,b:200};
+  // 文件已有的 hslToRgb 期望 h 为 0-1 范围（不是角度）
+  return hslToRgb(c.primary.h / 360, c.primary.s, c.primary.l);
+}
 function renderMemoryPage(idx) {
   const page = MEMORY_PAGES[idx];
   const container = $('memoryPage');
@@ -1009,15 +1139,22 @@ function renderMemoryPage(idx) {
   container.innerHTML = `
     <div class="title" data-en="${page.titleEn}">${page.title}</div>
     <div class="subtitle" data-en="${page.subtitleEn}">${page.subtitle}</div>
+    <div class="color-preview" id="colorPreview" style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;"></div>
     <div class="tag-container">
       <div class="tag-chips" id="chipGroup">
-        ${page.chips.map((c, i) => `
-          <div class="chip ${currentSel === c.zh ? 'selected' : ''} quick-enter" style="animation-delay: ${i * 60}ms" data-val="${c.zh}" data-en="${c.en}">${c.zh}</div>
-        `).join('')}
+        ${page.chips.map((c, i) => {
+          const col = chipColor(c);
+          return `<div class="chip ${currentSel === c.zh ? 'selected' : ''} quick-enter" style="animation-delay: ${i * 60}ms" data-val="${c.zh}" data-en="${c.en}">
+            <span class="chip-dot" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:rgb(${col.r},${col.g},${col.b});margin-right:6px;vertical-align:middle;"></span>${c.zh}
+          </div>`;
+        }).join('')}
         ${page.allowCustom ? `<div style="width:100%; margin-top:12px;"><input type="text" class="keyword-input" id="customKeyword" placeholder="或输入自己的关键词…" maxlength="8" value="${currentSel && !page.chips.find(c => c.zh === currentSel) ? currentSel : ''}"></div>` : ''}
       </div>
     </div>
   `;
+
+  // 渲染颜色预览条
+  updateColorPreview();
 
   container.querySelectorAll('.chip').forEach(chip => {
     chip.addEventListener('click', () => {
@@ -1025,7 +1162,7 @@ function renderMemoryPage(idx) {
       chip.classList.add('selected');
       state.tags[page.key] = chip.dataset.val;
       if ($('customKeyword')) $('customKeyword').value = '';
-      updateButtons();
+      updateButtons(); updateColorPreview();
     });
   });
   const kw = $('customKeyword');
@@ -1033,11 +1170,29 @@ function renderMemoryPage(idx) {
     const v = kw.value.trim();
     container.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
     state.tags[page.key] = v || null;
-    updateButtons();
+    updateButtons(); updateColorPreview();
   });
 
   updateButtons(); updateProgressDots();
   $('pageIndicator').textContent = `${idx + 1} / ${MEMORY_PAGES.length}`;
+}
+function updateColorPreview() {
+  const preview = $('colorPreview'); if (!preview) return;
+  preview.innerHTML = '';
+  const keys = ['study','social','mindset','keyword'];
+  keys.forEach(k => {
+    const tag = state.tags[k];
+    if (!tag) return;
+    const page = MEMORY_PAGES.find(p => p.key === k);
+    if (!page) return;
+    const chip = page.chips.find(c => c.zh === tag);
+    if (!chip) return;
+    const col = chipColor(chip);
+    const dot = document.createElement('div');
+    dot.style.cssText = `display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);font-size:11px;`;
+    dot.innerHTML = `<span style="width:12px;height:12px;border-radius:50%;background:rgb(${col.r},${col.g},${col.b});display:inline-block;"></span><span style="color:#c8c0e0;">${tag}</span>`;
+    preview.appendChild(dot);
+  });
 }
 function updateButtons() {
   const page = MEMORY_PAGES[currentMemoryPage];
@@ -1054,9 +1209,26 @@ function updateProgressDots() {
   }
 }
 
-/* Landing / Memory 按钮 */
-$('btnStart').onclick = () => { currentMemoryPage = 0; showScreen('memory'); renderMemoryPage(0); };
+/* Landing → Identity → Memory 按钮 */
+$('btnStart').onclick = () => { showScreen('identity'); };
 $('btnBackLanding').onclick = () => showScreen('landing');
+$('btnBackLandingFromId').onclick = () => showScreen('landing');
+
+/* 身份卡片选择 */
+document.querySelectorAll('.identity-card').forEach(card => {
+  card.addEventListener('click', () => {
+    document.querySelectorAll('.identity-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    state.identity = card.dataset.identity;
+    // 选完身份 → 构建页面 → 进入 Memory
+    setTimeout(() => {
+      buildMemoryPages();
+      currentMemoryPage = 0;
+      showScreen('memory');
+      renderMemoryPage(0);
+    }, 350);
+  });
+});
 $('btnPrevMemory').onclick = () => { if (currentMemoryPage > 0) { currentMemoryPage--; renderMemoryPage(currentMemoryPage); } };
 $('btnNextMemory').onclick = () => {
   const page = MEMORY_PAGES[currentMemoryPage];
@@ -1073,44 +1245,66 @@ $('btnNextMemory').onclick = () => {
 /* ============================================================
    6 阶段树生长
    ============================================================ */
-const STAGE_HINTS = [
-  { big: '点击一下，种下记忆的根 🌱', bigEn: 'Tap once, plant the root 🌱', sub: '你的学业/工作努力会让树根更扎实', subEn: 'Your study/effort shapes a solid root' },
-  { big: '点击一下，长出树干 🌲', bigEn: 'Tap to grow the trunk 🌲', sub: '社交节奏决定树干的挺拔程度', subEn: 'Social rhythm shapes how tall it stands' },
-  { big: '点击一下，展开枝桠 🌿', bigEn: 'Tap to unfold branches 🌿', sub: '你的内心状态塑造每一根枝条', subEn: 'Your mindset bends every branch' },
-  { big: '点击一下，点亮彩灯 ✨', bigEn: 'Tap to light the ornaments ✨', sub: '年度关键词化为闪烁的光芒', subEn: 'Your keyword becomes twinkling light' },
-  { big: '点击一下，堆起礼物 🎁', bigEn: 'Tap to stack the gifts 🎁', sub: '色彩聚合系统的慰藉色包裹这些礼物', subEn: 'Comfort colors wrap each gift' },
-  { big: '点击一下，点亮树顶星星 ⭐', bigEn: 'Tap to light the star ⭐', sub: '让记忆完整发光，和光带一起旋转吧', subEn: 'Memories fully lit, ribbons start spinning' }
-];
+function getStageHints() {
+  const t = state.tags;
+  return [
+    { big: '点击一下，种下记忆的根 🌱', bigEn: 'Tap once, plant the root 🌱',
+      sub: `因为你选了「${t.study || '努力'}」，树根更扎实`, subEn: `Your choice "${t.study || 'effort'}" shapes a solid root` },
+    { big: '点击一下，长出树干 🌲', bigEn: 'Tap to grow the trunk 🌲',
+      sub: `因为你选了「${t.social || '社交'}」，树干挺拔`, subEn: `"${t.social || 'social'}" shapes how tall it stands` },
+    { big: '点击一下，展开枝桠 🌿', bigEn: 'Tap to unfold branches 🌿',
+      sub: `因为你选了「${t.mindset || '心态'}」，枝条舒展`, subEn: `"${t.mindset || 'mindset'}" bends every branch` },
+    { big: '点击一下，点亮彩灯 ✨', bigEn: 'Tap to light the ornaments ✨',
+      sub: `年度关键词「${t.keyword || '成长'}」化为闪烁光芒`, subEn: `Your keyword "${t.keyword || 'growth'}" becomes twinkling light` },
+    { big: '点击一下，堆起礼物 🎁', bigEn: 'Tap to stack the gifts 🎁',
+      sub: `这些颜色来自你的选择——慰藉色包裹每一份记忆`, subEn: 'Comfort colors from your choices wrap each gift' },
+    { big: '点击一下，点亮树顶星星 ⭐', bigEn: 'Tap to light the star ⭐',
+      sub: '让记忆完整发光，和光带一起旋转吧', subEn: 'Memories fully lit, ribbons start spinning' }
+  ];
+}
 let stageTimes = {};
-/* 颜色文案系统：每个颜色一个温暖解释 */
-const COLOR_STORIES = {
-  star: { title: '⭐ 树顶的星星', emoji: '⭐', explain: '来自「' + '${keyword}' + '」这个年度关键词。暖色 = 希望与成就，冷色 = 理性与锚点。心理学发现，亮而饱和的颜色让我们感到"被看见"。' },
-  gift: { title: '🎁 树下的礼物', emoji: '🎁', explain: '这是慰藉色 —— 当你经历低谷或消耗时，它出现在你身边。研究表明柔暖的颜色降低皮质醇（压力激素），让我们感到被接住。' },
-  lights: { title: '🎵 树上的彩灯', emoji: '🎵', explain: '混合了你学业、社交、心态三个维度的情绪。每个灯泡都对应你某个时刻的感受 —— 它们不完美，但拼在一起就是你这一年的全貌。' },
-  ribbon: { title: '🌈 缠绕的光带', emoji: '🌈', explain: '是社交节奏和内心状态的综合。暖色带 = 高能量社交，冷色带 = 独处充电。它环绕整棵树，象征你如何把自己整理成一个整体。' },
-  dots: { title: '✨ 飘动的光点', emoji: '✨', explain: '这是那些"说不清但真实存在"的感受 —— 微小但持续。研究显示低饱和色调让人进入平静状态，它是你这一年默默陪伴自己的那部分。' },
-  snow: { title: '❄️ 积雪', emoji: '❄️', explain: '来自心态维度中"平静"和"接受"的力量。心理学认为白色 = 解脱和新的开始。覆盖一切，也让一切重新开始。' }
-};
+
+/* 颜色文案系统：动态引用用户实际选择的标签 */
+function getColorStories() {
+  const t = state.tags;
+  return {
+    star: { title: '⭐ 树顶的星星', emoji: '⭐',
+      explain: `来自你的年度关键词「${t.keyword || '成长'}」。暖色=希望与成就，冷色=理性与锚点。亮而饱和的颜色激活大脑奖赏系统，让你感到"被看见"。` },
+    gift: { title: '🎁 树下的礼物', emoji: '🎁',
+      explain: `这是慰藉色——因为你选了「${t.study || ''}」${t.mindset && t.mindset.includes('低谷') || (t.study && (t.study.includes('累') || t.study.includes('瓶颈') || t.study.includes('内耗'))) ? '和「'+t.mindset+'」' : ''}，这些颜色专门用来接住那些不容易的时刻。研究表明柔暖色调降低皮质醇（压力激素）。` },
+    lights: { title: '🎵 树上的彩灯', emoji: '🎵',
+      explain: `混合了你的三个维度：「${t.study || ''}」+「${t.social || ''}」+「${t.mindset || ''}」。每个灯泡都对应你某个时刻的感受——它们不完美，但拼在一起就是你这一年的全貌。` },
+    ribbon: { title: '🌈 缠绕的光带', emoji: '🌈',
+      explain: `来自「${t.social || ''}」和「${t.mindset || ''}」的综合。暖色带=高能量社交，冷色带=独处充电。它环绕整棵树，象征你如何把自己整理成一个整体。` },
+    dots: { title: '✨ 飘动的光点', emoji: '✨',
+      explain: `这是那些"说不清但真实存在"的感受——微小但持续。低饱和色调让人进入平静状态，它是你这一年默默陪伴自己的那部分。` },
+    snow: { title: '❄️ 积雪', emoji: '❄️',
+      explain: `来自你心态中的「${t.mindset || '平静'}」。心理学认为白色=解脱和新的开始。覆盖一切，也让一切重新开始。` }
+  };
+}
 
 function explainColorPart(part) {
-  const t = state.tags;
-  const chipMap = { study: MEMORY_PAGES[0], social: MEMORY_PAGES[1], mindset: MEMORY_PAGES[2], keyword: MEMORY_PAGES[3] };
-  const tagTexts = { study: t.study, social: t.social, mindset: t.mindset, keyword: t.keyword };
-  const chipTexts = {};
-  for (const k of ['study', 'social', 'mindset', 'keyword']) {
-    const page = chipMap[k];
-    const chip = page.chips.find(c => c.zh === tagTexts[k]);
-    chipTexts[k] = chip || { zh: tagTexts[k], en: tagTexts[k] };
-  }
-  return COLOR_STORIES[part];
+  return getColorStories()[part];
 }
 
 function buildColorModal() {
   const sw = $('colorModalSwatches');
   sw.innerHTML = '';
-  (state.colors || []).forEach((c, i) => {
+  const t = state.tags;
+  const pages = { study: MEMORY_PAGES[0], social: MEMORY_PAGES[1], mindset: MEMORY_PAGES[2], keyword: MEMORY_PAGES[3] };
+  const labels = { study:'🎓', social:'👥', mindset:'💭', keyword:'⭐' };
+  const keys = ['study','social','mindset','keyword'];
+  keys.forEach(k => {
+    const page = pages[k];
+    const chip = page.chips.find(c => c.zh === t[k]);
+    if (!chip) return;
+    const col = chipColor(chip);
     const el = document.createElement('div');
-    el.style.cssText = `width:42px;height:42px;border-radius:12px;background:rgb(${c.r},${c.g},${c.b});box-shadow:0 4px 16px rgba(${c.r},${c.g},${c.b},.35);border:1px solid rgba(255,255,255,.15);`;
+    el.style.cssText = `display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 8px;border-radius:12px;background:rgba(255,255,255,.06);min-width:70px;`;
+    el.innerHTML = `
+      <div style="width:36px;height:36px;border-radius:10px;background:rgb(${col.r},${col.g},${col.b});box-shadow:0 4px 16px rgba(${col.r},${col.g},${col.b},.35);border:1px solid rgba(255,255,255,.15);"></div>
+      <div style="font-size:11px;color:#e0d8f0;text-align:center;line-height:1.3;">${labels[k]} ${chip.zh}</div>
+    `;
     sw.appendChild(el);
   });
   // glass-card tint = 三个颜色平均
@@ -1144,8 +1338,9 @@ function setStage(stage) {
   }
 
   if (stage < 6) {
-    setBilingual('hintBig', STAGE_HINTS[stage - 1].big, STAGE_HINTS[stage - 1].bigEn);
-    setBilingual('hintSub', STAGE_HINTS[stage - 1].sub, STAGE_HINTS[stage - 1].subEn);
+    const hints = getStageHints();
+    setBilingual('hintBig', hints[stage - 1].big, hints[stage - 1].bigEn);
+    setBilingual('hintSub', hints[stage - 1].sub, hints[stage - 1].subEn);
   }
 }
 // 被 colorModalBtn 触发后，完整执行 stage 6 完成流程
@@ -1201,11 +1396,60 @@ function resetExperience() {
   resetSnow(); tree.rebuild();
   setBilingual('stageText', '0 / 6', 'STAGE 0/6');
   document.querySelectorAll('#progress .p').forEach(p => p.classList.remove('on'));
-  setBilingual('hintBig', STAGE_HINTS[0].big, STAGE_HINTS[0].bigEn);
-  setBilingual('hintSub', STAGE_HINTS[0].sub, STAGE_HINTS[0].subEn);
+  const hints = getStageHints();
+  setBilingual('hintBig', hints[0].big, hints[0].bigEn);
+  setBilingual('hintSub', hints[0].sub, hints[0].subEn);
   updateMemorySnapshot(); stageTimes = {};
 }
 $('btnRestart').onclick = resetExperience;
+
+/* 记忆解码面板 */
+$('btnDecode').onclick = () => {
+  buildDecodePanel();
+  $('decodePanel').style.display = 'flex';
+};
+$('decodeClose').onclick = () => { $('decodePanel').style.display = 'none'; };
+$('decodePanel').addEventListener('click', (e) => { if (e.target === $('decodePanel')) $('decodePanel').style.display = 'none'; });
+
+function buildDecodePanel() {
+  const t = state.tags;
+  const pages = { study: MEMORY_PAGES[0], social: MEMORY_PAGES[1], mindset: MEMORY_PAGES[2], keyword: MEMORY_PAGES[3] };
+  const labels = { study:'🎓', social:'👥', mindset:'💭', keyword:'⭐' };
+  const treeParts = { study:'树根 & 树干', social:'树干 & 光带', mindset:'树枝 & 积雪', keyword:'树顶星星' };
+  const list = $('decodeList');
+  list.innerHTML = '';
+
+  // 设置玻璃面板 tint 为三色平均
+  const cols = state.colors || [{r:255,g:216,b:107}];
+  const avg = { r: Math.round(cols.reduce((a,c)=>a+c.r,0)/cols.length), g: Math.round(cols.reduce((a,c)=>a+c.g,0)/cols.length), b: Math.round(cols.reduce((a,c)=>a+c.b,0)/cols.length) };
+  $('decodePanelInner').style.setProperty('--glass-tint', `rgb(${avg.r},${avg.g},${avg.b})`);
+
+  for (const k of ['study','social','mindset','keyword']) {
+    const page = pages[k];
+    const chip = page.chips.find(c => c.zh === t[k]);
+    if (!chip) continue;
+    const col = chipColor(chip);
+    const rgbStr = `rgb(${col.r},${col.g},${col.b})`;
+    const card = document.createElement('div');
+    card.style.cssText = `margin-bottom:14px;padding:14px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);`;
+    card.innerHTML = `
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <span style="font-size:20px;">${labels[k]}</span>
+        <span style="font-size:14px;font-weight:600;">${chip.zh}</span>
+        <span style="margin-left:auto;width:22px;height:22px;border-radius:50%;background:${rgbStr};border:2px solid rgba(255,255,255,.3);flex-shrink:0;"></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,.6);">
+        <span>→</span>
+        <span>${treeParts[k]}</span>
+        <span style="margin-left:auto;font-size:10px;font-family:'EnOther',monospace;opacity:.5;">${rgbStr}</span>
+      </div>
+      <div style="margin-top:8px;font-size:11px;color:rgba(255,255,255,.45);line-height:1.5;">
+        ${getColorStories()[k === 'study' ? 'gift' : k === 'social' ? 'ribbon' : k === 'mindset' ? 'snow' : 'star'].explain.substring(0, 60)}…
+      </div>
+    `;
+    list.appendChild(card);
+  }
+}
 
 /* 保存 */
 function isWeChat() { return /MicroMessenger/i.test(navigator.userAgent); }
