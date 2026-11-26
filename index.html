@@ -1,0 +1,1961 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#050810">
+<title>color-Christmas-tree</title>
+<meta property="og:title" content="color-Christmas-tree">
+<meta property="og:description" content="用颜色，种一棵发光圣诞树">
+<meta property="og:type" content="website">
+<style>
+  /* 站点统一字体（含中文），本地加载不依赖外部服务 */
+  @font-face {
+    font-family: 'SiteFont';
+    src: url('site-font.ttf') format('truetype');
+    font-weight: 400 900;
+    font-style: normal;
+    font-display: swap;
+  }
+  /* 英文字体：unicode-range 限定只作用于拉丁字符，中文继续用 SiteFont */
+  @font-face {
+    font-family: 'EnLanding';
+    src: url('en-landing.ttf') format('truetype');
+    font-weight: 400 900;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0000-024F, U+2000-206F, U+20A0-20CF, U+2100-214F, U+2190-21FF, U+2212, U+FEFF;
+  }
+  @font-face {
+    font-family: 'EnOther';
+    src: url('en-other.ttf') format('truetype');
+    font-weight: 400 900;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0000-024F, U+2000-206F, U+20A0-20CF, U+2100-214F, U+2190-21FF, U+2212, U+FEFF;
+  }
+  :root {
+    --gold: #ffd86b;
+    --bg: #050810;
+    --card: rgba(255,255,255,.06);
+    --line: rgba(255,255,255,.14);
+    --text: #f4f0ff;
+    --sub: #a9a4c0;
+    --accent: linear-gradient(135deg,#7b6cff,#ff6ba9,#ffb36b);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; width: 100%; overflow: hidden; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'EnOther', 'SiteFont', -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    user-select: none;
+  }
+  #app { position: fixed; inset: 0; overflow: hidden; }
+
+  /* ---------- 通用 ---------- */
+  .screen { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; }
+  .screen.active { display: flex; }
+  .hidden { display: none !important; }
+  button {
+    font: inherit; cursor: pointer; border: none; outline: none;
+    background: var(--accent); color: #fff; border-radius: 999px;
+    padding: 14px 36px; font-size: 16px; font-weight: 600; letter-spacing: 1px;
+    box-shadow: 0 8px 30px rgba(124,108,255,.35);
+    transition: transform .2s, box-shadow .2s, opacity .2s;
+  }
+  button:active { transform: scale(.96); }
+  button:disabled { opacity: .4; cursor: not-allowed; box-shadow: none; }
+  button.ghost {
+    background: rgba(255,255,255,.08); color: var(--text);
+    box-shadow: none; border: 1px solid var(--line);
+  }
+  h1 { font-weight: 700; }
+
+  /* ---------- 引导页 ---------- */
+  /* 首页英文用专属字体，中文仍走 SiteFont */
+  #landing, #landing *, #landing *::before, #landing *::after {
+    font-family: 'EnLanding', 'SiteFont', -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+  #landing {
+    /* 雪夜照片 + 暗色遮罩，降低亮度保证文字可读 */
+    background:
+      radial-gradient(circle at 50% 26%, rgba(123,108,255,.16), transparent 58%),
+      linear-gradient(rgba(4,6,14,.66), rgba(4,6,14,.76)),
+      url('landing-bg.jpg') center center / cover no-repeat;
+    text-align: center; padding: 28px;
+  }
+  #landing .badge {
+    font-size: 12px; letter-spacing: 3px; color: var(--sub);
+    border: 1px solid var(--line); border-radius: 999px; padding: 6px 16px; margin-bottom: 26px;
+    background: rgba(0,0,0,.28); text-shadow: 0 1px 6px rgba(0,0,0,.8);
+  }
+  #landing h1 {
+    font-size: clamp(32px, 9vw, 58px); line-height: 1.15;
+    background: linear-gradient(135deg,#fff 10%,#ffd86b 45%,#ff8fb8 75%,#9d8cff);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    margin-bottom: 18px;
+  }
+  #landing p { color: #d8d3e8; max-width: 380px; font-size: 15px; line-height: 1.8; margin-bottom: 36px; text-shadow: 0 1px 8px rgba(0,0,0,.9); }
+  #landing .steps { display: flex; gap: 10px; margin-bottom: 40px; flex-wrap: wrap; justify-content: center; }
+  #landing .step {
+    background: rgba(8,10,20,.58); border: 1px solid rgba(255,255,255,.16); border-radius: 16px;
+    padding: 14px 18px; font-size: 13px; width: 100px; color: var(--text);
+    backdrop-filter: blur(6px); box-shadow: 0 6px 18px rgba(0,0,0,.35);
+  }
+  #landing .step b { display: block; font-size: 22px; margin-bottom: 6px; }
+  #landing .note { margin-top: 22px; font-size: 12px; color: #c5bfd8; max-width: 320px; line-height: 1.7; text-shadow: 0 1px 6px rgba(0,0,0,.8); }
+
+  /* ---------- 取色页 ---------- */
+  #capture { background: #000; }
+  #capture .video-wrap { position: absolute; inset: 0; }
+  #camVideo { width: 100%; height: 100%; object-fit: cover; }
+  #capture .overlay { position: absolute; inset: 0; pointer-events: none; }
+  #capture .frame {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+    width: min(72vw, 420px); height: min(62vh, 480px);
+    border: 2px dashed rgba(255,255,255,.55); border-radius: 24px;
+    box-shadow: 0 0 0 9999px rgba(0,0,0,.45);
+  }
+  #capture .frame::after {
+    content: "将衣服对准取景框"; position: absolute; left: 50%; bottom: -38px; transform: translateX(-50%);
+    white-space: nowrap; font-size: 13px; color: rgba(255,255,255,.85); background: rgba(0,0,0,.4);
+    padding: 6px 14px; border-radius: 999px;
+  }
+  #capture .topbar {
+    position: absolute; top: 0; left: 0; right: 0; padding: 18px 68px 18px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: linear-gradient(#0009, transparent); z-index: 2;
+  }
+  #capture .topbar h2 { font-size: 16px; font-weight: 600; }
+  #capture .topbar button { padding: 8px 16px; font-size: 13px; }
+  #capture .bottom {
+    position: absolute; bottom: 0; left: 0; right: 0; padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+    background: linear-gradient(transparent, #000c); z-index: 2;
+  }
+  #capture .tip { font-size: 13px; color: #ddd8ee; text-align: center; max-width: 340px; line-height: 1.6; }
+  #palette { display: flex; gap: 14px; margin: 4px 0 2px; }
+  #palette .swatch {
+    width: 58px; height: 58px; border-radius: 16px; border: 2px solid rgba(255,255,255,.7);
+    box-shadow: 0 6px 20px rgba(0,0,0,.5); position: relative; display: flex;
+    align-items: flex-end; justify-content: center; padding-bottom: 4px;
+    font-size: 10px; color: #fff; text-shadow: 0 1px 3px #000; opacity: 0; transform: translateY(10px);
+    transition: opacity .5s, transform .5s;
+  }
+  #palette .swatch.show { opacity: 1; transform: translateY(0); }
+  #capture .actions { display: flex; gap: 12px; }
+
+  /* ---------- 体验页 ---------- */
+  /* 生成结果页：九张波点雪景图随机选一张做背景，叠暗色遮罩保证树和文字突出 */
+  #experience {
+    background-color: #050810;
+    background-image:
+      linear-gradient(rgba(3,5,12,.46), rgba(3,5,12,.66)),
+      var(--bg-img, url('bg-1.jpg'));
+    background-position: center, center;
+    background-size: cover, cover;
+    background-repeat: no-repeat, no-repeat;
+  }
+  #treeCanvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  #preview {
+    position: absolute; top: calc(118px + env(safe-area-inset-top)); right: 16px;
+    width: 108px; height: 144px; border-radius: 14px; overflow: hidden;
+    border: 1px solid var(--line); box-shadow: 0 8px 24px rgba(0,0,0,.5);
+    background: #111; z-index: 3;
+  }
+  #preview video { width: 100%; height: 100%; object-fit: cover; }
+  #previewOverlay { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  #preview .dot {
+    position: absolute; top: 8px; left: 8px; width: 8px; height: 8px; border-radius: 50%;
+    background: #4ade80; box-shadow: 0 0 8px #4ade80;
+  }
+  #gestureHint {
+    position: absolute; left: 0; right: 0; bottom: calc(26px + env(safe-area-inset-bottom));
+    text-align: center; z-index: 3; pointer-events: none; padding: 0 20px;
+  }
+  #gestureHint .big {
+    font-size: clamp(20px, 5.5vw, 30px); font-weight: 700; letter-spacing: 1px;
+    text-shadow: 0 2px 20px rgba(0,0,0,.8); margin-bottom: 8px;
+  }
+  #gestureHint .sub { font-size: 13px; color: var(--sub); line-height: 1.6; text-shadow: 0 2px 10px rgba(0,0,0,.95), 0 0 20px rgba(0,0,0,.8); }
+  #progress {
+    display: flex; gap: 8px; justify-content: center; margin-top: 16px;
+  }
+  #progress .p {
+    width: 34px; height: 4px; border-radius: 4px; background: rgba(255,255,255,.18);
+    transition: background .4s, box-shadow .4s;
+  }
+  #progress .p.on { background: var(--gold); box-shadow: 0 0 12px var(--gold); }
+  #stageBadge {
+    position: absolute; top: calc(18px + env(safe-area-inset-top)); left: 18px;
+    background: rgba(10,12,24,.6); border: 1px solid var(--line); border-radius: 999px;
+    padding: 8px 16px; font-size: 12px; color: var(--sub); z-index: 3;
+    backdrop-filter: blur(8px);
+  }
+  #stageBadge b { color: var(--text); }
+  /* 生成结果页操作按钮移到左侧竖排，避免遮挡中间的树 */
+  #experience .top-actions {
+    position: absolute; top: calc(74px + env(safe-area-inset-top)); left: 12px;
+    z-index: 4; display: flex; flex-direction: column; gap: 8px; align-items: flex-start;
+  }
+  #experience .top-actions button {
+    padding: 7px 11px; font-size: 11px; background: rgba(10,12,24,.62);
+    border: 1px solid var(--line); box-shadow: none; backdrop-filter: blur(8px);
+    white-space: nowrap;
+  }
+  #countBubble {
+    position: absolute; z-index: 5; pointer-events: none;
+    width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%;
+    border: 2px solid #4ade80; background: rgba(74,222,128,.15);
+    display: none; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 700; color: #fff;
+    box-shadow: 0 0 20px rgba(74,222,128,.6);
+  }
+
+  /* ---------- 错误提示 ---------- */
+  #toast {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+    background: rgba(20,16,30,.94); border: 1px solid var(--line); border-radius: 16px;
+    padding: 20px 26px; max-width: 320px; text-align: center; font-size: 14px; line-height: 1.7;
+    z-index: 20; display: none; box-shadow: 0 20px 60px rgba(0,0,0,.6);
+  }
+  #toast button { margin-top: 16px; padding: 10px 24px; font-size: 14px; }
+
+  @media (max-width: 480px) {
+    #preview { width: 84px; height: 112px; }
+    #landing .step { width: 88px; padding: 12px 10px; font-size: 12px; }
+    #experience .top-actions { top: calc(56px + env(safe-area-inset-top)); left: 8px; gap: 6px; }
+    #experience .top-actions button { padding: 6px 9px; font-size: 10px; }
+  }
+  /* ---------- 英文小字标注 ---------- */
+  [data-en]::after {
+    content: attr(data-en);
+    display: block;
+    font-size: .58em;
+    font-weight: 400;
+    opacity: .55;
+    line-height: 1.3;
+    margin-top: 3px;
+    letter-spacing: .2px;
+  }
+  button[data-en]::after { font-size: .62em; margin-top: 2px; opacity: .75; }
+  .toast-en { display: block; font-size: 11px; opacity: .55; margin-top: 4px; }
+
+  /* ---------- 音乐开关按钮 ---------- */
+  #btnMusic {
+    position: fixed; top: calc(14px + env(safe-area-inset-top)); right: 14px;
+    width: 40px; height: 40px; border-radius: 50%; padding: 0;
+    background: rgba(10,12,24,.72); border: 1px solid var(--line);
+    color: var(--text); font-size: 20px; z-index: 30;
+    box-shadow: none; backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+  }
+  #btnMusic.muted { opacity: .45; }
+
+  /* ---------- 长按保存图片面板（微信内） ---------- */
+  #saveSheet {
+    position: fixed; inset: 0; z-index: 40; display: none;
+    align-items: center; justify-content: center; padding: 24px;
+    background: rgba(0,0,0,.88); backdrop-filter: blur(6px);
+  }
+  #saveSheet.show { display: flex; }
+  #saveSheet .panel { display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%; max-width: 420px; }
+  #saveSheet .tip { color: #fff; font-size: 15px; text-align: center; line-height: 1.6; }
+  #saveSheet img {
+    width: 100%; max-height: 68vh; object-fit: contain; border-radius: 12px;
+    border: 1px solid var(--line); box-shadow: 0 12px 40px rgba(0,0,0,.6);
+    -webkit-touch-callout: default; user-select: auto;
+  }
+  #saveSheet button { padding: 10px 28px; font-size: 14px; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <button id="btnMusic" title="Music on / off">♪</button>
+
+  <!-- ============ 引导页 ============ -->
+  <section id="landing" class="screen active">
+    <div class="badge">CAMERA · COLOR · MAGIC</div>
+    <h1 data-en="Plant a tree with colors">用颜色，种一棵树</h1>
+    <p data-en="Use three colors from your outfit to grow a unique glowing Christmas tree. Tap the screen to light it up step by step.">用你身上的三种颜色，种一棵独一无二的发光圣诞树。<br>点击屏幕，让它一点点亮起来。</p>
+    <div class="steps">
+      <div class="step" data-en="① Get image"><b>①</b>获取图片</div>
+      <div class="step" data-en="② Extract 3 colors"><b>②</b>提取三色</div>
+      <div class="step" data-en="③ Tap to unlock"><b>③</b>点击解锁</div>
+    </div>
+    <button id="btnStart" data-en="Start camera">开启摄像头</button>
+    <div class="note" data-en="Camera access is required. Everything stays on your device — no photos or videos are uploaded.">需要允许使用摄像头。画面仅在你的设备本地处理，不会上传任何照片或视频。</div>
+  </section>
+
+  <!-- ============ 取色页 ============ -->
+  <section id="capture" class="screen">
+    <div class="video-wrap"><video id="camVideo" playsinline autoplay muted></video></div>
+    <div class="overlay"><div class="frame"></div></div>
+    <div class="topbar">
+      <h2 data-en="Capture colors">拍摄颜色 <span id="camLabel" style="font-size:11px;color:var(--sub);font-weight:400">· Rear</span></h2>
+      <div style="display:flex;gap:8px">
+        <button class="ghost btn-switch-cam">Switch Cam</button>
+        <button class="ghost" id="btnBackLanding">Back</button>
+      </div>
+    </div>
+    <div class="bottom">
+      <div class="tip" id="captureTip" data-en="Stand in front of the camera and fill the frame with your outfit.">站在镜头前，让衣服占满取景框，光线尽量均匀。</div>
+      <div id="palette">
+        <div class="swatch" id="sw0" data-en="Star">星光色</div>
+        <div class="swatch" id="sw1" data-en="Ribbon">光带色</div>
+        <div class="swatch" id="sw2" data-en="Dots">光点色</div>
+      </div>
+      <div class="actions">
+        <button class="ghost" id="btnPickImage">Gallery</button>
+        <button class="ghost" id="btnRecapture">Retake</button>
+        <button id="btnCapture" data-en="Extract">提取颜色</button>
+      </div>
+      <div class="actions" style="margin-top:4px">
+        <button id="btnToExper" disabled>Start →</button>
+      </div>
+      <input type="file" id="imageInput" accept="image/*" style="display:none">
+    </div>
+  </section>
+
+  <!-- ============ 体验页 ============ -->
+  <section id="experience" class="screen">
+    <canvas id="treeCanvas"></canvas>
+    <div id="stageBadge">Progress <b id="stageText">0 / 3</b></div>
+    <div class="top-actions">
+      <button class="btn-switch-cam">Switch Cam</button>
+      <button id="btnRecolor">Recolor</button>
+      <button id="btnAuto">Auto Play</button>
+      <button id="btnRestart">Replay</button>
+      <button id="btnSave">Save PNG</button>
+    </div>
+    <div id="gestureHint">
+      <div class="big" id="hintBig" data-en="Tap the screen once 👆">点击屏幕一下 👆</div>
+      <div class="sub" id="hintSub" data-en="Light up the star on top">点亮圣诞树顶端的光球</div>
+      <div id="progress"><div class="p"></div><div class="p"></div><div class="p"></div></div>
+    </div>
+  </section>
+
+  <div id="toast"></div>
+  <!-- 微信等不支持自动下载的环境：显示图片让用户长按保存 -->
+  <div id="saveSheet">
+    <div class="panel">
+      <div class="tip" id="saveTip">长按图片保存到相册</div>
+      <img id="saveImg" alt="Christmas tree">
+      <button id="saveClose">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- MediaPipe Selfie Segmentation（人物检测 / 衣服取色） -->
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation@0.1.1675465747/selfie_segmentation.js" crossorigin="anonymous"></script>
+
+<script>
+/* =====================================================================
+   颜色圣诞树 — 主逻辑
+   1) 摄像头 + 衣服取色
+   2) 点击屏幕推进阶段（1/2/3 次点击）
+   3) Canvas 粒子圣诞树（三阶段动画）
+   ===================================================================== */
+
+const $ = (id) => document.getElementById(id);
+
+/* 每次打开网站随机挑一张波点雪景作为生成结果背景（九选一） */
+let currentBgSrc = 'bg-1.jpg';
+(function pickRandomBackground() {
+  const ex = $('experience');
+  if (!ex) return;
+  const idx = 1 + Math.floor(Math.random() * 9);
+  currentBgSrc = `bg-${idx}.jpg`;
+  ex.style.setProperty('--bg-img', `url('${currentBgSrc}')`);
+})();
+
+const state = {
+  stream: null,
+  colors: null,          // 提取出的三种颜色 [{r,g,b}, ...]
+  stage: 0,              // 0=空 1=光球 2=树 3=完整
+  gesture: 0,
+  lastGesture: 0,
+  gestureStable: 0,
+  targetStage: 0,
+  animating: true,
+  facing: 'environment', // 默认后置摄像头
+  spinning: false,       // 成树后是否旋转
+  treeRotation: 0,       // 树的旋转角度
+  stickBoxes: [],        // 棍状物检测框（用于预览可视化）
+};
+
+/* ---------------------------------------------------------------------
+   屏幕切换
+--------------------------------------------------------------------- */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  $(id).classList.add('active');
+}
+
+function toast(msg, en) {
+  const t = $('toast');
+  t.innerHTML = msg + (en ? '<span class="toast-en">' + en + '</span>' : '') +
+    '<br><button onclick="this.parentNode.style.display=\'none\'">OK</button>';
+  t.style.display = 'block';
+}
+
+/* ---------------------------------------------------------------------
+   Merry Christmas 交响乐氛围版（Web Audio 多声部实时合成）
+   弦乐垫 + 低音 + 钟琴主旋律 + 音乐厅混响
+--------------------------------------------------------------------- */
+let audioCtx = null;
+let musicOn = true;   // 默认开启音乐（首次交互后自动播放）
+let masterGain = null;
+let convolver = null;
+let reverbBus = null;
+let musicTimer = null;
+let activeOscs = [];
+
+const BPM = 68;
+const BEAT = 60 / BPM;
+const BAR = BEAT * 4;
+
+// 和弦循环：C - G - Am - F，温暖厚重的圣诞氛围
+const CHORDS = [
+  { root: 130.81, notes: [261.63, 329.63, 392.00] },
+  { root: 98.00,  notes: [246.94, 293.66, 392.00] },
+  { root: 110.00, notes: [261.63, 329.63, 440.00] },
+  { root: 87.31,  notes: [261.63, 349.23, 440.00] }
+];
+
+// 钟琴主旋律：[频率, 起始拍, 持续拍] — 经典圣诞旋律的氛围化改编
+const MELODY = [
+  [523.25, 0, 1], [783.99, 1, 1], [783.99, 2, 2],
+  [698.46, 4, 1], [783.99, 5, 1], [659.25, 6, 1], [523.25, 7, 1],
+  [587.33, 8, 1], [880.00, 9, 1], [880.00, 10, 2],
+  [783.99, 12, 1], [880.00, 13, 1], [698.46, 14, 2],
+  [523.25, 16, 1], [659.25, 17, 1], [783.99, 18, 2],
+  [880.00, 20, 1], [783.99, 21, 1], [698.46, 22, 2],
+  [659.25, 24, 1], [587.33, 25, 1], [523.25, 26, 2],
+  [587.33, 28, 2], [523.25, 30, 2]
+];
+const TOTAL_BEATS = 32;
+
+// 生成衰减噪声脉冲响应，模拟音乐厅混响
+function makeReverbIR(ctx) {
+  const len = ctx.sampleRate * 3;
+  const ir = ctx.createBuffer(2, len, ctx.sampleRate);
+  for (let ch = 0; ch < 2; ch++) {
+    const d = ir.getChannelData(ch);
+    for (let i = 0; i < len; i++) {
+      d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.6);
+    }
+  }
+  return ir;
+}
+
+function initAudio() {
+  if (audioCtx) return;
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  masterGain = audioCtx.createGain();
+  masterGain.gain.value = 0.6;
+  masterGain.connect(audioCtx.destination);
+  convolver = audioCtx.createConvolver();
+  convolver.buffer = makeReverbIR(audioCtx);
+  reverbBus = audioCtx.createGain();
+  reverbBus.gain.value = 0.42;
+  convolver.connect(reverbBus);
+  reverbBus.connect(masterGain);
+}
+
+function track(osc) {
+  activeOscs.push(osc);
+  osc.onended = () => {
+    const i = activeOscs.indexOf(osc);
+    if (i >= 0) activeOscs.splice(i, 1);
+  };
+}
+
+// 弦乐垫：两把轻微失谐的小提琴，经低通滤波，缓慢起落
+function playPad(notes, start, dur) {
+  for (const f of notes) {
+    for (const det of [-5, 5]) {
+      const osc = audioCtx.createOscillator();
+      const filt = audioCtx.createBiquadFilter();
+      const g = audioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.value = f;
+      osc.detune.value = det;
+      filt.type = 'lowpass';
+      filt.frequency.value = 1300;
+      filt.Q.value = 0.7;
+      g.gain.setValueAtTime(0.0001, start);
+      g.gain.linearRampToValueAtTime(0.028, start + 0.6);
+      g.gain.setValueAtTime(0.028, start + dur - 0.7);
+      g.gain.linearRampToValueAtTime(0.0001, start + dur);
+      osc.connect(filt); filt.connect(g);
+      g.connect(masterGain); g.connect(convolver);
+      track(osc);
+      osc.start(start); osc.stop(start + dur + 0.1);
+    }
+  }
+}
+
+// 低音根音，撑起厚度
+function playBass(freq, start, dur) {
+  const osc = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  osc.type = 'sine';
+  osc.frequency.value = freq / 2;
+  g.gain.setValueAtTime(0.0001, start);
+  g.gain.linearRampToValueAtTime(0.13, start + 0.1);
+  g.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+  osc.connect(g); g.connect(masterGain);
+  track(osc);
+  osc.start(start); osc.stop(start + dur + 0.05);
+}
+
+// 钟琴主旋律：基频 + 两个泛音，清亮通透
+function playBell(freq, start, dur) {
+  [1, 2.01, 3.02].forEach((mult, i) => {
+    const osc = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = freq * mult;
+    const vol = [0.13, 0.04, 0.018][i];
+    g.gain.setValueAtTime(0.0001, start);
+    g.gain.linearRampToValueAtTime(vol, start + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, start + dur * 1.6);
+    osc.connect(g);
+    g.connect(masterGain); g.connect(convolver);
+    track(osc);
+    osc.start(start); osc.stop(start + dur * 1.6 + 0.05);
+  });
+}
+
+function scheduleOrchestra() {
+  if (!musicOn || !audioCtx) return;
+  const t0 = audioCtx.currentTime + 0.12;
+  // 每个和弦持续一小节
+  for (let bar = 0; bar < TOTAL_BEATS / 4; bar++) {
+    const chord = CHORDS[bar % CHORDS.length];
+    const t = t0 + bar * BAR;
+    playPad(chord.notes, t, BAR * 1.01);
+    playBass(chord.root, t, BAR * 0.96);
+  }
+  for (const [freq, sb, db] of MELODY) {
+    playBell(freq, t0 + sb * BEAT, db * BEAT);
+  }
+  musicTimer = setTimeout(scheduleOrchestra, TOTAL_BEATS * BEAT * 1000 - 80);
+}
+
+function toggleMusic() {
+  initAudio();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  musicOn = !musicOn;
+  const btn = $('btnMusic');
+  btn.textContent = musicOn ? '♫' : '♪';
+  btn.classList.toggle('muted', !musicOn);
+  if (musicOn) {
+    clearTimeout(musicTimer);
+    scheduleOrchestra();
+  } else {
+    clearTimeout(musicTimer);
+    activeOscs.forEach(o => { try { o.stop(); } catch (e) {} });
+    activeOscs = [];
+  }
+}
+
+$('btnMusic').addEventListener('click', toggleMusic);
+
+// 浏览器禁止自动播放：页面默认开启音乐，在用户首次点击浏览器的任意位置后自动开始
+let musicStarted = false;
+function autoStartMusic() {
+  if (musicStarted || !musicOn) return;
+  musicStarted = true;
+  initAudio();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  scheduleOrchestra();
+  document.removeEventListener('pointerdown', autoStartMusic);
+  document.removeEventListener('keydown', autoStartMusic);
+}
+document.addEventListener('pointerdown', autoStartMusic);
+document.addEventListener('keydown', autoStartMusic);
+
+/* ---------------------------------------------------------------------
+   摄像头
+--------------------------------------------------------------------- */
+async function startCamera() {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    toast('当前浏览器不支持摄像头，请换用 Chrome / Safari / Edge 打开。', 'Camera not supported. Try Chrome, Safari or Edge.');
+    return false;
+  }
+  try {
+    state.stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: state.facing, width: { ideal: 1280 }, height: { ideal: 720 } },
+      audio: false
+    });
+    $('camVideo').srcObject = state.stream;
+    // 前置镜像显示，后置保持原样
+    $('camVideo').style.transform = state.facing === 'user' ? 'scaleX(-1)' : 'none';
+    await $('camVideo').play();
+    updateCamLabel();
+    return true;
+  } catch (err) {
+    toast('无法访问摄像头：' + err.message + '<br>请检查浏览器权限设置后重试。', 'Camera access denied. Check your browser permissions.');
+    return false;
+  }
+}
+
+function stopCamera() {
+  if (state.stream) {
+    state.stream.getTracks().forEach(t => t.stop());
+    state.stream = null;
+  }
+}
+
+function updateCamLabel() {
+  const label = state.facing === 'user' ? 'Front' : 'Rear';
+  const el = $('camLabel');
+  if (el) el.textContent = '· ' + label;
+  document.querySelectorAll('.btn-switch-cam').forEach(b => {
+    b.textContent = state.facing === 'user' ? 'To Rear' : 'To Front';
+  });
+}
+
+// 同步中文文本 + 下方英文小字
+function setBilingual(id, zh, en) {
+  const el = $(id);
+  if (!el) return;
+  el.textContent = zh;
+  if (en) el.dataset.en = en; else el.removeAttribute('data-en');
+}
+
+// 在前置 / 后置摄像头之间切换
+async function switchCamera() {
+  const previous = state.facing;
+  stopCamera();
+  state.facing = previous === 'user' ? 'environment' : 'user';
+  const ok = await startCamera();
+  if (!ok) {
+    // 切换失败，恢复原摄像头
+    state.facing = previous;
+    await startCamera();
+    toast('切换摄像头失败，已恢复原来的镜头。', 'Switch failed — restored the previous camera.');
+    return;
+  }
+  const hint = state.facing === 'environment'
+    ? 'Switched to rear camera.'
+    : 'Switched to front camera.';
+  if ($('captureTip')) $('captureTip').textContent = hint;
+}
+
+document.querySelectorAll('.btn-switch-cam').forEach(b => {
+  b.addEventListener('click', switchCamera);
+});
+updateCamLabel();
+
+/* ---------------------------------------------------------------------
+   颜色提取：从取景框区域采样并聚类出 3 种主色
+--------------------------------------------------------------------- */
+function rgbToHsl(r, g, b) {
+  r /= 255; g /= 255; b /= 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+  let h = 0, s = 0;
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r: h = ((g - b) / d + (g < b ? 6 : 0)); break;
+      case g: h = ((b - r) / d + 2); break;
+      case b: h = ((r - g) / d + 4); break;
+    }
+    h /= 6;
+  }
+  return { h, s, l };
+}
+
+/* HSL 转回 RGB，用于提升取色结果的饱和度 */
+function hslToRgb(h, s, l) {
+  if (s === 0) { const v = Math.round(l * 255); return { r: v, g: v, b: v }; }
+  const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+  const p = 2 * l - q;
+  const hue2rgb = (t) => {
+    if (t < 0) t += 1;
+    if (t > 1) t -= 1;
+    if (t < 1 / 6) return p + (q - p) * 6 * t;
+    if (t < 1 / 2) return q;
+    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+    return p;
+  };
+  return {
+    r: Math.round(hue2rgb(h + 1 / 3) * 255),
+    g: Math.round(hue2rgb(h) * 255),
+    b: Math.round(hue2rgb(h - 1 / 3) * 255)
+  };
+}
+
+/* 饱和度本来够高就不动，偏灰的颜色才提饱和；亮度保持不变以免发白发灰 */
+function boostSaturation(c) {
+  const { h, s, l } = rgbToHsl(c.r, c.g, c.b);
+  const ns = s >= 0.5 ? s : Math.min(1, 0.5 * Math.pow(s / 0.5, 0.65));
+  return hslToRgb(h, ns, l);
+}
+
+/* ---------- 人物检测：MediaPipe Selfie Segmentation ---------- */
+let segmentation = null;
+
+async function initSegmentation() {
+  if (segmentation) return true;
+  if (typeof SelfieSegmentation === 'undefined') return false;
+  try {
+    segmentation = new SelfieSegmentation({
+      locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation@0.1.1675465747/${file}`
+    });
+    segmentation.setOptions({ modelSelection: 1 });
+    return true;
+  } catch (e) {
+    console.warn('SelfieSegmentation 初始化失败：', e);
+    segmentation = null;
+    return false;
+  }
+}
+
+// 返回 { mask: Uint8ClampedArray(100x100), ratio: 人物像素占比 }
+function detectPerson(video) {
+  return new Promise(resolve => {
+    if (!segmentation) { resolve(null); return; }
+    let settled = false;
+    const finish = (val) => { if (!settled) { settled = true; resolve(val); } };
+    segmentation.onResults(results => {
+      try {
+        const mc = document.createElement('canvas');
+        mc.width = 100; mc.height = 100;
+        const mctx = mc.getContext('2d', { willReadFrequently: true });
+        mctx.drawImage(results.segmentationMask, 0, 0, 100, 100);
+        const md = mctx.getImageData(0, 0, 100, 100).data;
+        let fg = 0;
+        for (let i = 0; i < md.length; i += 4) {
+          if (md[i] > 110) fg++; // 分割图：白色 = 人物前景
+        }
+        finish({ mask: md, ratio: fg / 10000 });
+      } catch (e) {
+        finish(null);
+      }
+    });
+    try {
+      segmentation.send({ image: video }).catch(() => finish(null));
+    } catch (e) {
+      finish(null);
+    }
+  });
+}
+
+// 把当前视频帧采样成 100x100 的像素数组
+function captureFrame(video, useCenterOnly = false) {
+  const c = document.createElement('canvas');
+  const cx = c.getContext('2d', { willReadFrequently: true });
+  const W = 100, H = 100;
+  c.width = W; c.height = H;
+  const vw = video.videoWidth, vh = video.videoHeight;
+  if (useCenterOnly) {
+    // 兜底：人物检测不可用时的中央区域采样
+    const sw = vw * 0.5, sh = vh * 0.6;
+    cx.drawImage(video, (vw - sw) / 2, (vh - sh) / 2, sw, sh, 0, 0, W, H);
+  } else {
+    cx.drawImage(video, 0, 0, vw, vh, 0, 0, W, H);
+  }
+  return cx.getImageData(0, 0, W, H).data;
+}
+
+/* 直方图聚类取占比最大的 3 种颜色
+   useMask=true 时只统计人物前景像素；random=true 时随机采样整幅画面 */
+function clusterColors(data, mask, useMask, random) {
+  const buckets = {};
+  const total = data.length / 4;
+  const indices = [];
+  if (random) {
+    // 环境模式：随机采样，体现"随机提取"
+    for (let k = 0; k < 9000; k++) indices.push((Math.random() * total) | 0);
+  } else {
+    for (let i = 0; i < total; i++) indices.push(i);
+  }
+  for (const i of indices) {
+    const idx = i * 4;
+    if (useMask && mask && mask[idx] < 110) continue; // 跳过背景
+    const r = data[idx], g = data[idx + 1], b = data[idx + 2];
+    const { h, s, l } = rgbToHsl(r, g, b);
+    // 人物衣服：过滤灰暗/过曝；环境：放宽阈值，只排除极黑极白
+    const minS = useMask ? 0.15 : 0.05;
+    const minL = useMask ? 0.12 : 0.06;
+    const maxL = useMask ? 0.92 : 0.97;
+    if (s < minS || l < minL || l > maxL) continue;
+    const hb = Math.floor(h * 24);
+    const sb = Math.min(2, Math.floor(s * 3));
+    const key = hb * 10 + sb;
+    if (!buckets[key]) buckets[key] = { n: 0, r: 0, g: 0, b: 0, sSum: 0 };
+    buckets[key].n++;
+    buckets[key].r += r; buckets[key].g += g; buckets[key].b += b;
+    buckets[key].sSum += s;   // 累积饱和度，用于隐形偏好
+  }
+
+  // 隐形规则：按「像素数量 × 饱和度权重」排序，同等占比下优先挑饱和度高的颜色
+  const sorted = Object.values(buckets)
+    .map(d => ({ ...d, sAvg: d.sSum / d.n }))
+    .sort((a, b) => {
+      const scoreA = a.n * (0.35 + 1.3 * a.sAvg);
+      const scoreB = b.n * (0.35 + 1.3 * b.sAvg);
+      return scoreB - scoreA;
+    });
+  const defaults = [
+    { r: 255, g: 190, b: 60 },
+    { r: 255, g: 70,  b: 110 },
+    { r: 80,  g: 180, b: 255 }
+  ];
+  const chosen = [];
+  for (const d of sorted) {
+    const col = { r: Math.round(d.r / d.n), g: Math.round(d.g / d.n), b: Math.round(d.b / d.n) };
+    if (chosen.some(c => colorDistance(c, col) < 55)) continue;
+    chosen.push(col);
+    if (chosen.length === 3) break;
+  }
+  // 提升提取色的饱和度，让最终圣诞树上的颜色更鲜明
+  const boosted = chosen.map(c => boostSaturation(c));
+  for (let i = boosted.length; i < 3; i++) boosted.push(defaults[i]);
+  return boosted;
+}
+
+/* 主取色入口：有人取衣服色，无人取环境占比最大的三色 */
+async function extractColorsSmart(video) {
+  await initSegmentation();
+  const person = await detectPerson(video);
+  const hasPerson = person && person.ratio > 0.04;
+  if (hasPerson) {
+    const frame = captureFrame(video, false);
+    return { colors: clusterColors(frame, person.mask, true, false), hasPerson: true, ratio: person.ratio };
+  }
+  // 未检测到人：随机采样整个环境，取占比最大的三种颜色
+  const frame = captureFrame(video, false);
+  return { colors: clusterColors(frame, null, false, true), hasPerson: false, ratio: person ? person.ratio : 0 };
+}
+
+function colorDistance(a, b) {
+  return Math.sqrt((a.r - b.r) ** 2 + (a.g - b.g) ** 2 + (a.b - b.b) ** 2);
+}
+
+function css(c, alpha = 1) {
+  return `rgba(${c.r},${c.g},${c.b},${alpha})`;
+}
+
+function lighten(c, amt) {
+  return {
+    r: Math.min(255, Math.round(c.r + (255 - c.r) * amt)),
+    g: Math.min(255, Math.round(c.g + (255 - c.g) * amt)),
+    b: Math.min(255, Math.round(c.b + (255 - c.b) * amt))
+  };
+}
+
+/* ---------------------------------------------------------------------
+   取色页交互
+--------------------------------------------------------------------- */
+$('btnStart').onclick = async () => {
+  const ok = await startCamera();
+  if (ok) {
+    showScreen('capture');
+    resetCaptureUI();
+    initSegmentation(); // 后台预加载人物检测模型，减少点击后的等待
+  }
+};
+
+$('btnBackLanding').onclick = () => { stopCamera(); showScreen('landing'); };
+
+function resetCaptureUI() {
+  state.colors = null;
+  ['sw0', 'sw1', 'sw2'].forEach(id => $(id).classList.remove('show'));
+  $('btnToExper').disabled = true;
+  $('btnCapture').disabled = false;
+  $('btnCapture').textContent = 'Extract';
+  $('btnCapture').removeAttribute('data-en');
+  setBilingual('captureTip', '站在镜头前让衣服占满取景框；若画面中无人，将自动提取环境色。', 'Fill the frame with your outfit. If no one is detected, environment colors are used.');
+}
+
+$('btnCapture').onclick = async () => {
+  const v = $('camVideo');
+  if (v.readyState < 2) { toast('摄像头画面还没准备好，请稍等一下。', 'Camera is not ready yet.'); return; }
+  $('btnCapture').disabled = true;
+  $('btnCapture').textContent = 'Detecting...';
+  setBilingual('captureTip', '正在检测画面中是否有人…', 'Checking for a person in the frame...');
+
+  let result;
+  try {
+    result = await extractColorsSmart(v);
+  } catch (e) {
+    // 极端情况兜底：直接用中央区域取色
+    result = { colors: clusterColors(captureFrame(v, true), null, false, false), hasPerson: false };
+  }
+  state.colors = result.colors;
+  ['sw0', 'sw1', 'sw2'].forEach((id, i) => {
+    const el = $(id);
+    el.style.background = css(result.colors[i]);
+    el.classList.add('show');
+  });
+  setBilingual('captureTip',
+    result.hasPerson ? '✓ 检测到人物，已提取衣服上的 3 种颜色' : '✓ 未检测到人物，已提取环境中占比最大的 3 种颜色',
+    result.hasPerson ? 'Person detected — 3 colors extracted from the outfit' : 'No person — top 3 environment colors extracted');
+  $('btnToExper').disabled = false;
+  $('btnCapture').textContent = 'Extract Again';
+};
+
+$('btnRecapture').onclick = () => {
+  resetCaptureUI();
+  setBilingual('captureTip', '请重新摆好姿势，然后点击「提取颜色」。', 'Reposition and tap Extract again.');
+};
+
+/* 从设备本地相册 / 图库选择图片提取颜色 */
+$('btnPickImage').onclick = () => $('imageInput').click();
+$('imageInput').addEventListener('change', (e) => {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  const img = new Image();
+  img.onload = () => {
+    const url = img.src;
+    try {
+      const c = document.createElement('canvas');
+      const cx = c.getContext('2d', { willReadFrequently: true });
+      c.width = 100; c.height = 100;
+      cx.drawImage(img, 0, 0, 100, 100);
+      const data = cx.getImageData(0, 0, 100, 100).data;
+      const colors = clusterColors(data, null, false, true);
+      state.colors = colors;
+      ['sw0', 'sw1', 'sw2'].forEach((id, i) => {
+        const el = $(id);
+        el.style.background = css(colors[i]);
+        el.classList.add('show');
+      });
+      setBilingual('captureTip', '✓ 已从图片中提取 3 种主色', '3 main colors extracted from the image');
+      $('btnToExper').disabled = false;
+      $('btnCapture').textContent = 'Extract Again';
+    } catch (err) {
+      toast('图片处理失败：' + err.message, 'Image processing failed.');
+    }
+    URL.revokeObjectURL(url);
+  };
+  img.onerror = () => toast('图片读取失败，请换一张试试。', 'Could not read the image. Try another one.');
+  img.src = URL.createObjectURL(file);
+  e.target.value = '';
+});
+
+$('btnToExper').onclick = async () => {
+  if (!state.colors) return;
+  showScreen('experience');
+  startHandTracking();
+  resetExperience();
+};
+
+/* ---------------------------------------------------------------------
+   体验页交互：点击屏幕推进阶段，不再需要摄像头预览
+--------------------------------------------------------------------- */
+let stickRunning = false;
+
+function startHandTracking() {
+  state.animating = true;
+  stickRunning = false;
+}
+
+function stickLoop() {
+  if (!state.animating || !stickRunning) return;
+  const v = $('previewVideo');
+  if (v.readyState >= 2) {
+    handleStickCount(detectSticks(v));
+  }
+  requestAnimationFrame(stickLoop);
+}
+
+// 灰度化 + 阈值分割 + 连通域，筛出长宽比大的细长区域
+function detectSticks(video) {
+  const W = 160, H = 120;
+  const c = document.createElement('canvas');
+  c.width = W; c.height = H;
+  const ctx = c.getContext('2d', { willReadFrequently: true });
+  ctx.drawImage(video, 0, 0, W, H);
+  const d = ctx.getImageData(0, 0, W, H).data;
+
+  const g = new Uint8Array(W * H);
+  let sum = 0;
+  for (let i = 0; i < W * H; i++) {
+    const v = (d[i * 4] * 77 + d[i * 4 + 1] * 150 + d[i * 4 + 2] * 29) >> 8;
+    g[i] = v; sum += v;
+  }
+  const mean = sum / (W * H);
+
+  // 只分析中央区域，减少背景杂物干扰
+  const x0 = (W * 0.12) | 0, x1 = (W * 0.88) | 0;
+  const y0 = (H * 0.06) | 0, y1 = (H * 0.94) | 0;
+  const thr = 16;   // 放宽：更多明暗差异较小的像素也纳入前景
+  const bin = new Uint8Array(W * H);
+  for (let y = y0; y < y1; y++) {
+    for (let x = x0; x < x1; x++) {
+      const i = y * W + x;
+      if (Math.abs(g[i] - mean) > thr) bin[i] = 1;
+    }
+  }
+
+  // 连通域标记（4 邻域）
+  const vis = new Uint8Array(W * H);
+  const found = [];
+  for (let y = y0; y < y1; y++) {
+    for (let x = x0; x < x1; x++) {
+      const start = y * W + x;
+      if (!bin[start] || vis[start]) continue;
+      const stack = [start];
+      vis[start] = 1;
+      let minx = x, maxx = x, miny = y, maxy = y, area = 0;
+      while (stack.length) {
+        const i = stack.pop();
+        const cy = (i / W) | 0, cx = i - cy * W;
+        area++;
+        if (cx < minx) minx = cx; if (cx > maxx) maxx = cx;
+        if (cy < miny) miny = cy; if (cy > maxy) maxy = cy;
+        if (cx > x0) { const j = i - 1; if (bin[j] && !vis[j]) { vis[j] = 1; stack.push(j); } }
+        if (cx < x1 - 1) { const j = i + 1; if (bin[j] && !vis[j]) { vis[j] = 1; stack.push(j); } }
+        if (cy > y0) { const j = i - W; if (bin[j] && !vis[j]) { vis[j] = 1; stack.push(j); } }
+        if (cy < y1 - 1) { const j = i + W; if (bin[j] && !vis[j]) { vis[j] = 1; stack.push(j); } }
+      }
+      const w = maxx - minx + 1, h = maxy - miny + 1;
+      const long = Math.max(w, h), short = Math.max(1, Math.min(w, h));
+      // 细长判定（放宽）：长宽比 > 1.6 且长度 > 9 像素
+      if (area > 8 && long > 9 && long / short > 1.6) {
+        found.push({ x: (minx + maxx) / 2, y: (miny + maxy) / 2, w, h });
+      }
+    }
+  }
+
+  // 去掉彼此太靠近的重复框
+  const sticks = [];
+  for (const f of found) {
+    if (sticks.every(s => Math.hypot(s.x - f.x, s.y - f.y) > 16)) sticks.push(f);
+  }
+  state.stickBoxes = sticks;
+  drawStickBoxes(sticks);
+  return Math.min(3, sticks.length);
+}
+
+// 把检测框画到小预览窗上，方便用户看到识别到了什么
+function drawStickBoxes(sticks) {
+  const oc = $('previewOverlay');
+  if (!oc) return;
+  const r = oc.getBoundingClientRect();
+  if (!r.width) return;
+  if (oc.width !== r.width || oc.height !== r.height) {
+    oc.width = r.width; oc.height = r.height;
+  }
+  const octx = oc.getContext('2d');
+  octx.clearRect(0, 0, oc.width, oc.height);
+  octx.strokeStyle = '#4ade80';
+  octx.lineWidth = 1.5;
+  for (const s of sticks) {
+    const x = s.x / 160 * oc.width, y = s.y / 120 * oc.height;
+    const w = s.w / 160 * oc.width, h = s.h / 120 * oc.height;
+    octx.strokeRect(x - w / 2, y - h / 2, w, h);
+  }
+}
+
+function handleStickCount(n) {
+  state.gesture = n;
+  // 稳定判定：连续多帧检测到同样数量才触发
+  if (n >= 1 && n <= 3) {
+    if (n === state.lastGesture) state.gestureStable++;
+    else { state.lastGesture = n; state.gestureStable = 1; }
+    // 阶段推进现在完全由点击控制，识别结果不再触发 setStage
+  } else {
+    state.lastGesture = 0;
+    state.gestureStable = 0;
+  }
+}
+
+/* 点击屏幕推进：第1步点1下、第2步连点2下、第3步连点3下 */
+let clickCount = 0;
+let clickTimer = null;
+$('treeCanvas').addEventListener('click', () => {
+  if (state.stage >= 3) return;
+  clickCount++;
+  clearTimeout(clickTimer);
+  clickTimer = setTimeout(() => { clickCount = 0; }, 900);
+  const need = state.stage + 1;   // 阶段0需1下，阶段1需2下，阶段2需3下
+  if (clickCount >= need) {
+    clickCount = 0;
+    clearTimeout(clickTimer);
+    setStage(state.stage + 1);
+  }
+});
+
+/* ---------------------------------------------------------------------
+   阶段控制
+--------------------------------------------------------------------- */
+const HINTS = [
+  { big: '点击屏幕一下 👆', bigEn: 'Tap the screen once 👆', sub: '点亮圣诞树顶端的光球', subEn: 'Light up the star on top' },
+  { big: '点击屏幕两下 👆👆', bigEn: 'Tap the screen twice 👆👆', sub: '让圣诞树生长出来', subEn: 'Grow the Christmas tree' },
+  { big: '点击屏幕三下 👆👆👆', bigEn: 'Tap the screen three times 👆👆👆', sub: '环绕光带与飘动光点，完成！', subEn: 'Add ribbons and floating lights. Done!' }
+];
+
+function setStage(stage) {
+  if (stage <= state.stage) return;
+  state.stage = stage;
+  state.targetStage = stage;
+  if (stage === 2) stageStartTime = time;
+  if (stage === 3) ribbonStartTime = time;   // 光带从上至下环绕展开
+  $('stageText').textContent = stage + ' / 3';
+  document.querySelectorAll('#progress .p').forEach((p, i) => {
+    p.classList.toggle('on', i < stage);
+  });
+  if (stage < 3) {
+    setBilingual('hintBig', HINTS[stage].big, HINTS[stage].bigEn);
+    setBilingual('hintSub', HINTS[stage].sub, HINTS[stage].subEn);
+  } else {
+    setBilingual('hintBig', '✨ 你的圣诞树完成啦 ✨', '✨ Your tree is complete ✨');
+    setBilingual('hintSub', '树已开始旋转 · 点击「保存图片」留住这一刻', 'The tree is spinning · Tap Save PNG to keep this moment');
+    state.spinning = true;   // 成树后开始旋转
+    burstCelebration();
+  }
+  onStageChanged(stage);
+}
+
+function resetExperience() {
+  autoTimers.forEach(clearTimeout); autoTimers = [];
+  state.stage = 0;
+  state.targetStage = 0;
+  state.gestureStable = 0;
+  state.lastGesture = 0;
+  state.spinning = false;
+  state.treeRotation = 0;
+  clickCount = 0; clearTimeout(clickTimer);
+  resetSnow();
+  $('stageText').textContent = '0 / 3';
+  document.querySelectorAll('#progress .p').forEach(p => p.classList.remove('on'));
+  setBilingual('hintBig', HINTS[0].big, HINTS[0].bigEn);
+  setBilingual('hintSub', HINTS[0].sub, HINTS[0].subEn);
+  tree.rebuild();
+}
+
+$('btnRestart').onclick = resetExperience;
+
+/* 是否为微信内置浏览器（不支持 a[download] 自动下载） */
+function isWeChat() {
+  return /MicroMessenger/i.test(navigator.userAgent);
+}
+
+/* 在微信等环境里弹出图片，让用户长按保存到相册 */
+function showSaveSheet(dataUrl) {
+  const sheet = $('saveSheet');
+  $('saveImg').src = dataUrl;
+  setBilingual('saveTip', '长按图片 → 保存到相册', 'Long press the image → Save to album');
+  $('saveClose').textContent = 'Close';
+  sheet.classList.add('show');
+}
+$('saveClose').onclick = () => $('saveSheet').classList.remove('show');
+
+/* 保存当前动画帧为 PNG：把随机波点背景 + 暗色遮罩 + 画布动画合成到一起 */
+$('btnSave').onclick = () => {
+  try {
+    const out = document.createElement('canvas');
+    out.width = canvas.width; out.height = canvas.height;
+    const octx = out.getContext('2d');
+    const drawFrame = (bgImg) => {
+      const Wc = out.width, Hc = out.height;
+      if (bgImg) {
+        // cover 方式铺满，和页面背景一致
+        const scale = Math.max(Wc / bgImg.width, Hc / bgImg.height);
+        const bw = bgImg.width * scale, bh = bgImg.height * scale;
+        octx.drawImage(bgImg, (Wc - bw) / 2, (Hc - bh) / 2, bw, bh);
+      } else {
+        octx.fillStyle = '#050810'; octx.fillRect(0, 0, Wc, Hc);
+      }
+      const g = octx.createLinearGradient(0, 0, 0, Hc);
+      g.addColorStop(0, 'rgba(3,5,12,.46)');
+      g.addColorStop(1, 'rgba(3,5,12,.66)');
+      octx.fillStyle = g; octx.fillRect(0, 0, Wc, Hc);
+      octx.drawImage(canvas, 0, 0);
+      const dataUrl = out.toDataURL('image/png');
+      if (isWeChat()) {
+        // 微信内 a[download] 无效，改为弹出图片让用户长按保存
+        showSaveSheet(dataUrl);
+      } else {
+        const link = document.createElement('a');
+        link.download = 'christmas-tree-' + Date.now() + '.png';
+        link.href = dataUrl;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        toast('已把这一刻的画面（含背景）保存到设备 ✓', 'Saved this moment with background to your device');
+      }
+    };
+    const bg = new Image();
+    bg.onload = () => drawFrame(bg);
+    bg.onerror = () => drawFrame(null);
+    bg.src = currentBgSrc;
+  } catch (e) {
+    toast('保存失败：' + e.message, 'Save failed');
+  }
+};
+
+/* 自动播放：依次点亮三个阶段（不想点击时的兜底） */
+let autoTimers = [];
+$('btnAuto').onclick = () => {
+  autoTimers.forEach(clearTimeout); autoTimers = [];
+  resetExperience();
+  [1, 2, 3].forEach((s, i) => {
+    autoTimers.push(setTimeout(() => setStage(s), 600 + i * 1600));
+  });
+};
+$('btnRecolor').onclick = () => {
+  stopHandTracking();
+  showScreen('capture');
+  resetCaptureUI();
+  setBilingual('captureTip', '请重新拍摄衣服，提取新的颜色。', 'Recapture your outfit to extract new colors.');
+};
+
+function stopHandTracking() {
+  state.animating = false;
+  stickRunning = false;
+  state.stickBoxes = [];
+}
+
+/* =====================================================================
+   Canvas 粒子圣诞树
+   ===================================================================== */
+const canvas = $('treeCanvas');
+const ctx = canvas.getContext('2d');
+let W = 0, H = 0, DPR = 1;
+
+const tree = {
+  particles: [],
+  dots: [],
+  streaks: [],
+  starSparks: [],
+  init() {
+    this.rebuild();
+    window.addEventListener('resize', () => this.resize());
+    this.resize();
+  },
+  resize() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = W * DPR; canvas.height = H * DPR;
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  },
+  rebuild() {
+    // 树身粒子：分层锥形 + 轮廓飞散，模拟参考图里毛茸茸的笔触质感
+    this.particles = [];
+    const count = 18000;
+    for (let i = 0; i < count; i++) {
+      const t = Math.pow(Math.random(), 0.62);            // 0 顶 1 底，越靠下越密
+      const ang = Math.random() * Math.PI * 2;
+      const edge = Math.random() < 0.62;                   // 多数粒子落在轮廓附近
+      const r = edge ? 0.72 + 0.36 * Math.random() : Math.sqrt(Math.random()) * 0.92;
+      const scatter = edge ? (Math.random() - 0.5) * 0.085 * (0.4 + t) : 0;
+      this.particles.push({
+        t, ang, r, scatter,
+        jy: (Math.random() - 0.5) * 0.013,                 // 垂直微扰，边缘更毛糙
+        size: 0.22 + Math.random() * 0.95,
+        phase: Math.random() * Math.PI * 2,
+        speed: 0.3 + Math.random() * 1.5,
+        streak: Math.random() < 0.8 ? 0.9 + Math.random() * 0.95 : 0,  // 更多更长的下垂流苏
+        edge
+      });
+    }
+    // 树上的彩色灯点：用用户提取的三种颜色，让成树明显显出颜色
+    this.lights = [];
+    for (let i = 0; i < 900; i++) {
+      const t = Math.pow(Math.random(), 0.6);
+      const ang = Math.random() * Math.PI * 2;
+      this.lights.push({
+        t, ang,
+        r: 0.35 + 0.65 * Math.random(),                    // 偏树冠外缘，像挂灯
+        ci: i % 3,
+        size: 0.9 + Math.random() * 1.8,
+        phase: Math.random() * Math.PI * 2,
+        speed: 0.6 + Math.random() * 1.4
+      });
+    }
+    // 飘动光点：像参考图里散布的小彩灯
+    this.dots = [];
+    for (let i = 0; i < 110; i++) {
+      const t = Math.random();
+      const inTree = Math.random() < 0.6;
+      const spread = inTree ? (0.1 + t * 0.4) : (0.3 + t * 0.75);
+      this.dots.push({
+        nx: 0.5 + (Math.random() - 0.5) * spread * 2,
+        ny: 0.1 + Math.random() * 0.82,
+        size: 0.5 + Math.random() * 1.9,
+        phase: Math.random() * Math.PI * 2,
+        speed: 0.2 + Math.random() * 0.9,
+        vy: 0.00001 + Math.random() * 0.00005
+      });
+    }
+    // 树身上的闪烁星点：高频短促的十字芒，制造"亮闪闪"效果
+    this.twinkles = [];
+    for (let i = 0; i < 220; i++) {
+      this.twinkles.push({
+        t: Math.pow(Math.random(), 0.62),
+        ang: Math.random() * Math.PI * 2,
+        r: 0.3 + 0.7 * Math.random(),
+        size: 0.7 + Math.random() * 1.6,
+        phase: Math.random() * Math.PI * 2,
+        speed: 1.2 + Math.random() * 2.2
+      });
+    }
+    // 随机点缀的小闪亮光点：更亮更大、稀疏分布
+    this.glints = [];
+    for (let i = 0; i < 46; i++) {
+      this.glints.push({
+        t: Math.pow(Math.random(), 0.7),
+        ang: Math.random() * Math.PI * 2,
+        r: 0.35 + 0.6 * Math.random(),
+        size: 1.8 + Math.random() * 2.2,
+        phase: Math.random() * Math.PI * 2,
+        speed: 0.8 + Math.random() * 1.6,
+        tint: Math.random() < 0.65 ? 0 : (Math.random() < 0.5 ? 1 : 2)
+      });
+    }
+    // 顶端光球星芒
+    this.starSparks = [];
+    for (let i = 0; i < 48; i++) {
+      this.starSparks.push({
+        angle: Math.random() * Math.PI * 2,
+        len: 8 + Math.random() * 55,
+        phase: Math.random() * Math.PI * 2,
+        speed: 0.5 + Math.random()
+      });
+    }
+  }
+};
+
+function onStageChanged(stage) {
+  // 阶段 2 时重建树粒子，带来"生长"的观感
+  if (stage === 2) tree.rebuild();
+}
+
+let time = 0;
+let lastTs = 0;
+
+function render(ts) {
+  requestAnimationFrame(render);
+  if (!lastTs) lastTs = ts;
+  const dt = Math.min(50, ts - lastTs) / 1000;
+  lastTs = ts;
+  time += dt;
+
+  // 成树之后旋转（略提速，让转动能被看出来）
+  if (state.spinning) state.treeRotation += dt * 0.5;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // 背景：暗角 + 暗夜微闪 + 背景飘雪 + 积雪增长
+  drawBackground(dt);
+
+  if (state.stage >= 2) drawMistBack();
+  if (state.stage >= 2) drawTreeBody();
+  if (state.stage >= 2) drawColoredLights();
+  if (state.stage >= 2) drawTwinkles();
+  if (state.stage >= 2) drawGlints();
+  if (state.stage >= 1) drawTopStar();
+  if (state.stage >= 3) drawFloatingDots();
+  if (state.stage >= 2) drawMistFront();
+  if (state.stage >= 3) drawSpiralRibbons();   // 光带最后画，不被树和薄雾遮掩
+  drawSnowPile();   // 页面下方堆积的雪
+
+  // 庆祝粒子
+  if (celebration.length) drawCelebration(dt);
+}
+
+/* ---------- 暗夜微闪 / 飘雪 / 逐渐堆积的雪 ---------- */
+const sparkles = [];   // 暗夜 Kira 闪：少量十字星芒，随机点缀
+const snowfall = [];   // 背景飘雪（视觉层，不参与堆积）
+const SNOW_BINS = 64;  // 雪面分段
+let snowBank = new Array(SNOW_BINS).fill(0.006);
+let snowDrifts = [];   // 真实雪堆的松软团块
+
+function resetSnow() {
+  snowBank = new Array(SNOW_BINS).fill(0.006);   // 归一化高度（占屏幕比例）
+  snowDrifts = [];
+  for (let i = 0; i < 26; i++) {
+    snowDrifts.push({
+      x: Math.random(),
+      r: 18 + Math.random() * 46,        // 雪团半径
+      bump: 0.35 + Math.random() * 0.9,  // 隆起程度
+      phase: Math.random() * Math.PI * 2
+    });
+  }
+  sparkles.length = 0;
+  for (let i = 0; i < 18; i++) {
+    sparkles.push({
+      x: 0.04 + Math.random() * 0.92,
+      y: 0.05 + Math.random() * 0.80,
+      size: 1.4 + Math.random() * 2.2,
+      phase: Math.random() * Math.PI * 2,
+      speed: 0.6 + Math.random() * 1.3
+    });
+  }
+  snowfall.length = 0;
+  for (let i = 0; i < 95; i++) {
+    snowfall.push({
+      x: Math.random(),
+      y: Math.random(),
+      r: 0.7 + Math.random() * 2.2,
+      vy: 0.02 + Math.random() * 0.05,
+      drift: Math.random() * Math.PI * 2,
+      sway: 0.25 + Math.random() * 0.8,
+      alpha: 0.25 + Math.random() * 0.55,
+      depth: 0.5 + Math.random() * 0.9
+    });
+  }
+}
+resetSnow();
+
+function drawBackground(dt) {
+  // 暗角：让随机波点背景透出来，四周压暗突出圣诞树
+  const g = ctx.createRadialGradient(
+    W / 2, H * 0.46, Math.min(W, H) * 0.1,
+    W / 2, H * 0.5, Math.max(W, H) * 0.78
+  );
+  g.addColorStop(0, 'rgba(2,3,8,0)');
+  g.addColorStop(0.55, 'rgba(2,3,8,0.10)');
+  g.addColorStop(1, 'rgba(2,3,8,0.68)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, W, H);
+
+  drawSparkles();
+  drawSnowfall(dt);
+  updateSnow(dt);
+}
+
+// 背景飘雪：缓慢下落、横向轻摆，落到底部后从顶部循环
+function drawSnowfall(dt) {
+  ctx.save();
+  ctx.fillStyle = '#ffffff';
+  for (const f of snowfall) {
+    f.y += f.vy * dt * f.depth;
+    f.x += Math.sin(time * f.sway + f.drift) * 0.0003;
+    if (f.x < -0.02) f.x = 1.02;
+    if (f.x > 1.02) f.x = -0.02;
+    if (f.y > 1.02) { f.y = -0.02; f.x = Math.random(); }
+    ctx.globalAlpha = f.alpha;
+    ctx.beginPath();
+    ctx.arc(f.x * W, f.y * H, f.r * f.depth, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+// 暗夜 Kira 闪：尖锐短十字，低频点缀，不喧宾夺主
+function drawSparkles() {
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  for (const s of sparkles) {
+    const wave = Math.sin(time * s.speed + s.phase);
+    const tw = Math.pow(Math.max(0, wave), 8);
+    if (tw < 0.015) continue;
+    const x = s.x * W, y = s.y * H;
+    const len = s.size * (1 + tw * 3.2);
+    ctx.strokeStyle = `rgba(255,246,214,${tw * 0.8})`;
+    ctx.lineWidth = 0.9;
+    ctx.beginPath();
+    ctx.moveTo(x - len, y); ctx.lineTo(x + len, y);
+    ctx.moveTo(x, y - len); ctx.lineTo(x, y + len);
+    ctx.stroke();
+    ctx.fillStyle = `rgba(255,255,240,${tw * 0.9})`;
+    ctx.beginPath();
+    ctx.arc(x, y, s.size * 0.38 * tw, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+// 积雪随时间自然增长（不再画飘雪），速度放缓
+function snowSurfaceAt(x) {
+  const i = Math.max(0, Math.min(SNOW_BINS - 1, Math.floor(x * SNOW_BINS)));
+  return 1 - snowBank[i];
+}
+
+function updateSnow(dt) {
+  for (let i = 0; i < SNOW_BINS; i++) {
+    // 各处略有不同的堆积速度，形成起伏
+    const rate = 0.00028 * (0.7 + 0.55 * Math.sin(i * 1.7 + 2.3));
+    snowBank[i] = Math.min(0.15, snowBank[i] + rate * dt * 60);
+  }
+  // 缓慢抹平，保持柔和雪面
+  const smooth = snowBank.slice();
+  for (let i = 0; i < SNOW_BINS; i++) {
+    const l = smooth[Math.max(0, i - 1)], r = smooth[Math.min(SNOW_BINS - 1, i + 1)];
+    snowBank[i] += ((l + r) / 2 - smooth[i]) * Math.min(1, dt * 1.1);
+  }
+}
+
+// 底部积雪：模仿真实雪——松软的圆弧雪团、背光处的冷蓝阴影、迎光的白亮顶部
+function drawSnowPile() {
+  ctx.save();
+  const step = W / (SNOW_BINS - 1);
+  const ys = snowBank.map(h => H * (1 - h));
+  const top = Math.min(...ys);
+  const trace = () => {
+    ctx.beginPath();
+    ctx.moveTo(0, H);
+    ctx.lineTo(0, ys[0]);
+    for (let i = 0; i < SNOW_BINS - 1; i++) {
+      const x0 = i * step, x1 = (i + 1) * step;
+      ctx.quadraticCurveTo(x0, ys[i], (x0 + x1) / 2, (ys[i] + ys[i + 1]) / 2);
+    }
+    ctx.lineTo(W, ys[SNOW_BINS - 1]);
+    ctx.lineTo(W, H);
+    ctx.closePath();
+  };
+
+  // 主体：上白下冷蓝的雪体，带柔和外发光
+  trace();
+  const g = ctx.createLinearGradient(0, top, 0, H);
+  g.addColorStop(0, 'rgba(255,255,255,0.99)');
+  g.addColorStop(0.22, 'rgba(246,250,255,0.98)');
+  g.addColorStop(0.55, 'rgba(214,228,244,0.96)');
+  g.addColorStop(1, 'rgba(158,182,212,0.97)');
+  ctx.fillStyle = g;
+  ctx.shadowColor = 'rgba(226,240,255,.45)';
+  ctx.shadowBlur = 16;
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  // 背光阴影：沿雪面下方一条冷蓝色带，制造雪丘的立体凹陷
+  ctx.save();
+  trace(); ctx.clip();
+  ctx.beginPath();
+  ctx.moveTo(0, ys[0] + 6);
+  for (let i = 0; i < SNOW_BINS - 1; i++) {
+    const x0 = i * step, x1 = (i + 1) * step;
+    ctx.quadraticCurveTo(x0, ys[i] + 6, (x0 + x1) / 2, (ys[i] + ys[i + 1]) / 2 + 6);
+  }
+  ctx.lineTo(W, ys[SNOW_BINS - 1] + 6);
+  ctx.lineTo(W, ys[SNOW_BINS - 1] + 26);
+  for (let i = SNOW_BINS - 1; i > 0; i--) {
+    const x0 = i * step, x1 = (i - 1) * step;
+    ctx.quadraticCurveTo(x0, ys[i] + 26, (x0 + x1) / 2, (ys[i] + ys[i - 1]) / 2 + 26);
+  }
+  ctx.lineTo(0, ys[0] + 26);
+  ctx.closePath();
+  const sg = ctx.createLinearGradient(0, top, 0, top + 40);
+  sg.addColorStop(0, 'rgba(150,175,210,0.28)');
+  sg.addColorStop(1, 'rgba(150,175,210,0)');
+  ctx.fillStyle = sg;
+  ctx.fill();
+  ctx.restore();
+
+  // 松软雪团：沿雪面叠一圈半透明白色圆弧，形成真实堆积的蓬松轮廓
+  for (const d of snowDrifts) {
+    const dx = d.x * W;
+    const surface = snowSurfaceAt(d.x) * H;
+    const dy = surface + d.r * 0.18;
+    ctx.save();
+    const rg = ctx.createRadialGradient(dx - d.r * 0.25, dy - d.r * 0.35, d.r * 0.1, dx, dy, d.r);
+    rg.addColorStop(0, 'rgba(255,255,255,0.85)');
+    rg.addColorStop(0.6, 'rgba(248,251,255,0.45)');
+    rg.addColorStop(1, 'rgba(235,243,252,0)');
+    ctx.fillStyle = rg;
+    ctx.beginPath();
+    ctx.ellipse(dx, dy, d.r * 1.15, d.r * (0.5 + d.bump * 0.18), 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // 迎光顶缘：一道柔和高光，雪面轮廓更真实
+  ctx.beginPath();
+  ctx.moveTo(0, ys[0]);
+  for (let i = 0; i < SNOW_BINS - 1; i++) {
+    const x0 = i * step, x1 = (i + 1) * step;
+    ctx.quadraticCurveTo(x0, ys[i], (x0 + x1) / 2, (ys[i] + ys[i + 1]) / 2);
+  }
+  ctx.lineTo(W, ys[SNOW_BINS - 1]);
+  ctx.strokeStyle = 'rgba(255,255,255,.92)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // 细小闪光雪粒
+  ctx.fillStyle = 'rgba(255,255,255,.9)';
+  for (let i = 0; i < 80; i++) {
+    const x = ((i * 97.3) % 100) / 100 * W;
+    const surface = snowSurfaceAt(x / W) * H;
+    const y = surface + ((i * 53.7) % 100) / 100 * (H - surface) * 0.72;
+    ctx.globalAlpha = 0.12 + 0.42 * Math.abs(Math.sin(time * 1.2 + i));
+    ctx.fillRect(x, y, i % 5 === 0 ? 1.7 : 1.2, i % 5 === 0 ? 1.7 : 1.2);
+  }
+  ctx.restore();
+}
+
+function treeMetrics() {
+  const cx = W / 2;
+  const baseY = H * 0.91;
+  const topY = H * 0.08;
+  const height = baseY - topY;
+  const halfW = Math.min(W * 0.48, height * 0.7);
+  return { cx, baseY, topY, height, halfW };
+}
+
+// 树背后的柔光，营造朦胧氛围
+function drawMistBack() {
+  const { cx, topY, height, halfW } = treeMetrics();
+  const col = state.colors ? state.colors[1] : { r: 255, g: 200, b: 140 };
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  const cy = topY + height * 0.58;
+  const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, halfW * 2.5);
+  g.addColorStop(0, css(col, 0.085));
+  g.addColorStop(0.45, css(col, 0.035));
+  g.addColorStop(1, css(col, 0));
+  ctx.fillStyle = g;
+  ctx.fillRect(cx - halfW * 2.5, topY - 10, halfW * 5, height * 1.6);
+  ctx.restore();
+}
+
+// 树前薄雾，让轮廓更柔和朦胧
+function drawMistFront() {
+  const { cx, topY, height, halfW } = treeMetrics();
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+  const cy = topY + height * 0.6;
+  const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, halfW * 1.9);
+  g.addColorStop(0, 'rgba(255,248,225,0.055)');
+  g.addColorStop(0.5, 'rgba(240,235,220,0.022)');
+  g.addColorStop(1, 'rgba(240,235,220,0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(cx - halfW * 2, topY, halfW * 4, height * 1.3);
+  ctx.restore();
+}
+
+// 树身闪烁星点：尖锐短促的十字芒
+function drawTwinkles() {
+  if (!tree.twinkles) return;
+  const { cx, topY, height, halfW } = treeMetrics();
+  const raw = state.stage === 2 ? Math.min(1, (time - stageStartTime) / 2.3) : 1;
+  const grow = 1 - Math.pow(1 - raw, 3);
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  for (const p of tree.twinkles) {
+    if (p.t > grow) continue;
+    const ang = p.ang + state.treeRotation;
+    const depth = (Math.cos(ang) + 1) / 2;
+    const maxR = halfW * Math.pow(p.t, 0.92);
+    const x = cx + Math.cos(ang) * maxR * p.r * (0.9 + 0.1 * depth);
+    const y = topY + p.t * height;
+    const tw = Math.pow(Math.max(0, Math.sin(time * p.speed * 2.6 + p.phase)), 8) * (0.4 + 0.6 * depth);
+    if (tw < 0.12) continue;
+    const l = p.size * (2 + tw * 7);
+    ctx.strokeStyle = `rgba(255,255,245,${0.55 * tw})`;
+    ctx.lineWidth = 0.9;
+    ctx.beginPath();
+    ctx.moveTo(x - l, y); ctx.lineTo(x + l, y);
+    ctx.moveTo(x, y - l); ctx.lineTo(x, y + l);
+    ctx.stroke();
+    ctx.fillStyle = `rgba(255,255,255,${tw})`;
+    ctx.beginPath(); ctx.arc(x, y, p.size * 0.6, 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.restore();
+}
+
+// 树上随机点缀的小闪亮光点：柔和光晕 + 短十字星芒
+function drawGlints() {
+  if (!tree.glints || !state.colors) return;
+  const { cx, topY, height, halfW } = treeMetrics();
+  const raw = state.stage === 2 ? Math.min(1, (time - stageStartTime) / 2.3) : 1;
+  const grow = 1 - Math.pow(1 - raw, 3);
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  for (const p of tree.glints) {
+    if (p.t > grow) continue;
+    const ang = p.ang + state.treeRotation;
+    const depth = (Math.cos(ang) + 1) / 2;
+    const maxR = halfW * Math.pow(p.t, 0.92);
+    const x = cx + Math.cos(ang) * maxR * p.r * (0.9 + 0.1 * depth);
+    const y = topY + p.t * height;
+    const wave = Math.sin(time * p.speed + p.phase);
+    const tw = Math.pow(Math.max(0, wave), 4) * (0.45 + 0.55 * depth);
+    const col = lighten(state.colors[p.tint], 0.55);
+    ctx.fillStyle = css(col, 0.1 + 0.22 * tw);
+    ctx.beginPath(); ctx.arc(x, y, p.size * 3.2, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = css(col, 0.55 + 0.4 * tw);
+    ctx.beginPath(); ctx.arc(x, y, p.size * 0.7, 0, Math.PI * 2); ctx.fill();
+    if (tw > 0.4) {
+      const l = p.size * (1.5 + tw * 2.4);
+      ctx.strokeStyle = css(col, 0.45 * tw);
+      ctx.lineWidth = 0.9;
+      ctx.beginPath();
+      ctx.moveTo(x - l, y); ctx.lineTo(x + l, y);
+      ctx.moveTo(x, y - l); ctx.lineTo(x, y + l);
+      ctx.stroke();
+    }
+  }
+  ctx.restore();
+}
+
+function drawTreeBody() {
+  const { cx, topY, height, halfW } = treeMetrics();
+  const silver = { r: 232, g: 227, b: 212 };
+  // easeOutCubic 生长曲线，配合前沿淡入，让"一点点出现"更丝滑
+  const raw = state.stage === 2 ? Math.min(1, (time - stageStartTime) / 2.3) : 1;
+  const grow = 1 - Math.pow(1 - raw, 3);
+
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+
+  for (const p of tree.particles) {
+    const delta = grow - p.t;
+    if (delta < 0) continue;
+    const appear = Math.min(1, delta * 5);   // 生长边缘平滑淡入
+    const ang = p.ang + state.treeRotation;
+    const maxR = halfW * Math.pow(p.t, 0.92);
+    // 近侧更亮更外扩、远侧更暗更内收，让旋转有立体可读的明暗变化
+    const depth = (Math.cos(ang) + 1) / 2;
+    const rad = (maxR * p.r + p.scatter * halfW) * (0.9 + 0.1 * depth);
+    const sway = Math.sin(time * p.speed + p.phase) * 1.7;
+    const x = cx + Math.cos(ang) * rad + sway;
+    const y = topY + p.t * height + p.jy * height;
+    const flick = 0.55 + 0.45 * Math.sin(time * p.speed * 1.6 + p.phase);
+    const sz = p.size * (0.65 + 0.6 * flick);
+
+    // 下垂流苏：更长，并随风摆动（有相位差的整阵风）
+    if (p.streak) {
+      const len = p.streak * (34 + 104 * (1 - p.t)) * (H / 900 + 0.55);
+      const wind = Math.sin(time * 0.85 + p.phase * 0.55 + p.t * 2.2) * (5 + 12 * (1 - p.t));
+      const tipX = x + sway * 0.5 + wind;
+      ctx.strokeStyle = css(silver, (0.035 + 0.06 * flick) * appear * (0.45 + 0.55 * depth));
+      ctx.lineWidth = sz * 0.72;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.quadraticCurveTo(x + wind * 0.25, y + len * 0.55, tipX, y + len);
+      ctx.stroke();
+    }
+
+    // 用两层圆模拟发光，随深度变化让转动清晰可见
+    const shade = 0.35 + 0.65 * depth;
+    ctx.fillStyle = css(silver, 0.028 * flick * appear * shade);
+    ctx.beginPath(); ctx.arc(x, y, sz * 2.6, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = css(silver, (0.18 + 0.3 * flick) * appear * shade);
+    ctx.beginPath(); ctx.arc(x, y, sz, 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.restore();
+}
+
+// 树上彩色灯点：用提取的三色，让成树明显显出用户颜色
+function drawColoredLights() {
+  if (!state.colors || !tree.lights) return;
+  const { cx, topY, height, halfW } = treeMetrics();
+  const raw = state.stage === 2 ? Math.min(1, (time - stageStartTime) / 2.3) : 1;
+  const grow = 1 - Math.pow(1 - raw, 3);
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  for (const p of tree.lights) {
+    const delta = grow - p.t;
+    if (delta < 0) continue;
+    const appear = Math.min(1, delta * 5);
+    const ang = p.ang + state.treeRotation;
+    const depth = (Math.cos(ang) + 1) / 2;
+    const maxR = halfW * Math.pow(p.t, 0.92);
+    const x = cx + Math.cos(ang) * maxR * p.r * (0.9 + 0.1 * depth);
+    const y = topY + p.t * height;
+    const col = state.colors[p.ci];
+    const tw = 0.45 + 0.55 * Math.sin(time * p.speed * 2.2 + p.phase);
+    const sz = p.size * (0.65 + 0.55 * tw) * (0.85 + 0.25 * depth);
+    const bright = lighten(col, 0.35);
+    const shade = 0.3 + 0.7 * depth;
+    ctx.fillStyle = css(col, 0.18 * tw * appear * shade);
+    ctx.beginPath(); ctx.arc(x, y, sz * 3.4, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = css(bright, (0.55 + 0.45 * tw) * appear * shade);
+    ctx.beginPath(); ctx.arc(x, y, sz, 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.restore();
+}
+
+function drawSpiralRibbons() {
+  const { cx, topY, height, halfW } = treeMetrics();
+  // 光带用更饱和鲜明的颜色，和银白树身拉开区分度
+  const baseCol = state.colors ? state.colors[1] : { r: 255, g: 70, b: 110 };
+  const hslc = rgbToHsl(baseCol.r, baseCol.g, baseCol.b);
+  const col = hslToRgb(hslc.h, Math.min(1, Math.max(hslc.s, 0.75)), 0.6);
+  const turns = 4.5;
+  const segs = 200;
+  // 从上至下环绕展开：raw 0→1 控制光带沿螺旋线生长
+  const raw = ribbonStartTime ? Math.min(1, (time - ribbonStartTime) / 2.6) : 1;
+  const reveal = 1 - Math.pow(1 - raw, 3);
+  const pts = [];
+  for (let i = 0; i <= segs; i++) {
+    const t = i / segs;
+    if (t > reveal) break;   // 尚未展开到的部分不画
+    const ang = t * Math.PI * 2 * turns + time * 0.32 + state.treeRotation;
+    const y = topY + 0.05 * height + t * 0.88 * height;
+    const r = halfW * Math.pow(t, 0.78) * (0.94 + 0.06 * Math.sin(time * 1.2 + t * 7));
+    // 前方亮、后方暗，营造环绕树身的 3D 遮挡感
+    pts.push({
+      x: cx + Math.cos(ang) * r,
+      y: y + Math.sin(ang) * r * 0.14,
+      depth: (Math.cos(ang) + 1) / 2
+    });
+  }
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+
+  // 底层辉光：一条粗的低透明光带
+  ctx.beginPath();
+  pts.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y));
+  ctx.strokeStyle = css(col, 0.3);
+  ctx.lineWidth = 13;
+  ctx.stroke();
+
+  // 核心笔触：逐段明暗变化，像参考图里有粗细的环绕曲线
+  for (let i = 1; i < pts.length; i++) {
+    const a = pts[i - 1], b = pts[i];
+    const depth = (a.depth + b.depth) / 2;
+    ctx.strokeStyle = css(col, 0.28 + 0.72 * depth);
+    ctx.lineWidth = 2.8 + depth * 3.6;
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    ctx.lineTo(b.x, b.y);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function drawTopStar() {
+  const { cx, topY } = treeMetrics();
+  const col = state.colors ? state.colors[0] : { r: 255, g: 216, b: 107 };
+  const bright = lighten(col, 0.5);
+  const x = cx, y = topY;
+  const pulse = 1 + 0.11 * Math.sin(time * 2.1);
+  const R = Math.min(W, H) * 0.026 * pulse;
+
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+
+  // 多层柔和光晕
+  for (let k = 3; k >= 1; k--) {
+    const rr = R * (1.4 + k * 1.5);
+    const g = ctx.createRadialGradient(x, y, 0, x, y, rr);
+    g.addColorStop(0, css(bright, 0.34 / k));
+    g.addColorStop(0.4, css(col, 0.14 / k));
+    g.addColorStop(1, css(col, 0));
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(x, y, rr, 0, Math.PI * 2); ctx.fill();
+  }
+
+  // 十字星芒：参考图里顶端有明显的长星光
+  const beam = R * 8;
+  const gx = ctx.createLinearGradient(x - beam, y, x + beam, y);
+  gx.addColorStop(0, css(bright, 0));
+  gx.addColorStop(0.5, css(bright, 0.95));
+  gx.addColorStop(1, css(bright, 0));
+  ctx.fillStyle = gx;
+  ctx.fillRect(x - beam, y - 1.6, beam * 2, 3.2);
+  const gy = ctx.createLinearGradient(x, y - beam, x, y + beam);
+  gy.addColorStop(0, css(bright, 0));
+  gy.addColorStop(0.5, css(bright, 0.95));
+  gy.addColorStop(1, css(bright, 0));
+  ctx.fillStyle = gy;
+  ctx.fillRect(x - 1.6, y - beam, 3.2, beam * 2);
+
+  // 星形本体
+  ctx.beginPath();
+  for (let i = 0; i < 10; i++) {
+    const a = i * Math.PI / 5 - Math.PI / 2;
+    const rr = i % 2 === 0 ? R : R * 0.44;
+    const px = x + Math.cos(a) * rr, py = y + Math.sin(a) * rr;
+    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  }
+  ctx.closePath();
+  ctx.fillStyle = '#fffdf5';
+  ctx.shadowBlur = 26; ctx.shadowColor = css(col, 1);
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  // 放射火花
+  for (const s of tree.starSparks) {
+    const l = s.len * (0.5 + 0.5 * Math.sin(time * s.speed + s.phase)) * pulse;
+    const sx = x + Math.cos(s.angle) * R;
+    const sy = y + Math.sin(s.angle) * R;
+    ctx.strokeStyle = css(bright, 0.42);
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(sx, sy);
+    ctx.lineTo(sx + Math.cos(s.angle) * l, sy + Math.sin(s.angle) * l);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function drawFloatingDots() {
+  const { cx, topY, height, halfW } = treeMetrics();
+  const col = state.colors ? state.colors[2] : { r: 80, g: 180, b: 255 };
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  for (const d of tree.dots) {
+    d.ny -= d.vy * 16;
+    if (d.ny < 0.08) { d.ny = 0.95; d.nx = 0.5 + (Math.random() - 0.5) * 0.9; }
+    const x = cx + (d.nx - 0.5) * halfW * 2.2 + Math.sin(time * 0.8 + d.phase) * 12;
+    const y = topY + (d.ny - 0.1) / 0.85 * height;
+    const tw = 0.4 + 0.6 * Math.sin(time * d.speed * 3 + d.phase);
+    const sz = d.size * (0.6 + 0.5 * tw);
+    ctx.fillStyle = css(col, 0.32 + 0.68 * tw);
+    ctx.shadowBlur = 12; ctx.shadowColor = css(col, 1);
+    ctx.beginPath(); ctx.arc(x, y, sz, 0, Math.PI * 2); ctx.fill();
+    // 较亮的光点带短十字芒，更接近参考图里的星点
+    if (d.size > 1.7 && tw > 0.68) {
+      const l = sz * 3.6;
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = css(col, 0.45);
+      ctx.lineWidth = 0.9;
+      ctx.beginPath();
+      ctx.moveTo(x - l, y); ctx.lineTo(x + l, y);
+      ctx.moveTo(x, y - l); ctx.lineTo(x, y + l);
+      ctx.stroke();
+    }
+  }
+  ctx.restore();
+}
+
+/* ---------- 完成庆祝 ---------- */
+const celebration = [];
+let stageStartTime = 0;
+let ribbonStartTime = 0;
+
+function burstCelebration() {
+  const col = state.colors ? state.colors[0] : { r: 255, g: 216, b: 107 };
+  const { cx, topY } = treeMetrics();
+  for (let i = 0; i < 90; i++) {
+    const a = Math.random() * Math.PI * 2;
+    const sp = 60 + Math.random() * 220;
+    celebration.push({
+      x: cx, y: topY,
+      vx: Math.cos(a) * sp,
+      vy: Math.sin(a) * sp - 60,
+      life: 1,
+      color: i % 2 ? col : { r: 255, g: 255, b: 255 }
+    });
+  }
+}
+
+function drawCelebration(dt) {
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  for (let i = celebration.length - 1; i >= 0; i--) {
+    const p = celebration[i];
+    p.x += p.vx * dt; p.y += p.vy * dt;
+    p.vy += 140 * dt;
+    p.life -= dt * 0.8;
+    if (p.life <= 0) { celebration.splice(i, 1); continue; }
+    ctx.fillStyle = css(p.color, p.life);
+    ctx.shadowBlur = 12; ctx.shadowColor = css(p.color, 1);
+    ctx.beginPath(); ctx.arc(p.x, p.y, 2.5 * p.life, 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.restore();
+}
+
+/* ---------- 启动 ---------- */
+function init() {
+  tree.init();
+  requestAnimationFrame(render);
+}
+init();
+</script>
+</body>
+</html>
