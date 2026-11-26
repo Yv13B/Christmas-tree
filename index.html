@@ -9,29 +9,32 @@
 <meta property="og:description" content="用记忆，种一棵发光圣诞树">
 <meta property="og:type" content="website">
 <style>
-  /* 中文主字体（全站中文唯一字体），本地加载 */
+  /* 中文主字体（全站中文唯一字体），本地加载；woff2 优先，ttf 兜底 */
   @font-face {
     font-family: 'SiteFont';
-    src: url('site-font.ttf') format('truetype');
-    font-weight: normal;
+    src: url('site-font.woff2') format('woff2'),
+         url('site-font.ttf') format('truetype');
+    font-weight: 400;
     font-style: normal;
-    font-display: swap;
+    font-display: block;
   }
   /* 英文字体：unicode-range 限定只作用于拉丁字符，中文自动走 SiteFont */
   @font-face {
     font-family: 'EnLanding';
-    src: url('en-landing.ttf') format('truetype');
-    font-weight: normal;
+    src: url('en-landing.woff2') format('woff2'),
+         url('en-landing.ttf') format('truetype');
+    font-weight: 400;
     font-style: normal;
-    font-display: swap;
+    font-display: block;
     unicode-range: U+0000-024F, U+2000-206F, U+20A0-20CF, U+2100-214F, U+2190-21FF, U+2212, U+FEFF;
   }
   @font-face {
     font-family: 'EnOther';
-    src: url('en-other.ttf') format('truetype');
-    font-weight: normal;
+    src: url('en-other.woff2') format('woff2'),
+         url('en-other.ttf') format('truetype');
+    font-weight: 400;
     font-style: normal;
-    font-display: swap;
+    font-display: block;
     unicode-range: U+0000-024F, U+2000-206F, U+20A0-20CF, U+2100-214F, U+2190-21FF, U+2212, U+FEFF;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -39,7 +42,7 @@
   body {
     background: #050810;
     color: #f5f1ff;
-    font-family: 'SiteFont', 'EnOther', -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    font-family: 'EnOther', 'SiteFont', -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
     user-select: none;
   }
   #app { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
