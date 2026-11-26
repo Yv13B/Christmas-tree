@@ -366,7 +366,7 @@
   </div>
 
   <!-- 完成后颜色小提示 -->
-  <div id="colorHint" style="position:absolute;left:50%;bottom:calc(120px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:4;padding:8px 18px;background:rgba(10,12,24,.72);border:1px solid rgba(255,255,255,.16);border-radius:999px;font-size:12px;color:#d0cbe0;backdrop-filter:blur(8px);display:none;pointer-events:none;">点击<span style="color:rgba(232,201,122,.9);">✨星星</span>·<span style="color:rgba(232,201,122,.9);">🎁礼物</span>·<span style="color:rgba(232,201,122,.9);">🎵彩灯</span>查看颜色由来</div>
+  <div id="colorHint" style="position:absolute;left:50%;bottom:calc(120px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:4;padding:11px 22px;background:rgba(10,12,24,.78);border:1px solid rgba(255,255,255,.22);border-radius:999px;font-size:15px;letter-spacing:.3px;white-space:nowrap;color:#efeafc;backdrop-filter:blur(8px);box-shadow:0 6px 24px rgba(0,0,0,.35);display:none;pointer-events:none;">点击<span style="color:rgba(232,201,122,.95);">✨星星</span> · <span style="color:rgba(232,201,122,.95);">🌈光带</span> · <span style="color:rgba(232,201,122,.95);">🎁礼物</span> · <span style="color:rgba(232,201,122,.95);">🎵彩灯</span> 查看颜色由来</div>
 
   <!-- 点击后的颜色提示卡（玻璃质感，动态 tint） -->
   <div id="colorCard" class="glass-card" style="position:absolute;z-index:17;max-width:min(260px, calc(100vw - 24px));max-height:62vh;overflow-y:auto;padding:12px 14px 14px;box-shadow:0 10px 40px rgba(0,0,0,.25);display:none;">
@@ -1037,11 +1037,11 @@ $('btnNextMemory').onclick = () => {
    ============================================================ */
 const STAGE_HINTS = [
   { big: '点击一下，种下记忆的根 🌱', bigEn: 'Tap once, plant the root 🌱', sub: '你的学业/工作努力会让树根更扎实', subEn: 'Your study/effort shapes a solid root' },
-  { big: '再点一下，长出树干 🌲', bigEn: 'Tap again, grow the trunk 🌲', sub: '社交节奏决定树干的挺拔程度', subEn: 'Social rhythm shapes how tall it stands' },
-  { big: '点击第三下，展开枝桠 🌿', bigEn: 'Third tap, branches unfold 🌿', sub: '你的内心状态塑造每一根枝条', subEn: 'Your mindset bends every branch' },
-  { big: '点亮彩灯 ✨', bigEn: 'Light up the ornaments ✨', sub: '年度关键词化为闪烁的光芒', subEn: 'Your keyword becomes twinkling light' },
-  { big: '堆起礼物 🎁', bigEn: 'Stack up the gifts 🎁', sub: '色彩聚合系统的慰藉色包裹这些礼物', subEn: 'Comfort colors wrap each gift' },
-  { big: '最后一下，点亮树顶星星 ⭐', bigEn: 'Final tap, light the star ⭐', sub: '让记忆完整发光，和光带一起旋转吧', subEn: 'Memories fully lit, ribbons start spinning' }
+  { big: '点击一下，长出树干 🌲', bigEn: 'Tap to grow the trunk 🌲', sub: '社交节奏决定树干的挺拔程度', subEn: 'Social rhythm shapes how tall it stands' },
+  { big: '点击一下，展开枝桠 🌿', bigEn: 'Tap to unfold branches 🌿', sub: '你的内心状态塑造每一根枝条', subEn: 'Your mindset bends every branch' },
+  { big: '点击一下，点亮彩灯 ✨', bigEn: 'Tap to light the ornaments ✨', sub: '年度关键词化为闪烁的光芒', subEn: 'Your keyword becomes twinkling light' },
+  { big: '点击一下，堆起礼物 🎁', bigEn: 'Tap to stack the gifts 🎁', sub: '色彩聚合系统的慰藉色包裹这些礼物', subEn: 'Comfort colors wrap each gift' },
+  { big: '点击一下，点亮树顶星星 ⭐', bigEn: 'Tap to light the star ⭐', sub: '让记忆完整发光，和光带一起旋转吧', subEn: 'Memories fully lit, ribbons start spinning' }
 ];
 let stageTimes = {};
 /* 颜色文案系统：每个颜色一个温暖解释 */
@@ -1088,10 +1088,7 @@ function buildColorModal() {
 }
 $('colorModalBtn').addEventListener('click', () => {
   $('colorModal').style.display = 'none';
-  clickCount = 5; // 直接解锁最后一步
-  clearTimeout(clickTimer);
-  clickTimer = setTimeout(() => { clickCount = 0; }, 900);
-  setStage(6);
+  completeStage6();
 });
 
 function setStage(stage) {
@@ -1119,7 +1116,7 @@ function completeStage6() {
   setBilingual('stageText', `6 / 6`, `STAGE 6/6`);
   document.querySelectorAll('#progress .p').forEach(p => p.classList.toggle('on', true));
   setBilingual('hintBig', '✨ 你的年度记忆树完成啦 ✨', '✨ Your memory tree is complete ✨');
-  setBilingual('hintSub', '点击星星/礼物/彩灯查看颜色由来', 'Tap parts of the tree to read about colors');
+  setBilingual('hintSub', '点击星星 / 光带 / 礼物 / 彩灯查看颜色由来', 'Tap star / ribbon / gifts / lights to read about colors');
   state.spinning = true; burstCelebration();
   $('colorHint').style.display = 'block';
   setTimeout(() => { $('colorHint').style.opacity = 0.3; }, 6000);
@@ -1130,17 +1127,18 @@ $('colorModalBtn').addEventListener('click', () => {
   completeStage6();
 });
 
-let clickCount = 0, clickTimer = null;
+let lastStageTap = 0;
 $('treeCanvas').addEventListener('click', (e) => {
   // 阶段 6 后 → 颜色交互模式
   if (state.stage >= 6) {
     handleColorTap(e);
     return;
   }
-  clickCount++; clearTimeout(clickTimer);
-  clickTimer = setTimeout(() => { clickCount = 0; }, 900);
-  const need = state.stage + 1;
-  if (clickCount >= need) { clickCount = 0; clearTimeout(clickTimer); setStage(state.stage + 1); }
+  // 一次点击 → 直接长出下一部分（250ms 防连点误跳）
+  const now = performance.now();
+  if (now - lastStageTap < 250) return;
+  lastStageTap = now;
+  setStage(state.stage + 1);
 });
 
 function updateMemorySnapshot() {
@@ -1162,7 +1160,6 @@ function updateMemorySnapshot() {
 
 function resetExperience() {
   state.stage = 0; state.spinning = false; state.treeRotation = 0;
-  clickCount = 0; clearTimeout(clickTimer);
   resetSnow(); tree.rebuild();
   setBilingual('stageText', '0 / 6', 'STAGE 0/6');
   document.querySelectorAll('#progress .p').forEach(p => p.classList.remove('on'));
