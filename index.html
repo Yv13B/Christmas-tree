@@ -366,7 +366,7 @@
   <div id="colorHint" style="position:absolute;left:50%;bottom:calc(120px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:4;padding:8px 18px;background:rgba(10,12,24,.72);border:1px solid rgba(255,255,255,.16);border-radius:999px;font-size:12px;color:#d0cbe0;backdrop-filter:blur(8px);display:none;pointer-events:none;">点击<span style="color:rgba(232,201,122,.9);">✨星星</span>·<span style="color:rgba(232,201,122,.9);">🎁礼物</span>·<span style="color:rgba(232,201,122,.9);">🎵彩灯</span>查看颜色由来</div>
 
   <!-- 点击后的颜色提示卡（玻璃质感，动态 tint） -->
-  <div id="colorCard" class="glass-card" style="position:absolute;z-index:17;max-width:260px;padding:12px 14px 14px;box-shadow:0 10px 40px rgba(0,0,0,.25);display:none;">
+  <div id="colorCard" class="glass-card" style="position:absolute;z-index:17;max-width:min(260px, calc(100vw - 24px));max-height:62vh;overflow-y:auto;padding:12px 14px 14px;box-shadow:0 10px 40px rgba(0,0,0,.25);display:none;">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
       <div id="ccDot" style="width:18px;height:18px;border-radius:50%;border:1.5px solid rgba(255,255,255,.7);"></div>
       <div id="ccTitle" style="font-size:13px;font-weight:700;flex:1;"></div>
@@ -700,25 +700,27 @@ function handleColorTap(e) {
     const d = Math.hypot(cx - hitRegions.star.x, cy - hitRegions.star.y);
     if (d < hitRegions.star.r * 2.8) { showColorCard(cx, cy, 'star'); return; }
   }
-  // 2. 彩带/光带
+  // 2. 礼物（积雪带里，优先判定）
+  if (hitRegions.gifts.length && my > 0.68) {
+    let best = null, bestD = Infinity;
+    for (const g of hitRegions.gifts) {
+      const d = Math.hypot(cx - g.x, cy - g.y);
+      if (d < g.r + 26 && d < bestD) { bestD = d; best = g; }
+    }
+    if (best) { showColorCard(cx, cy, 'gift', best.colorIdx); return; }
+  }
+  // 3. 彩带/光带
   if (hitRegions.ribbonsCenter) {
     const { x, y, r } = hitRegions.ribbonsCenter;
     const dx = cx - x; const dy = cy - y;
     const inBand = Math.abs(dx) < r + 20 && Math.abs(dy) < 200;
     if (inBand && hitRegions.ribbonsCenter.segs > 10) { showColorCard(cx, cy, 'ribbon'); return; }
   }
-  // 3. 彩灯（采样）
+  // 4. 彩灯（采样）
   if (hitRegions.lightsSample.length) {
     for (const l of hitRegions.lightsSample) {
       const d = Math.hypot(cx - l.x, cy - l.y);
       if (d < l.r + 14) { showColorCard(cx, cy, 'lights'); return; }
-    }
-  }
-  // 4. 礼物（底部区域）
-  if (hitRegions.gifts.length && my > 0.85) {
-    for (const g of hitRegions.gifts) {
-      const d = Math.hypot(cx - g.x, cy - g.y);
-      if (d < 45) { showColorCard(cx, cy, 'gift', g.colorIdx); return; }
     }
   }
   // 5. 飘浮光点
@@ -803,16 +805,26 @@ function showColorCard(x, y, part, colorIdx) {
   $('ccColorVal').textContent = `${rgbStr} — ${hslStr} — ${sTag}${hueTag}${lTag}`;
   $('ccBody').textContent = body;
 
-  // 定位：贴近点击点，不超出屏幕
-  const cardW = 260, cardH = 160;
-  let left = x + 14, top = y - 30;
-  const vw = window.innerWidth, vh = window.innerHeight;
-  if (left + cardW > vw - 8) left = x - cardW - 14;
-  if (top + cardH > vh - 8) top = vh - cardH - 8;
-  if (top < 70) top = 70;
+  // 定位：先显示量真实尺寸，再严格夹在手机屏幕内
+  card.style.display = 'block';
+  card.style.visibility = 'hidden';
+  card.style.left = '0px';
+  card.style.top = '0px';
+  const cw = card.offsetWidth;
+  const ch = card.offsetHeight;
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const M = 10; // 安全边距
+  let left = x + 14;
+  let top = y - ch / 2;
+  if (left + cw > vw - M) left = x - cw - 14;        // 右侧放不下 → 挪到左边
+  if (left + cw > vw - M) left = Math.max(M, vw - cw - M); // 仍溢出 → 贴右
+  if (left < M) left = M;
+  if (top < M) top = M;
+  if (top + ch > vh - M) top = Math.max(M, vh - ch - M);
   card.style.left = left + 'px';
   card.style.top = top + 'px';
-  card.style.display = 'block';
+  card.style.visibility = 'visible';
 }
 function hideColorCard() { $('colorCard').style.display = 'none'; }
 $('ccClose').onclick = hideColorCard;
@@ -876,7 +888,7 @@ function makeReverbIR(ctx) {
 function initAudio() {
   if (audioCtx) return;
   audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  masterGain = audioCtx.createGain(); masterGain.gain.value = 0.6; masterGain.connect(audioCtx.destination);
+  masterGain = audioCtx.createGain(); masterGain.gain.value = 0.88; masterGain.connect(audioCtx.destination);
   convolver = audioCtx.createConvolver(); convolver.buffer = makeReverbIR(audioCtx);
   reverbBus = audioCtx.createGain(); reverbBus.gain.value = 0.42;
   convolver.connect(reverbBus); reverbBus.connect(masterGain);
@@ -1231,14 +1243,18 @@ const tree = {
     }
     this.gifts = [];
     const giftColors = state.colors || [{ r: 255, g: 190, b: 60 }, { r: 255, g: 70, b: 110 }, { r: 80, g: 180, b: 255 }];
-    for (let i = 0; i < params.giftN; i++) {
-      const ang = Math.random() * Math.PI * 2;
+    const giftTotal = Math.max(7, Math.min(13, Math.round(params.giftN * 0.7)));
+    for (let i = 0; i < giftTotal; i++) {
+      // 均匀铺开在积雪带里，避免全挤在树中心
+      const nx = 0.10 + (i + 0.5) / giftTotal * 0.80 + (Math.random() - 0.5) * 0.055;
       this.gifts.push({
-        x: cx + Math.cos(ang) * (0.08 + Math.random() * 0.05),
-        y: 0.92 + Math.random() * 0.03,
-        w: 0.025 + Math.random() * 0.025, h: 0.02 + Math.random() * 0.02,
+        nx: Math.min(0.94, Math.max(0.06, nx)),
+        depth: Math.random(),               // 0 靠后(小) 1 靠前(大)
+        w: 0.020 + Math.random() * 0.024,
+        h: 0.017 + Math.random() * 0.018,
         color: giftColors[i % 3], ribbonColor: giftColors[(i + 1) % 3],
-        phase: Math.random() * Math.PI * 2
+        phase: Math.random() * Math.PI * 2,
+        tilt: (Math.random() - 0.5) * 0.10
       });
     }
     this.dots = [];
@@ -1279,11 +1295,11 @@ function render(ts) {
   if (state.stage >= 2) drawTrunk();
   if (state.stage >= 3) drawBranches();
   if (state.stage >= 4) { drawLights(); drawTwinkles(); drawGlints(); }
-  if (state.stage >= 5) drawGifts();
   if (state.stage >= 6) { drawTopStar(); drawSpiralRibbons(); }
   if (state.stage >= 3) drawMistFront();
   if (state.stage >= 6) drawFloatingDots();
   drawSnowPile();
+  if (state.stage >= 5) drawGifts();   // 礼物画在积雪之上，确保看得见
   if (celebration.length) drawCelebration(dt);
 }
 
@@ -1315,10 +1331,10 @@ function resetSnow() {
   sparkles.length = 0;
   for (let i = 0; i < 18; i++) sparkles.push({ x: 0.04 + Math.random() * 0.92, y: 0.05 + Math.random() * 0.80, size: 1.4 + Math.random() * 2.2, phase: Math.random() * Math.PI * 2, speed: 0.6 + Math.random() * 1.3 });
   snowfall.length = 0;
-  // 三层雪景：远景小快、中景、近景大慢
-  for (let i = 0; i < 70; i++) snowfall.push({ layer: 'far', x: Math.random(), y: Math.random(), r: 0.5 + Math.random() * 1.0, vy: 0.04 + Math.random() * 0.06, drift: Math.random() * Math.PI * 2, sway: 0.2 + Math.random() * 0.6, alpha: 0.2 + Math.random() * 0.35, rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 2 });
-  for (let i = 0; i < 65; i++) snowfall.push({ layer: 'mid', x: Math.random(), y: Math.random(), r: 1.0 + Math.random() * 1.8, vy: 0.028 + Math.random() * 0.04, drift: Math.random() * Math.PI * 2, sway: 0.3 + Math.random() * 0.8, alpha: 0.35 + Math.random() * 0.4, rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 1.5 });
-  for (let i = 0; i < 25; i++) snowfall.push({ layer: 'near', x: Math.random(), y: Math.random(), r: 2.0 + Math.random() * 3.5, vy: 0.015 + Math.random() * 0.025, drift: Math.random() * Math.PI * 2, sway: 0.15 + Math.random() * 0.4, alpha: 0.55 + Math.random() * 0.35, rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 1.0, depth: 1 });
+  // 三层雪景：数量减少、速度放慢（vy 为每秒下落的比例）
+  for (let i = 0; i < 38; i++) snowfall.push({ layer: 'far', x: Math.random(), y: Math.random(), r: 0.5 + Math.random() * 1.0, vy: 0.09 + Math.random() * 0.07, drift: Math.random() * Math.PI * 2, sway: 0.2 + Math.random() * 0.6, alpha: 0.2 + Math.random() * 0.35, rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 1.2 });
+  for (let i = 0; i < 30; i++) snowfall.push({ layer: 'mid', x: Math.random(), y: Math.random(), r: 1.0 + Math.random() * 1.8, vy: 0.06 + Math.random() * 0.05, drift: Math.random() * Math.PI * 2, sway: 0.3 + Math.random() * 0.8, alpha: 0.35 + Math.random() * 0.4, rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.9 });
+  for (let i = 0; i < 12; i++) snowfall.push({ layer: 'near', x: Math.random(), y: Math.random(), r: 2.0 + Math.random() * 3.0, vy: 0.035 + Math.random() * 0.03, drift: Math.random() * Math.PI * 2, sway: 0.15 + Math.random() * 0.4, alpha: 0.55 + Math.random() * 0.35, rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.6, depth: 1 });
 }
 resetSnow();
 
@@ -1345,9 +1361,9 @@ function drawSnowfall(dt) {
   const windX = Math.sin(windTime * 0.3) * 0.0008; // 柔和风
   ctx.save();
   for (const f of snowfall) {
-    // 更新
-    f.y += f.vy * dt * 60;
-    f.x += Math.sin(time * f.sway + f.drift) * 0.0003 + windX * (f.layer === 'near' ? 2.5 : f.layer === 'mid' ? 1.5 : 0.8);
+    // 更新（vy 已是每秒比例，dt 为秒）
+    f.y += f.vy * dt;
+    f.x += Math.sin(time * f.sway + f.drift) * 0.00018 + windX * (f.layer === 'near' ? 2.5 : f.layer === 'mid' ? 1.5 : 0.8);
     f.rot += f.rotSpeed * dt;
     if (f.x < -0.05) f.x = 1.05; if (f.x > 1.05) f.x = -0.05;
     if (f.y > 1.02) { f.y = -0.02; f.x = Math.random(); }
@@ -1389,13 +1405,14 @@ function drawSnowfall(dt) {
 }
 function snowSurfaceAt(x) { const i = Math.max(0, Math.min(SNOW_BINS - 1, Math.floor(x * SNOW_BINS))); return 1 - snowBank[i]; }
 function updateSnow(dt) {
-  const rate = 0.0006; // 更快的积雪速度
-  for (let i = 0; i < SNOW_BINS; i++) { snowBank[i] = Math.min(0.22, snowBank[i] + rate * dt * 60); }
-  // 中心区域更容易积雪（树周围）
+  const CAP = 0.105; // 积雪上限（只到屏幕底部约 10%，保证树本体完整可见）
+  const rate = 0.00016;
+  for (let i = 0; i < SNOW_BINS; i++) { snowBank[i] = Math.min(CAP, snowBank[i] + rate * dt * 60); }
+  // 树周围略微高一点，但不超过上限
   const cxBin = Math.floor(SNOW_BINS / 2);
   for (let i = 0; i < SNOW_BINS; i++) {
     const d = Math.abs(i - cxBin) / (SNOW_BINS / 2);
-    if (d < 0.7) snowBank[i] = Math.min(0.22, snowBank[i] + 0.0003 * (1 - d) * dt * 60);
+    if (d < 0.6) snowBank[i] = Math.min(CAP, snowBank[i] + 0.00008 * (1 - d) * dt * 60);
   }
   // 平滑
   const smooth = snowBank.slice();
@@ -1647,29 +1664,53 @@ function drawGlints() {
 }
 function drawGifts() {
   const grow = growEase(5); if (grow <= 0) return;
-  const baseY = H * 0.93;
   if (state.stage >= 6) hitRegions.gifts = [];
   ctx.save();
   for (const g of tree.gifts) {
-    const gx = g.x * W, gy = g.y * H;
-    const gw = g.w * W * 2, gh = g.h * H * 1.5;
-    const emerge = Math.min(1, Math.max(0, (grow - (gy / H - 0.9) * 3) * 2)); if (emerge <= 0) continue;
+    // 礼物坐在积雪表面（雪堆在 drawGifts 之前绘制，所以这里是最上层）
+    const gx = g.nx * W;
+    const snowY = snowSurfaceAt(g.nx) * H;
+    const scale = 0.72 + g.depth * 0.55;
+    const gw = g.w * W * 2 * scale;
+    const gh = g.h * H * 1.6 * scale;
+    const gy = snowY + gh * 0.32 + g.depth * 12;  // 略陷入雪里
+    const emerge = Math.min(1, Math.max(0, (grow - g.depth * 0.25) * 2.4)); if (emerge <= 0) continue;
     if (state.stage >= 6) {
-      hitRegions.gifts.push({ x: gx, y: gy - gh / 2, r: Math.max(gw, gh), colorIdx: tree.gifts.indexOf(g) % 3 });
+      hitRegions.gifts.push({ x: gx, y: gy - gh * 0.5, r: Math.max(gw, gh) * 0.9, colorIdx: tree.gifts.indexOf(g) % 3 });
     }
-    ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(gx, baseY + 8, gw * 0.5, 3, 0, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = css(g.color, emerge); ctx.fillRect(gx - gw / 2, gy - gh, gw * emerge, gh * emerge);
-    const rw = gw * 0.12;
+    ctx.save();
+    ctx.translate(gx, gy);
+    ctx.rotate(g.tilt);
+    // 雪地上的柔和阴影
+    ctx.fillStyle = 'rgba(90,120,155,.22)';
+    ctx.beginPath(); ctx.ellipse(0, 2, gw * 0.6, Math.max(2.5, gh * 0.10), 0, 0, Math.PI * 2); ctx.fill();
+    // 盒身
+    ctx.fillStyle = css(g.color, emerge);
+    ctx.fillRect(-gw / 2, -gh * emerge, gw * emerge, gh * emerge);
+    // 盒盖
+    ctx.fillStyle = css(lighten(g.color, 0.12), emerge);
+    ctx.fillRect(-gw * 0.54 * emerge, -gh * emerge, gw * 1.08 * emerge, gh * 0.26 * emerge);
+    // 丝带（横 + 竖）
+    const rw = Math.max(1.4, gw * 0.11);
     ctx.fillStyle = css(g.ribbonColor, emerge);
-    ctx.fillRect(gx - gw / 2, gy - gh * 0.55 * emerge, gw * emerge, rw * emerge);
-    ctx.fillRect(gx - rw / 2, gy - gh, rw * emerge, gh * emerge);
-    const bx = gx, by = gy - gh;
+    ctx.fillRect(-gw / 2, -gh * 0.76 * emerge, gw * emerge, rw * emerge);
+    ctx.fillRect(-rw / 2, -gh * emerge, rw * emerge, gh * emerge);
+    // 蝴蝶结
+    const bx = 0, by = -gh;
     ctx.beginPath();
-    ctx.moveTo(bx - rw, by); ctx.lineTo(bx - rw * 2.2, by - rw * 0.8); ctx.lineTo(bx - rw, by - rw * 0.2);
-    ctx.lineTo(bx - rw * 0.3, by); ctx.lineTo(bx, by - rw * 0.8);
-    ctx.lineTo(bx + rw * 0.3, by); ctx.lineTo(bx + rw, by - rw * 0.2);
-    ctx.lineTo(bx + rw * 2.2, by - rw * 0.8); ctx.lineTo(bx + rw, by);
+    ctx.moveTo(bx - rw * 0.4, by);
+    ctx.quadraticCurveTo(bx - rw * 2.0, by - rw * 1.5, bx - rw * 0.5, by - rw * 0.2);
+    ctx.quadraticCurveTo(bx - rw * 1.6, by - rw * 2.6, bx, by - rw * 0.3);
+    ctx.quadraticCurveTo(bx + rw * 1.6, by - rw * 2.6, bx + rw * 0.5, by - rw * 0.2);
+    ctx.quadraticCurveTo(bx + rw * 2.0, by - rw * 1.5, bx + rw * 0.4, by);
+    ctx.closePath();
     ctx.fillStyle = css(g.ribbonColor, emerge); ctx.fill();
+    // 顶部积雪（真雪感）
+    ctx.fillStyle = `rgba(255,255,255,${0.75 * emerge})`;
+    ctx.beginPath();
+    ctx.ellipse(-gw * 0.08, -gh * emerge - gh * 0.04, gw * 0.34, gh * 0.12, 0, Math.PI, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
   }
   ctx.restore();
 }
