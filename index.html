@@ -60,7 +60,7 @@
   button {
     font: inherit; cursor: pointer; border: none; outline: none;
     background: var(--accent); color: #fff; border-radius: 999px;
-    padding: 14px 36px; font-size: 16px; font-weight: 600; letter-spacing: 1px;
+    padding: 14px 36px; font-size: 18px; font-weight: 600; letter-spacing: 1px;
     box-shadow: 0 8px 30px rgba(124,108,255,.35);
     transition: transform .2s, box-shadow .2s, opacity .2s;
   }
@@ -86,7 +86,7 @@
     text-align: center; padding: 28px;
   }
   #landing .badge {
-    font-size: 12px; letter-spacing: 3px; color: var(--sub);
+    font-size: 14px; letter-spacing: 3px; color: var(--sub);
     border: 1px solid var(--line); border-radius: 999px; padding: 6px 16px; margin-bottom: 26px;
     background: rgba(0,0,0,.28); text-shadow: 0 1px 6px rgba(0,0,0,.8);
   }
@@ -96,15 +96,15 @@
     -webkit-background-clip: text; background-clip: text; color: transparent;
     margin-bottom: 18px;
   }
-  #landing p { color: #d8d3e8; max-width: 380px; font-size: 15px; line-height: 1.8; margin-bottom: 36px; text-shadow: 0 1px 8px rgba(0,0,0,.9); }
+  #landing p { color: #d8d3e8; max-width: 420px; font-size: 17px; line-height: 1.8; margin-bottom: 36px; text-shadow: 0 1px 8px rgba(0,0,0,.9); }
   #landing .steps { display: flex; gap: 10px; margin-bottom: 40px; flex-wrap: wrap; justify-content: center; }
   #landing .step {
     background: rgba(8,10,20,.58); border: 1px solid rgba(255,255,255,.16); border-radius: 16px;
-    padding: 14px 18px; font-size: 13px; width: 100px; color: var(--text);
+    padding: 14px 18px; font-size: 15px; width: 108px; color: var(--text);
     backdrop-filter: blur(6px); box-shadow: 0 6px 18px rgba(0,0,0,.35);
   }
   #landing .step b { display: block; font-size: 22px; margin-bottom: 6px; }
-  #landing .note { margin-top: 22px; font-size: 12px; color: #c5bfd8; max-width: 320px; line-height: 1.7; text-shadow: 0 1px 6px rgba(0,0,0,.8); }
+  #landing .note { margin-top: 22px; font-size: 14px; color: #c5bfd8; max-width: 360px; line-height: 1.7; text-shadow: 0 1px 6px rgba(0,0,0,.8); }
 
   /* ---------- 取色页 ---------- */
   #capture { background: #000; }
@@ -127,14 +127,14 @@
     display: flex; align-items: center; justify-content: space-between;
     background: linear-gradient(#0009, transparent); z-index: 2;
   }
-  #capture .topbar h2 { font-size: 16px; font-weight: 600; }
-  #capture .topbar button { padding: 8px 16px; font-size: 13px; }
+  #capture .topbar h2 { font-size: 18px; font-weight: 600; }
+  #capture .topbar button { padding: 8px 16px; font-size: 15px; }
   #capture .bottom {
     position: absolute; bottom: 0; left: 0; right: 0; padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
     display: flex; flex-direction: column; align-items: center; gap: 14px;
     background: linear-gradient(transparent, #000c); z-index: 2;
   }
-  #capture .tip { font-size: 13px; color: #ddd8ee; text-align: center; max-width: 340px; line-height: 1.6; }
+  #capture .tip { font-size: 15px; color: #ddd8ee; text-align: center; max-width: 360px; line-height: 1.6; }
   #palette { display: flex; gap: 14px; margin: 4px 0 2px; }
   #palette .swatch {
     width: 58px; height: 58px; border-radius: 16px; border: 2px solid rgba(255,255,255,.7);
@@ -178,7 +178,7 @@
     font-size: clamp(20px, 5.5vw, 30px); font-weight: 700; letter-spacing: 1px;
     text-shadow: 0 2px 20px rgba(0,0,0,.8); margin-bottom: 8px;
   }
-  #gestureHint .sub { font-size: 13px; color: var(--sub); line-height: 1.6; text-shadow: 0 2px 10px rgba(0,0,0,.95), 0 0 20px rgba(0,0,0,.8); }
+  #gestureHint .sub { font-size: 15px; color: var(--sub); line-height: 1.6; text-shadow: 0 2px 10px rgba(0,0,0,.95), 0 0 20px rgba(0,0,0,.8); }
   #progress {
     display: flex; gap: 8px; justify-content: center; margin-top: 16px;
   }
@@ -190,7 +190,7 @@
   #stageBadge {
     position: absolute; top: calc(18px + env(safe-area-inset-top)); left: 18px;
     background: rgba(10,12,24,.6); border: 1px solid var(--line); border-radius: 999px;
-    padding: 8px 16px; font-size: 12px; color: var(--sub); z-index: 3;
+    padding: 8px 16px; font-size: 14px; color: var(--sub); z-index: 3;
     backdrop-filter: blur(8px);
   }
   #stageBadge b { color: var(--text); }
@@ -200,7 +200,7 @@
     z-index: 4; display: flex; flex-direction: column; gap: 8px; align-items: flex-start;
   }
   #experience .top-actions button {
-    padding: 7px 11px; font-size: 11px; background: rgba(10,12,24,.62);
+    padding: 8px 13px; font-size: 13px; background: rgba(10,12,24,.62);
     border: 1px solid var(--line); box-shadow: none; backdrop-filter: blur(8px);
     white-space: nowrap;
   }
@@ -226,7 +226,7 @@
     #preview { width: 84px; height: 112px; }
     #landing .step { width: 88px; padding: 12px 10px; font-size: 12px; }
     #experience .top-actions { top: calc(56px + env(safe-area-inset-top)); left: 8px; gap: 6px; }
-    #experience .top-actions button { padding: 6px 9px; font-size: 10px; }
+    #experience .top-actions button { padding: 7px 10px; font-size: 12px; }
   }
   /* ---------- 英文小字标注 ---------- */
   [data-en]::after {
@@ -324,11 +324,11 @@
     <canvas id="treeCanvas"></canvas>
     <div id="stageBadge">Progress <b id="stageText">0 / 3</b></div>
     <div class="top-actions">
-      <button class="btn-switch-cam">Switch Cam</button>
-      <button id="btnRecolor">Recolor</button>
-      <button id="btnAuto">Auto Play</button>
-      <button id="btnRestart">Replay</button>
-      <button id="btnSave">Save PNG</button>
+      <button class="btn-switch-cam" data-en="Switch Cam">切换镜头</button>
+      <button id="btnRecolor" data-en="Recolor">重新取色</button>
+      <button id="btnAuto" data-en="Auto Play">自动播放</button>
+      <button id="btnRestart" data-en="Replay">重新生成</button>
+      <button id="btnSave" data-en="Save PNG">保存图片</button>
     </div>
     <div id="gestureHint">
       <div class="big" id="hintBig" data-en="Tap the screen once 👆">点击屏幕一下 👆</div>
