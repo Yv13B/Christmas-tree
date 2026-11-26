@@ -6,10 +6,10 @@
 <meta name="theme-color" content="#050810">
 <title>color-Christmas-tree</title>
 <meta property="og:title" content="color-Christmas-tree">
-<meta property="og:description" content="用颜色，种一棵发光圣诞树">
+<meta property="og:description" content="用记忆，种一棵发光圣诞树">
 <meta property="og:type" content="website">
 <style>
-  /* 站点统一字体（含中文），本地加载不依赖外部服务 */
+  /* 中文主字体（全站中文唯一字体），本地加载 */
   @font-face {
     font-family: 'SiteFont';
     src: url('site-font.ttf') format('truetype');
@@ -17,7 +17,7 @@
     font-style: normal;
     font-display: swap;
   }
-  /* 英文字体：unicode-range 限定只作用于拉丁字符，中文自动回退 SiteFont */
+  /* 英文字体：unicode-range 限定只作用于拉丁字符，中文自动走 SiteFont */
   @font-face {
     font-family: 'EnLanding';
     src: url('en-landing.ttf') format('truetype');
@@ -39,7 +39,7 @@
   body {
     background: #050810;
     color: #f5f1ff;
-    font-family: 'EnOther', 'SiteFont', -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    font-family: 'SiteFont', 'EnOther', -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
     user-select: none;
   }
   #app { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
@@ -60,24 +60,16 @@
   }
   button:disabled { opacity: .35; cursor: not-allowed; }
 
-  /* ---------- 英文小字标注（原版 data-en 双语系统） ---------- */
+  /* 英文小字标注 */
   [data-en]::after {
     content: attr(data-en);
-    display: block;
-    font-size: .58em;
-    font-weight: 400;
-    opacity: .55;
-    line-height: 1.3;
-    margin-top: 3px;
-    letter-spacing: .2px;
+    display: block; font-size: .58em; font-weight: 400; opacity: .55;
+    line-height: 1.3; margin-top: 3px; letter-spacing: .2px;
   }
   button[data-en]::after { font-size: .62em; margin-top: 2px; opacity: .75; }
   .toast-en { display: block; font-size: 11px; opacity: .55; margin-top: 4px; }
-  /* 取色页顶栏按钮保持单行，不显示英文小字 */
-  #capture .topbar button[data-en]::after { display: none; }
 
   /* ---------- Landing ---------- */
-  /* 首页英文用专属字体，中文继续 SiteFont */
   #landing, #landing *, #landing *::before, #landing *::after {
     font-family: 'EnLanding', 'SiteFont', -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
   }
@@ -96,180 +88,97 @@
     margin-bottom: 28px; text-transform: uppercase;
   }
   #landing h1 {
-    font-size: clamp(32px, 8.5vw, 54px); font-weight: 700; line-height: 1.15;
-    text-shadow: 0 2px 20px rgba(0,0,0,.8);
-    margin-bottom: 20px;
+    font-size: clamp(30px, 8vw, 50px); font-weight: 700; line-height: 1.15;
+    text-shadow: 0 2px 20px rgba(0,0,0,.8); margin-bottom: 18px;
   }
-  #landing p { color: #d8d3e8; max-width: 420px; font-size: 16px; line-height: 1.85; margin-bottom: 32px; text-shadow: 0 1px 8px rgba(0,0,0,.9); }
+  #landing p { color: #d8d3e8; max-width: 420px; font-size: 16px; line-height: 1.85; margin-bottom: 28px; text-shadow: 0 1px 8px rgba(0,0,0,.9); }
   #landing .note { margin-top: 22px; font-size: 13px; color: #a8a2c0; max-width: 360px; line-height: 1.7; text-shadow: 0 1px 6px rgba(0,0,0,.8); }
 
-  /* ---------- Memory Tag Page ---------- */
+  /* ---------- Memory Tag ---------- */
   #memory {
     background-color: #050810;
-    background-image:
-      radial-gradient(ellipse at 50% 100%, rgba(100,160,220,.08), transparent 60%);
+    background-image: radial-gradient(ellipse at 50% 100%, rgba(100,160,220,.08), transparent 60%);
     display: flex; flex-direction: column;
     padding: calc(20px + env(safe-area-inset-top)) 20px calc(20px + env(safe-area-inset-bottom));
   }
-  #memory .topbar {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 16px;
-  }
-  #memory .topbar h2 {
-    font-size: 15px; font-weight: 600; color: #c8c0e0;
-    letter-spacing: 1px;
-  }
-  #memory .page-indicator {
-    font-size: 13px; color: rgba(232,201,122,.85);
-  }
-  #memory .title {
-    font-size: clamp(24px, 6vw, 34px); font-weight: 700;
-    margin-bottom: 6px; text-shadow: 0 2px 14px rgba(0,0,0,.7);
-  }
-  #memory .subtitle {
-    font-size: 14px; color: #a8a2c0; line-height: 1.6; margin-bottom: 20px;
-  }
+  #memory .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  #memory .topbar h2 { font-size: 15px; font-weight: 600; color: #c8c0e0; letter-spacing: 1px; }
+  #memory .page-indicator { font-size: 13px; color: rgba(232,201,122,.85); }
+  #memory .progress-bar { display: flex; gap: 6px; margin-bottom: 14px; }
+  #memory .progress-bar .dot { flex: 1; height: 3px; border-radius: 3px; background: rgba(255,255,255,.15); transition: all .3s; }
+  #memory .progress-bar .dot.done { background: linear-gradient(90deg, #e8c97a, #d4a84a); }
+  #memory .progress-bar .dot.active { background: rgba(232,201,122,.5); }
+  #memory .title { font-size: clamp(22px, 5.5vw, 30px); font-weight: 700; margin-bottom: 6px; text-shadow: 0 2px 14px rgba(0,0,0,.7); }
+  #memory .subtitle { font-size: 14px; color: #a8a2c0; line-height: 1.6; margin-bottom: 16px; }
   #memory .tag-container { flex: 1; display: flex; flex-direction: column; justify-content: center; }
-  #memory .tag-group { margin-bottom: 18px; }
-  #memory .tag-label {
-    font-size: 13px; color: #a8a2c0; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
-  }
-  #memory .tag-label .tag-icon {
-    display: inline-flex; width: 22px; height: 22px; border-radius: 50%;
-    align-items: center; justify-content: center; font-size: 12px;
-    background: rgba(232,201,122,.18); color: rgba(232,201,122,.95);
-  }
-  #memory .tag-chips {
-    display: flex; flex-wrap: wrap; gap: 8px;
-  }
+  #memory .tag-chips { display: flex; flex-wrap: wrap; gap: 10px; }
   #memory .chip {
-    padding: 10px 16px; border-radius: 999px;
+    padding: 11px 18px; border-radius: 999px;
     background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.15);
-    color: #d8d3e8; font-size: 14px; transition: all .2s;
+    color: #d8d3e8; font-size: 14px; transition: all .25s cubic-bezier(.2,.7,.2,1);
     cursor: pointer; user-select: none;
   }
   #memory .chip.selected {
-    background: linear-gradient(135deg, rgba(232,201,122,.25), rgba(212,168,74,.15));
-    border-color: rgba(232,201,122,.6);
-    color: #fff; box-shadow: 0 0 20px rgba(232,201,122,.2);
+    transform: scale(1.04);
+    background: linear-gradient(135deg, rgba(232,201,122,.3), rgba(212,168,74,.15));
+    border-color: rgba(232,201,122,.7); color: #fff;
+    box-shadow: 0 0 24px rgba(232,201,122,.25), inset 0 1px 0 rgba(255,255,255,.2);
+  }
+  #memory .chip.quick-enter {
+    animation: chipPop .45s cubic-bezier(.2,.7,.2,1) both;
+  }
+  @keyframes chipPop {
+    from { opacity: 0; transform: translateY(12px) scale(.92); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
   }
   #memory .keyword-input {
     width: 100%; max-width: 240px; padding: 12px 18px; border-radius: 999px;
     background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.2);
     color: #fff; font-size: 15px; text-align: center; outline: none;
-    font-family: 'SiteFont', sans-serif;
+    font-family: inherit;
   }
   #memory .keyword-input::placeholder { color: rgba(255,255,255,.35); }
   #memory .keyword-input:focus { border-color: rgba(232,201,122,.6); }
-  #memory .bottom-actions {
-    display: flex; gap: 12px; margin-top: 12px;
-  }
-  #memory .progress-bar {
-    display: flex; gap: 6px; margin-bottom: 14px;
-  }
-  #memory .progress-bar .dot {
-    flex: 1; height: 3px; border-radius: 3px;
-    background: rgba(255,255,255,.15); transition: all .3s;
-  }
-  #memory .progress-bar .dot.done {
-    background: linear-gradient(90deg, #e8c97a, #d4a84a);
-  }
-  #memory .progress-bar .dot.active {
-    background: rgba(232,201,122,.5);
-  }
-
-  /* ---------- Capture ---------- */
-  #capture { background: #000; }
-  #capture .video-wrap { position: absolute; inset: 0; }
-  #camVideo { width: 100%; height: 100%; object-fit: cover; }
-  #capture .overlay { position: absolute; inset: 0; pointer-events: none; }
-  #capture .frame {
-    position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
-    width: min(72vw, 420px); height: min(62vh, 480px);
-    border: 2px dashed rgba(255,255,255,.55); border-radius: 24px;
-    box-shadow: 0 0 0 9999px rgba(0,0,0,.45);
-  }
-  #capture .frame::after {
-    content: "将衣服对准取景框"; position: absolute; left: 50%; bottom: -38px; transform: translateX(-50%);
-    white-space: nowrap; font-size: 13px; color: rgba(255,255,255,.85); background: rgba(0,0,0,.4);
-    padding: 6px 14px; border-radius: 999px;
-  }
-  #capture .topbar {
-    position: absolute; top: 0; left: 0; right: 0; padding: 18px 68px 18px 20px;
-    display: flex; align-items: center; justify-content: space-between;
-    background: linear-gradient(#0009, transparent); z-index: 2;
-  }
-  #capture .topbar h2 { font-size: 18px; font-weight: 600; }
-  #capture .topbar button { padding: 8px 16px; font-size: 15px; }
-  #capture .bottom {
-    position: absolute; bottom: 0; left: 0; right: 0; padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
-    display: flex; flex-direction: column; align-items: center; gap: 14px;
-    background: linear-gradient(transparent, #000c); z-index: 2;
-  }
-  #capture .tip { font-size: 15px; color: #ddd8ee; text-align: center; max-width: 360px; line-height: 1.6; }
-  #palette { display: flex; gap: 14px; margin: 4px 0 2px; }
-  #palette .swatch {
-    width: 58px; height: 58px; border-radius: 16px; border: 2px solid rgba(255,255,255,.7);
-    box-shadow: 0 6px 20px rgba(0,0,0,.5); position: relative; display: flex;
-    align-items: flex-end; justify-content: center; padding-bottom: 4px;
-    font-size: 10px; color: #fff; text-shadow: 0 1px 3px #000; opacity: 0; transform: translateY(10px);
-    transition: opacity .5s, transform .5s;
-  }
-  #palette .swatch.show { opacity: 1; transform: translateY(0); }
-  #capture .actions { display: flex; gap: 12px; }
+  #memory .bottom-actions { display: flex; gap: 12px; margin-top: 16px; }
 
   /* ---------- Experience ---------- */
-  :root {
-    --gold: #e8c97a;
-    --text: #f5f1ff;
-    --sub: #a8a2c0;
-    --line: rgba(255,255,255,.18);
-  }
+  :root { --gold: #e8c97a; --text: #f5f1ff; --sub: #a8a2c0; --line: rgba(255,255,255,.18); }
   #experience {
     background-color: #050810;
-    background-image:
-      linear-gradient(rgba(3,5,12,.46), rgba(3,5,12,.66)),
-      var(--bg-img, url('bg-1.jpg'));
-    background-position: center, center;
-    background-size: cover, cover;
-    background-repeat: no-repeat, no-repeat;
+    background-image: linear-gradient(rgba(3,5,12,.46), rgba(3,5,12,.66)), var(--bg-img, url('bg-1.jpg'));
+    background-position: center, center; background-size: cover, cover; background-repeat: no-repeat, no-repeat;
   }
   #treeCanvas { position: absolute; inset: 0; width: 100%; height: 100%; }
   #gestureHint {
     position: absolute; left: 0; right: 0; bottom: calc(26px + env(safe-area-inset-bottom));
     text-align: center; z-index: 3; pointer-events: none; padding: 0 20px;
   }
-  #gestureHint .big {
-    font-size: clamp(18px, 5vw, 26px); font-weight: 700; letter-spacing: 1px;
-    text-shadow: 0 2px 20px rgba(0,0,0,.8); margin-bottom: 6px;
-  }
-  #gestureHint .sub { font-size: 14px; color: var(--sub); line-height: 1.6; text-shadow: 0 2px 10px rgba(0,0,0,.95), 0 0 20px rgba(0,0,0,.8); }
-  #progress {
-    display: flex; gap: 6px; justify-content: center; margin-top: 14px;
-  }
-  #progress .p {
-    width: 38px; height: 4px; border-radius: 4px; background: rgba(255,255,255,.15);
-    transition: background .4s, box-shadow .4s;
-  }
+  #gestureHint .big { font-size: clamp(18px, 5vw, 26px); font-weight: 700; letter-spacing: 1px; text-shadow: 0 2px 20px rgba(0,0,0,.8); margin-bottom: 6px; }
+  #gestureHint .sub { font-size: 14px; color: var(--sub); line-height: 1.6; text-shadow: 0 2px 10px rgba(0,0,0,.95); }
+  #progress { display: flex; gap: 6px; justify-content: center; margin-top: 14px; }
+  #progress .p { width: 38px; height: 4px; border-radius: 4px; background: rgba(255,255,255,.15); transition: background .4s, box-shadow .4s; }
   #progress .p.on { background: var(--gold); box-shadow: 0 0 10px var(--gold); }
   #stageBadge {
     position: absolute; top: calc(18px + env(safe-area-inset-top)); left: 18px;
     background: rgba(10,12,24,.6); border: 1px solid var(--line); border-radius: 999px;
-    padding: 8px 16px; font-size: 13px; color: var(--sub); z-index: 3;
-    backdrop-filter: blur(8px);
+    padding: 8px 16px; font-size: 13px; color: var(--sub); z-index: 3; backdrop-filter: blur(8px);
   }
   #stageBadge b { color: var(--text); }
+  #memorySnapshot {
+    position: absolute; top: calc(18px + env(safe-area-inset-top)); right: 18px;
+    background: rgba(10,12,24,.55); border: 1px solid var(--line); border-radius: 14px;
+    padding: 10px 14px; z-index: 3; backdrop-filter: blur(8px);
+    max-width: 160px; text-align: right;
+  }
+  #memorySnapshot .ms-title { font-size: 10px; color: rgba(232,201,122,.8); letter-spacing: 1px; margin-bottom: 4px; font-family: 'EnOther', sans-serif; }
+  #memorySnapshot .ms-row { font-size: 11px; color: rgba(235,230,250,.75); margin-bottom: 2px; }
   #experience .top-actions {
     position: absolute; top: calc(74px + env(safe-area-inset-top)); left: 12px;
     z-index: 4; display: flex; flex-direction: column; gap: 8px; align-items: flex-start;
   }
-  #experience .top-actions button {
-    padding: 8px 13px; font-size: 13px; background: rgba(10,12,24,.62);
-    border: 1px solid var(--line); box-shadow: none; backdrop-filter: blur(8px);
-    white-space: nowrap;
-  }
+  #experience .top-actions button { padding: 8px 13px; font-size: 13px; background: rgba(10,12,24,.62); border: 1px solid var(--line); box-shadow: none; backdrop-filter: blur(8px); white-space: nowrap; }
 
-  /* ---------- Toast ---------- */
+  /* ---------- Toast & Save ---------- */
   #toast {
     position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
     background: rgba(20,16,30,.94); border: 1px solid var(--line); border-radius: 16px;
@@ -277,8 +186,6 @@
     z-index: 20; display: none; box-shadow: 0 20px 60px rgba(0,0,0,.6);
   }
   #toast button { margin-top: 16px; padding: 10px 24px; font-size: 14px; }
-
-  /* ---------- Music Button ---------- */
   #btnMusic {
     position: fixed; top: calc(14px + env(safe-area-inset-top)); right: 14px;
     width: 40px; height: 40px; border-radius: 50%; padding: 0;
@@ -288,8 +195,6 @@
     display: flex; align-items: center; justify-content: center;
   }
   #btnMusic.muted { opacity: .45; }
-
-  /* ---------- Save Sheet ---------- */
   #saveSheet {
     position: fixed; inset: 0; z-index: 40; display: none;
     align-items: center; justify-content: center; padding: 24px;
@@ -298,16 +203,12 @@
   #saveSheet.show { display: flex; }
   #saveSheet .panel { display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%; max-width: 420px; }
   #saveSheet .tip { color: #fff; font-size: 15px; text-align: center; line-height: 1.6; }
-  #saveSheet img {
-    width: 100%; max-height: 68vh; object-fit: contain; border-radius: 12px;
-    border: 1px solid var(--line); box-shadow: 0 12px 40px rgba(0,0,0,.6);
-    -webkit-touch-callout: default; user-select: auto;
-  }
+  #saveSheet img { width: 100%; max-height: 68vh; object-fit: contain; border-radius: 12px; border: 1px solid var(--line); box-shadow: 0 12px 40px rgba(0,0,0,.6); -webkit-touch-callout: default; user-select: auto; }
   #saveSheet button { padding: 10px 28px; font-size: 14px; }
 
   @media (max-width: 480px) {
-    #memory .title { font-size: 22px; }
-    #memory .chip { padding: 8px 14px; font-size: 13px; }
+    #memory .title { font-size: 20px; }
+    #memory .chip { padding: 9px 14px; font-size: 13px; }
     #experience .top-actions { top: calc(56px + env(safe-area-inset-top)); left: 8px; gap: 6px; }
     #experience .top-actions button { padding: 7px 10px; font-size: 12px; }
   }
@@ -322,14 +223,14 @@
   <section id="landing" class="screen active">
     <div class="badge">MEMORY · COLOR · TREE</div>
     <h1 data-en="Curate a year, grow a tree">用一年记忆，种一棵树</h1>
-    <p data-en="Pick your tags, grab a color from your outfit — watch your memories become a unique glowing Christmas tree.">选择你的年度状态标签，再取一抹身上的颜色——<br>让记忆和色彩一起，长成一棵只属于你的圣诞树。</p>
+    <p data-en="Your choices carry emotional weight. Science shows colors and feelings link across cultures — we turn yours into light.">选择你的年度状态标签。心理学研究显示——颜色与情绪有跨文化的稳定关联，<br>我们会把你的每一个选择，变成树上的一束光。</p>
     <div style="display:flex; gap:10px; margin-bottom:28px; flex-wrap:wrap; justify-content:center;">
-      <div class="chip" style="background:rgba(10,12,24,.58); border:1px solid rgba(255,255,255,.16); border-radius:16px; padding:14px 18px; font-size:14px; width:110px; color:var(--text); backdrop-filter:blur(6px);" data-en="① Curate"><b style="font-size:20px; display:block; margin-bottom:6px;">①</b>选择记忆</div>
-      <div class="chip" style="background:rgba(10,12,24,.58); border:1px solid rgba(255,255,255,.16); border-radius:16px; padding:14px 18px; font-size:14px; width:110px; color:var(--text); backdrop-filter:blur(6px);" data-en="② Extract"><b style="font-size:20px; display:block; margin-bottom:6px;">②</b>提取颜色</div>
-      <div class="chip" style="background:rgba(10,12,24,.58); border:1px solid rgba(255,255,255,.16); border-radius:16px; padding:14px 18px; font-size:14px; width:110px; color:var(--text); backdrop-filter:blur(6px);" data-en="③ Light up"><b style="font-size:20px; display:block; margin-bottom:6px;">③</b>点亮成长</div>
+      <div style="background:rgba(10,12,24,.58); border:1px solid rgba(255,255,255,.16); border-radius:16px; padding:14px 18px; font-size:14px; width:110px; color:var(--text); backdrop-filter:blur(6px);" data-en="① Curate"><b style="font-size:20px; display:block; margin-bottom:6px;">①</b>选择记忆</div>
+      <div style="background:rgba(10,12,24,.58); border:1px solid rgba(255,255,255,.16); border-radius:16px; padding:14px 18px; font-size:14px; width:110px; color:var(--text); backdrop-filter:blur(6px);" data-en="② Map emotion"><b style="font-size:20px; display:block; margin-bottom:6px;">②</b>映射情绪色</div>
+      <div style="background:rgba(10,12,24,.58); border:1px solid rgba(255,255,255,.16); border-radius:16px; padding:14px 18px; font-size:14px; width:110px; color:var(--text); backdrop-filter:blur(6px);" data-en="③ Light up"><b style="font-size:20px; display:block; margin-bottom:6px;">③</b>点亮成长</div>
     </div>
     <button id="btnStart" data-en="Start curating my year →">开始策展我的年度记忆 →</button>
-    <div class="note" data-en="Everything stays on your device — no data is uploaded.">一切数据仅在你的设备本地处理，不会上传任何内容。</div>
+    <div class="note" data-en="Everything stays on your device — no data is uploaded. Based on 128 years of color-emotion psychology research (Jonauskaite & Mohr 2025).">一切数据仅在你的设备本地处理。<br>色彩映射基于128年色-情绪心理学研究综述（Jonauskaite & Mohr 2025）。</div>
   </section>
 
   <!-- ============ Memory Tag ============ -->
@@ -353,42 +254,18 @@
     </div>
   </section>
 
-  <!-- ============ Capture ============ -->
-  <section id="capture" class="screen">
-    <div class="video-wrap"><video id="camVideo" playsinline autoplay muted></video></div>
-    <div class="overlay"><div class="frame"></div></div>
-    <div class="topbar">
-      <h2 data-en="Capture colors">拍摄颜色 <span id="camLabel" style="font-size:11px;color:#a8a2c0;font-weight:400">· 后置</span></h2>
-      <div style="display:flex;gap:8px">
-        <button class="ghost btn-switch-cam" style="padding:6px 12px; font-size:14px;" data-en="Switch Cam">切换镜头</button>
-        <button class="ghost" id="btnBackMemory" style="padding:6px 12px; font-size:14px;" data-en="Back">返回</button>
-      </div>
-    </div>
-    <div class="bottom">
-      <div class="tip" id="captureTip" data-en="Stand in front of the camera and fill the frame with your outfit.">站在镜头前，让衣服占满取景框，光线尽量均匀。</div>
-      <div id="palette">
-        <div class="swatch" id="sw0" data-en="Star">星光</div>
-        <div class="swatch" id="sw1" data-en="Ribbon">光带</div>
-        <div class="swatch" id="sw2" data-en="Dots">光点</div>
-      </div>
-      <div class="actions">
-        <button class="ghost" id="btnPickImage" style="padding:10px 18px; font-size:14px;" data-en="Gallery">相册</button>
-        <button class="ghost" id="btnRecapture" style="padding:10px 18px; font-size:14px;" data-en="Retake">重拍</button>
-        <button id="btnCapture" style="padding:10px 24px; font-size:14px;" data-en="Extract">提取颜色</button>
-      </div>
-      <div class="actions" style="margin-top:4px">
-        <button id="btnToExper" style="padding:10px 32px; font-size:15px;" disabled data-en="Light up my tree →">点亮我的树 →</button>
-      </div>
-      <input type="file" id="imageInput" accept="image/*" style="display:none">
-    </div>
-  </section>
-
   <!-- ============ Experience ============ -->
   <section id="experience" class="screen">
     <canvas id="treeCanvas"></canvas>
     <div id="stageBadge">STAGE <b id="stageText">0 / 6</b></div>
+    <div id="memorySnapshot">
+      <div class="ms-title">YOUR MEMORY</div>
+      <div class="ms-row" id="msStudy">—</div>
+      <div class="ms-row" id="msSocial">—</div>
+      <div class="ms-row" id="msMindset">—</div>
+      <div class="ms-row" id="msKeyword">—</div>
+    </div>
     <div class="top-actions">
-      <button class="btn-switch-cam" style="padding:6px 10px; font-size:12px;" data-en="Switch Cam">切换镜头</button>
       <button id="btnRestart" style="padding:6px 10px; font-size:12px;" data-en="Replay">重新生成</button>
       <button id="btnSave" style="padding:6px 10px; font-size:12px;" data-en="Save PNG">保存图片</button>
     </div>
@@ -412,201 +289,323 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation@0.1.1675465747/selfie_segmentation.js" crossorigin="anonymous"></script>
-
 <script>
 /* ============================================================
-   年度记忆策展 · 圣诞树生成器
-   流程：Landing → Memory Tags (4 pages) → Capture → Experience (6 stages)
-   6个生长阶段：树根 → 树干 → 树枝 → 彩灯 → 礼物 → 树顶星星
+   年度记忆策展 · 圣诞树生成器 v2
+   基于 Jonauskaite & Mohr (2025) 128年色-情绪研究综述的心理学色彩系统
+   流程：Landing → Memory (4 pages) → Experience (6 stages)
+   6 层生长：树根 → 树干 → 树枝 → 彩灯 → 礼物 → 树顶星星
    ============================================================ */
 
 const $ = (id) => document.getElementById(id);
 
 /* ---------- 随机背景 ---------- */
-let currentBgSrc = 'bg-1.jpg';
 (function pickRandomBackground() {
-  const ex = $('experience');
-  if (!ex) return;
   const idx = 1 + Math.floor(Math.random() * 9);
-  currentBgSrc = `bg-${idx}.jpg`;
-  ex.style.setProperty('--bg-img', `url('${currentBgSrc}')`);
+  $('experience').style.setProperty('--bg-img', `url('bg-${idx}.jpg')`);
 })();
 
-/* ---------- 状态 ---------- */
-const state = {
-  stream: null,
-  colors: null,
-  stage: 0,             // 0-6
-  facing: 'environment',
-  spinning: false,
-  treeRotation: 0,
-  animating: true,
-  tags: {               // 年度记忆标签
-    study: null,        // 学业/工作
-    social: null,       // 社交
-    mindset: null,      // 心态
-    keyword: null       // 年度关键词
-  }
-};
-
-/* ---------- 屏幕切换 ---------- */
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  $(id).classList.add('active');
-}
-function toast(msg) {
+/* ---------- 工具 ---------- */
+function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); $(id).classList.add('active'); }
+function toast(msg, en) {
   const t = $('toast');
-  t.innerHTML = msg + '<br><button onclick="this.parentNode.style.display=\'none\'">好的</button>';
+  t.innerHTML = msg + (en ? '<span class="toast-en">' + en + '</span>' : '') + '<br><button onclick="this.parentNode.style.display=\'none\'">好的</button>';
   t.style.display = 'block';
 }
-// 同时设置中文文本 + data-en 英文小字（原版双语系统）
 function setBilingual(id, zh, en) {
-  const el = $(id);
-  if (!el) return;
+  const el = $(id); if (!el) return;
   el.textContent = zh;
-  if (en) el.dataset.en = en;
-  else el.removeAttribute('data-en');
+  if (en) el.dataset.en = en; else el.removeAttribute('data-en');
 }
 
 /* ============================================================
-   年度记忆标签 · 数据与交互
+   心理学色彩系统
+   依据：Jonauskaite & Mohr (2025), 128 years, 132 studies, 42,266 participants
+   HSL 模型：h(0-360), s(0-1), l(0-1)
+   
+   核心规律（跨文化一致）：
+   - 红 H≈0/360  → 高强度情绪（爱/愤怒/力量）双极性
+   - 黄/橙 H≈40-30 → 积极高唤醒（快乐/愉悦/兴奋）
+   - 绿 H≈120 / 青 H≈170 / 蓝 H≈210 → 积极低唤醒（舒适/放松/平静）
+   - 粉 H≈340 → 积极（爱/愉悦/快乐）
+   - 紫 H≈270 → 力量/自豪，但也恐惧
+   - 白 H≈0 s≈0 l≈1 → 积极平静（希望/解脱）
+   - 饱和度 ↑ → 情绪能量 ↑，饱和度 ↓ → 平静
+   - 亮度 ↑ → 正面倾向，亮度 ↓ → 负面倾向
+   
+   慰藉色策略：
+   - 低唤醒负情绪 → 蓝/绿/青 + 白
+   - 高唤醒负情绪 → 柔青绿 + 柔暖粉
+   - 压力/力量感 → 柔米白 + 柔绿
    ============================================================ */
 
+/* 4 个维度 × 每个维度 8 个选项
+   每个选项携带：
+   { zh, en, emotion: Plutchik基本情绪,
+     primary: {h,s,l} 情绪主色, valence: 'pos'|'neg', arousal: 'low'|'high',
+     comfort: [{h,s,l}] 慰藉色（负情绪才需要） } */
 const MEMORY_PAGES = [
   {
-    key: 'study', icon: '📚', title: '学业 / 工作',
-    subtitle: '这一年你把主要精力放在哪里？',
-    chips: ['深度学习', '稳扎稳打', '多方尝试', '探索边界', '需要更多方向']
+    key: 'study', title: '学业 / 工作', titleEn: 'Study / Work',
+    subtitle: '这一年你把主要精力放在哪里？', subtitleEn: 'Where did this year go?',
+    chips: [
+      { zh: '深度学习', en: 'Deep focus', emotion: 'trust+anticipation',
+        primary: {h: 175, s: 0.65, l: 0.45}, valence: 'pos', arousal: 'low',
+        comfort: [{h: 40, s: 0.55, l: 0.78}] },   // 青绿（信任）+ 柔金（成就慰藉）
+      { zh: '稳扎稳打', en: 'Steady progress', emotion: 'trust',
+        primary: {h: 160, s: 0.50, l: 0.50}, valence: 'pos', arousal: 'low',
+        comfort: [{h: 45, s: 0.60, l: 0.80}] },  // 青绿+淡金
+      { zh: '多方尝试', en: 'Trying many paths', emotion: 'surprise+anticipation',
+        primary: {h: 200, s: 0.70, l: 0.55}, valence: 'pos', arousal: 'high',
+        comfort: [{h: 170, s: 0.55, l: 0.65}] }, // 亮青+柔青绿
+      { zh: '探索边界', en: 'Pushing boundaries', emotion: 'anticipation',
+        primary: {h: 30, s: 0.80, l: 0.55}, valence: 'pos', arousal: 'high',
+        comfort: [{h: 25, s: 0.70, l: 0.70}] },  // 暖橙（期待）+ 柔粉橙
+      { zh: '需要更多方向', en: 'Seeking direction', emotion: 'fear+anticipation',
+        primary: {h: 250, s: 0.35, l: 0.35}, valence: 'neg', arousal: 'high',
+        comfort: [{h: 180, s: 0.55, l: 0.60}, {h: 35, s: 0.45, l: 0.80}] }, // 暗紫（不确定）+ 柔青绿+柔米（慰藉）
+      { zh: '节奏卡顿', en: 'Felt stuck', emotion: 'sadness+disgust',
+        primary: {h: 240, s: 0.25, l: 0.30}, valence: 'neg', arousal: 'low',
+        comfort: [{h: 165, s: 0.50, l: 0.65}, {h: 50, s: 0.50, l: 0.85}] },  // 暗蓝（悲伤）+ 柔青绿+柔白（慰藉）
+      { zh: '成果超出预期', en: 'Exceeded goals', emotion: 'joy+trust',
+        primary: {h: 45, s: 0.90, l: 0.60}, valence: 'pos', arousal: 'high',
+        comfort: [{h: 170, s: 0.60, l: 0.70}] }, // 金黄（快乐）+ 青绿（持久支撑）
+      { zh: '学到了但很累', en: 'Learned but drained', emotion: 'trust+sadness',
+        primary: {h: 155, s: 0.40, l: 0.45}, valence: 'neg', arousal: 'low',
+        comfort: [{h: 35, s: 0.65, l: 0.75}, {h: 0, s: 0, l: 0.92}] }   // 暗青绿（疲惫信任）+ 柔暖粉+白（恢复）
+    ]
   },
   {
-    key: 'social', icon: '👥', title: '社交节奏',
-    subtitle: '这一年你和朋友、同事的相处状态？',
-    chips: ['热热闹闹', '偶尔小聚', '独处充电', '新友相遇', '联系变少了']
+    key: 'social', title: '社交节奏', titleEn: 'Social rhythm',
+    subtitle: '这一年你和朋友、同事的相处状态？', subtitleEn: 'How did social life feel?',
+    chips: [
+      { zh: '热热闹闹', en: 'Lively', emotion: 'joy',
+        primary: {h: 15, s: 0.85, l: 0.55}, valence: 'pos', arousal: 'high',
+        comfort: [{h: 340, s: 0.65, l: 0.70}] },  // 暖红橙（快乐）+ 柔粉
+      { zh: '偶尔小聚', en: 'Occasional meetups', emotion: 'trust',
+        primary: {h: 160, s: 0.55, l: 0.55}, valence: 'pos', arousal: 'low',
+        comfort: [{h: 40, s: 0.50, l: 0.80}] },  // 青绿（舒适信任）+ 柔金
+      { zh: '独处充电', en: 'Recharging alone', emotion: 'trust+anticipation',
+        primary: {h: 200, s: 0.60, l: 0.55}, valence: 'pos', arousal: 'low',
+        comfort: [{h: 170, s: 0.55, l: 0.70}] }, // 冷蓝绿（独处平静）+ 柔青绿
+      { zh: '新友相遇', en: 'New connections', emotion: 'surprise+joy',
+        primary: {h: 50, s: 0.85, l: 0.60}, valence: 'pos', arousal: 'high',
+        comfort: [{h: 340, s: 0.60, l: 0.75}] }, // 亮黄（惊讶快乐）+ 柔粉
+      { zh: '联系变少了', en: 'Distanced', emotion: 'sadness',
+        primary: {h: 250, s: 0.30, l: 0.32}, valence: 'neg', arousal: 'low',
+        comfort: [{h: 175, s: 0.50, l: 0.65}, {h: 40, s: 0.45, l: 0.82}] }, // 暗蓝紫（失落）+ 柔青绿+柔米
+      { zh: '小圈子很暖', en: 'Warm small circle', emotion: 'trust+joy',
+        primary: {h: 25, s: 0.75, l: 0.60}, valence: 'pos', arousal: 'low',
+        comfort: [{h: 165, s: 0.50, l: 0.68}] }, // 暖橙（温暖）+ 青绿（稳定）
+      { zh: '社交消耗大', en: 'Socially drained', emotion: 'fear+sadness',
+        primary: {h: 270, s: 0.25, l: 0.28}, valence: 'neg', arousal: 'high',
+        comfort: [{h: 180, s: 0.55, l: 0.62}, {h: 340, s: 0.55, l: 0.78}] }, // 暗紫（压力恐惧）+ 柔青绿+柔粉（平衡唤醒）
+      { zh: '保持中立挺好', en: 'Balanced', emotion: 'trust',
+        primary: {h: 150, s: 0.45, l: 0.55}, valence: 'pos', arousal: 'low',
+        comfort: [{h: 50, s: 0.45, l: 0.80}] }   // 柔绿（平衡）+ 柔淡金
+    ]
   },
   {
-    key: 'mindset', icon: '💭', title: '内心状态',
-    subtitle: '回望这一年，你的底色是？',
-    chips: ['充实满足', '稳步成长', '经历低谷', '寻找自己', '平静如水']
+    key: 'mindset', title: '内心状态', titleEn: 'Inner state',
+    subtitle: '回望这一年，你的底色是？', subtitleEn: 'Looking back — how did you feel inside?',
+    chips: [
+      { zh: '充实满足', en: 'Fulfilled', emotion: 'joy+trust',
+        primary: {h: 48, s: 0.88, l: 0.62}, valence: 'pos', arousal: 'high',
+        comfort: [{h: 165, s: 0.55, l: 0.68}] }, // 金黄（快乐+成就）+ 青绿（稳定感）
+      { zh: '稳步成长', en: 'Growing steadily', emotion: 'trust+anticipation',
+        primary: {h: 165, s: 0.60, l: 0.52}, valence: 'pos', arousal: 'low',
+        comfort: [{h: 42, s: 0.55, l: 0.78}] }, // 青绿（成长+信任）+ 柔金（方向感）
+      { zh: '经历低谷', en: 'Hit a low point', emotion: 'sadness+anger',
+        primary: {h: 230, s: 0.40, l: 0.32}, valence: 'neg', arousal: 'high',
+        comfort: [{h: 175, s: 0.55, l: 0.60}, {h: 340, s: 0.55, l: 0.75}, {h: 0, s: 0, l: 0.92}] }, // 暗蓝（悲伤）+ 青绿(平静)+柔粉(自我关怀)+白(解脱)
+      { zh: '寻找自己', en: 'Searching for self', emotion: 'anticipation+trust',
+        primary: {h: 200, s: 0.55, l: 0.50}, valence: 'pos', arousal: 'low',
+        comfort: [{h: 170, s: 0.55, l: 0.68}] }, // 冷蓝（探索）+ 青绿（锚点）
+      { zh: '平静如水', en: 'Like calm water', emotion: 'trust',
+        primary: {h: 185, s: 0.50, l: 0.58}, valence: 'pos', arousal: 'low',
+        comfort: [{h: 45, s: 0.45, l: 0.82}] }, // 柔青（平静）+ 柔淡金（温暖加持）
+      { zh: '焦虑辗转', en: 'Anxious nights', emotion: 'fear+anger',
+        primary: {h: 275, s: 0.35, l: 0.30}, valence: 'neg', arousal: 'high',
+        comfort: [{h: 175, s: 0.55, l: 0.58}, {h: 35, s: 0.50, l: 0.80}] }, // 暗紫（焦虑恐惧）+ 青绿(平静)+柔米(缓冲)
+      { zh: '想通了一些事', en: 'Clarity arrived', emotion: 'trust+surprise',
+        primary: {h: 190, s: 0.70, l: 0.60}, valence: 'pos', arousal: 'medium',
+        comfort: [{h: 40, s: 0.55, l: 0.78}] }, // 亮青（清晰）+ 柔金（顿悟）
+      { zh: '接受了不完美', en: 'Accepted imperfection', emotion: 'trust',
+        primary: {h: 160, s: 0.42, l: 0.58}, valence: 'pos', arousal: 'low',
+        comfort: [{h: 50, s: 0.40, l: 0.85}] }   // 柔绿（接纳）+ 柔白（包容）
+    ]
   },
   {
-    key: 'keyword', icon: '🔑', title: '年度关键词',
-    subtitle: '如果用一个词总结这一年，是什么？（选一个或自己写）',
-    chips: ['成长', '变化', '坚持', '遇见', '重启', '自由', '专注', '相信'],
-    allowCustom: true
+    key: 'keyword', title: '年度关键词', titleEn: 'Year keyword',
+    subtitle: '如果用一个词总结这一年？（选一个或自己写）', subtitleEn: 'One word to sum it up?',
+    chips: [
+      { zh: '成长', en: 'Growth', emotion: 'trust+anticipation', primary: {h: 160, s: 0.70, l: 0.48}, valence: 'pos', arousal: 'low' },
+      { zh: '变化', en: 'Change', emotion: 'surprise', primary: {h: 200, s: 0.80, l: 0.55}, valence: 'pos', arousal: 'high' },
+      { zh: '坚持', en: 'Persistence', emotion: 'trust+anticipation', primary: {h: 35, s: 0.85, l: 0.52}, valence: 'pos', arousal: 'medium' },
+      { zh: '遇见', en: 'Encounter', emotion: 'joy+surprise', primary: {h: 48, s: 0.88, l: 0.60}, valence: 'pos', arousal: 'high' },
+      { zh: '重启', en: 'Reboot', emotion: 'anticipation+trust', primary: {h: 175, s: 0.70, l: 0.55}, valence: 'pos', arousal: 'medium' },
+      { zh: '自由', en: 'Freedom', emotion: 'joy', primary: {h: 135, s: 0.72, l: 0.55}, valence: 'pos', arousal: 'medium' },
+      { zh: '专注', en: 'Focus', emotion: 'trust', primary: {h: 225, s: 0.60, l: 0.52}, valence: 'pos', arousal: 'low' },
+      { zh: '感谢', en: 'Gratitude', emotion: 'joy+trust', primary: {h: 32, s: 0.78, l: 0.62}, valence: 'pos', arousal: 'medium' },
+      { zh: '告别', en: 'Letting go', emotion: 'sadness+trust', primary: {h: 230, s: 0.40, l: 0.42}, valence: 'neg', arousal: 'low' }
+    ],
+    allowCustom: true,
+    /* 自定义关键词 → 根据用户输入情绪关键词匹配，或随机一个积极色 */
+    customColorFallback: {h: 170, s: 0.65, l: 0.55} // 青绿（未知但向好的方向）
   }
 ];
 
-let currentMemoryPage = 0;
+/* ---------- 颜色聚合引擎 ----------
+   输入：4维度选择的 chip 数据
+   输出：3 个最终 HSL 颜色 + 饱和度随机化
+   
+   策略：
+   1. 4 个主色 + 负情绪慰藉色（只取正情绪不需要慰藉，因为本身已是调节色）
+   2. 按 valence 加权：正面权重 1.0，负面权重 0.6（慰藉色权重 0.35）
+   3. 色相用圆形平均（HSL 直接会穿模）
+   4. 最终 3 色：饱和度 ±15% 随机，亮度固定
+   
+   同选项 = 同色相 → 饱和度随机 → 颜色相似但不单调
+*/
+function hsToRgb(h, s, l) {
+  h = ((h % 360) + 360) % 360 / 360;
+  s = Math.max(0, Math.min(1, s));
+  l = Math.max(0, Math.min(1, l));
+  if (s === 0) { const v = Math.round(l * 255); return { r: v, g: v, b: v }; }
+  const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+  const p = 2 * l - q;
+  const hue2rgb = (t) => {
+    if (t < 0) t += 1; if (t > 1) t -= 1;
+    if (t < 1/6) return p + (q - p) * 6 * t;
+    if (t < 1/2) return q;
+    if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+    return p;
+  };
+  return { r: Math.round(hue2rgb(h + 1/3) * 255), g: Math.round(hue2rgb(h) * 255), b: Math.round(hue2rgb(h - 1/3) * 255) };
+}
+function cssHS(h, s, l, a = 1) { return `hsla(${h.toFixed(0)}, ${(s*100).toFixed(0)}%, ${(l*100).toFixed(0)}%, ${a})`; }
+function cssHS2(h, s, l, a = 1) { const {r,g,b} = hsToRgb(h, s, l); return `rgba(${r},${g},${b},${a})`; }
+function hslToObj(c) { return { h: c.h, s: c.s, l: c.l }; }
 
-function renderMemoryPage(idx) {
-  const page = MEMORY_PAGES[idx];
-  const container = $('memoryPage');
-  const isDone = state.tags[page.key] !== null && state.tags[page.key] !== '';
+/* 圆形均值（处理色相环绕问题） */
+function circularMeanH(hs, weights) {
+  let sinS = 0, cosS = 0, totalW = 0;
+  for (let i = 0; i < hs.length; i++) {
+    const w = weights[i] ?? 1;
+    const rad = hs[i] * Math.PI / 180;
+    sinS += Math.sin(rad) * w; cosS += Math.cos(rad) * w; totalW += w;
+  }
+  if (totalW === 0) return 0;
+  let meanRad = Math.atan2(sinS / totalW, cosS / totalW);
+  let deg = meanRad * 180 / Math.PI;
+  if (deg < 0) deg += 360;
+  return deg;
+}
 
-  container.innerHTML = `
-    <div class="title"><span style="font-size:26px;">${page.icon}</span> ${page.title}</div>
-    <div class="subtitle">${page.subtitle}</div>
-    <div class="tag-container">
-      <div class="tag-group">
-        <div class="tag-chips" id="chipGroup">
-          ${page.chips.map(c => `<div class="chip ${state.tags[page.key] === c ? 'selected' : ''}" data-val="${c}">${c}</div>`).join('')}
-        </div>
-        ${page.allowCustom ? `
-          <div style="margin-top:14px;">
-            <input type="text" class="keyword-input" id="customKeyword" placeholder="或输入自己的关键词…" maxlength="8" value="${state.tags[page.key] && !page.chips.includes(state.tags[page.key]) ? state.tags[page.key] : ''}">
-          </div>
-        ` : ''}
-      </div>
-    </div>
-  `;
-
-  // 点击标签
-  container.querySelectorAll('.chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      container.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
-      chip.classList.add('selected');
-      state.tags[page.key] = chip.dataset.val;
-      $('customKeyword') && ($('customKeyword').value = '');
-      updateMemoryButtons();
-    });
+/* 核心：颜色聚合 */
+function buildColors(tags) {
+  const pageChipMap = {};
+  MEMORY_PAGES.forEach(p => {
+    if (p.allowCustom) {
+      // 关键词页：检查是否匹配预设
+      const match = p.chips.find(c => c.zh === tags.keyword || c.en?.toLowerCase() === tags.keyword?.toLowerCase());
+      if (match) { pageChipMap[p.key] = match; }
+      else {
+        // 自定义关键词 → fallback 到一个适中的积极色
+        pageChipMap[p.key] = { zh: tags.keyword, primary: p.customColorFallback, valence: 'pos', arousal: 'medium', emotion: 'trust' };
+      }
+    } else {
+      pageChipMap[p.key] = p.chips.find(c => c.zh === tags[p.key]) || p.chips[0];
+    }
   });
 
-  // 自定义关键词
-  const kw = $('customKeyword');
-  if (kw) {
-    kw.addEventListener('input', () => {
-      const v = kw.value.trim();
-      container.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
-      state.tags[page.key] = v || null;
-      updateMemoryButtons();
-    });
+  /* 构建颜色池 */
+  const pool = []; // { h, s, l, weight, role: 'primary'|'comfort', page }
+  for (const key of ['study', 'social', 'mindset', 'keyword']) {
+    const chip = pageChipMap[key];
+    const isNeg = chip.valence === 'neg';
+    pool.push({ h: chip.primary.h, s: chip.primary.s, l: chip.primary.l, weight: isNeg ? 0.6 : 1.0, role: 'primary', page: key, arousal: chip.arousal });
+    if (chip.comfort && chip.comfort.length) {
+      for (const c of chip.comfort) {
+        pool.push({ h: c.h, s: c.s, l: c.l, weight: 0.35, role: 'comfort', page: key, arousal: 'low' });
+      }
+    }
   }
 
-  updateMemoryButtons();
-  updateProgressDots();
-  $('pageIndicator').textContent = `${idx + 1} / ${MEMORY_PAGES.length}`;
+  /* 加权平均 → 3 个主色：
+     col0（顶星星）：study + keyword 主色 + 全部慰藉色 主导
+     col1（光带/礼物）：social + mindset 主色 + 积极情绪慰藉色
+     col2（彩灯/飘浮）：综合平均 */
+  function weightedAverage(selector, saturationJitter = 0) {
+    const picked = pool.filter(selector);
+    const hs = picked.map(p => p.h);
+    const ws = picked.map(p => p.weight);
+    const sMean = picked.reduce((a, p) => a + p.s * p.weight, 0) / picked.reduce((a, p) => a + p.weight, 0);
+    const lMean = picked.reduce((a, p) => a + p.l * p.weight, 0) / picked.reduce((a, p) => a + p.weight, 0);
+    const h = circularMeanH(hs, ws);
+    let s = Math.max(0.12, Math.min(0.95, sMean + (Math.random() * 2 - 1) * saturationJitter));
+    const l = Math.max(0.22, Math.min(0.88, lMean));
+    return { h, s, l };
+  }
+
+  const col0 = weightedAverage(p => p.role === 'primary' && (p.page === 'study' || p.page === 'keyword'));
+  const col1 = weightedAverage(p => p.role === 'primary' && (p.page === 'social' || p.page === 'mindset'));
+  const col2 = weightedAverage(() => true);
+
+  /* 确保三色色相差异 > 25度，避免太像 */
+  function hueDiff(a, b) {
+    const d = Math.abs(a - b);
+    return Math.min(d, 360 - d);
+  }
+  const final = [col0, col1, col2];
+  for (let i = 0; i < 3; i++) {
+    for (let j = i + 1; j < 3; j++) {
+      if (hueDiff(final[i].h, final[j].h) < 25) {
+        final[j].h = (final[j].h + 30) % 360;
+      }
+    }
+  }
+
+  /* 同项 = 同色相 → 饱和度 ±15% 随机 */
+  final.forEach(c => { c.s = Math.max(0.15, Math.min(0.92, c.s + (Math.random() * 0.3 - 0.15))); });
+
+  /* 转 RGB */
+  return final.map(c => hsToRgb(c.h, c.s, c.l));
 }
 
-function updateMemoryButtons() {
-  const page = MEMORY_PAGES[currentMemoryPage];
-  const done = state.tags[page.key] !== null && state.tags[page.key] !== '';
-  $('btnNextMemory').disabled = !done;
-  $('btnPrevMemory').style.visibility = currentMemoryPage === 0 ? 'hidden' : 'visible';
+/* 形态参数：情绪 → 树的物理形状 */
+function getTreeParams(tags) {
+  const pmap = {
+    study: {
+      '深度学习': { heightMult: 1.10 }, '稳扎稳打': { heightMult: 1.05 },
+      '多方尝试': { heightMult: 0.92 }, '探索边界': { heightMult: 1.15 },
+      '需要更多方向': { heightMult: 0.80 }, '节奏卡顿': { heightMult: 0.75 },
+      '成果超出预期': { heightMult: 1.12 }, '学到了但很累': { heightMult: 0.88 }
+    },
+    social: {
+      '热热闹闹': { trunkW: 1.35, giftN: 18 }, '偶尔小聚': { trunkW: 1.05, giftN: 12 },
+      '独处充电': { trunkW: 0.82, giftN: 8 }, '新友相遇': { trunkW: 1.18, giftN: 14 },
+      '联系变少了': { trunkW: 0.72, giftN: 6 }, '小圈子很暖': { trunkW: 1.15, giftN: 13 },
+      '社交消耗大': { trunkW: 0.78, giftN: 7 }, '保持中立挺好': { trunkW: 0.95, giftN: 10 }
+    },
+    mindset: {
+      '充实满足': { branchD: 1.35, rootC: 0.85 }, '稳步成长': { branchD: 1.15, rootC: 0.65 },
+      '经历低谷': { branchD: 0.65, rootC: 0.35 }, '寻找自己': { branchD: 1.05, rootC: 0.55 },
+      '平静如水': { branchD: 0.92, rootC: 0.50 }, '焦虑辗转': { branchD: 0.55, rootC: 0.28 },
+      '想通了一些事': { branchD: 1.10, rootC: 0.60 }, '接受了不完美': { branchD: 0.88, rootC: 0.45 }
+    }
+  };
+  const d = { heightMult: 1.05, trunkW: 1.0, giftN: 12, branchD: 1.0, rootC: 0.55 };
+  Object.assign(d, pmap.study?.[tags.study] || {});
+  Object.assign(d, pmap.social?.[tags.social] || {});
+  Object.assign(d, pmap.mindset?.[tags.mindset] || {});
+  return d;
 }
-
-function updateProgressDots() {
-  for (let i = 0; i < MEMORY_PAGES.length; i++) {
-    const d = $(`progDot${i}`);
-    if (!d) continue;
-    d.className = 'dot';
-    if (i < currentMemoryPage) d.classList.add('done');
-    else if (i === currentMemoryPage) d.classList.add('active');
-  }
-}
-
-/* Memory 按钮事件 */
-$('btnStart').onclick = () => {
-  currentMemoryPage = 0;
-  showScreen('memory');
-  renderMemoryPage(0);
-};
-$('btnBackLanding').onclick = () => showScreen('landing');
-$('btnPrevMemory').onclick = () => {
-  if (currentMemoryPage > 0) {
-    currentMemoryPage--;
-    renderMemoryPage(currentMemoryPage);
-  }
-};
-$('btnNextMemory').onclick = () => {
-  const page = MEMORY_PAGES[currentMemoryPage];
-  if (!state.tags[page.key]) return;
-  if (currentMemoryPage < MEMORY_PAGES.length - 1) {
-    currentMemoryPage++;
-    renderMemoryPage(currentMemoryPage);
-  } else {
-    // 完成所有标签 → 进入取色
-    showScreen('capture');
-    startCamera();
-  }
-};
-$('btnBackMemory').onclick = () => {
-  stopCamera();
-  currentMemoryPage = MEMORY_PAGES.length - 1;
-  showScreen('memory');
-  renderMemoryPage(currentMemoryPage);
-};
 
 /* ============================================================
-   音乐系统（保留原有）
+   音乐系统
    ============================================================ */
-let audioCtx = null;
-let musicOn = true;
-let masterGain = null;
-let convolver = null;
-let reverbBus = null;
-let musicTimer = null;
-let activeOscs = [];
+let audioCtx = null, musicOn = true, masterGain = null, convolver = null, reverbBus = null, musicTimer = null, activeOscs = [];
 const BPM = 68, BEAT = 60 / BPM, BAR = BEAT * 4;
 const CHORDS = [
   { root: 130.81, notes: [261.63, 329.63, 392.00] },
@@ -626,19 +625,14 @@ const MELODY = [
 ];
 const TOTAL_BEATS = 32;
 function makeReverbIR(ctx) {
-  const len = ctx.sampleRate * 3;
-  const ir = ctx.createBuffer(2, len, ctx.sampleRate);
-  for (let ch = 0; ch < 2; ch++) {
-    const d = ir.getChannelData(ch);
-    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.6);
-  }
+  const len = ctx.sampleRate * 3; const ir = ctx.createBuffer(2, len, ctx.sampleRate);
+  for (let ch = 0; ch < 2; ch++) { const d = ir.getChannelData(ch); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.6); }
   return ir;
 }
 function initAudio() {
   if (audioCtx) return;
   audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  masterGain = audioCtx.createGain(); masterGain.gain.value = 0.6;
-  masterGain.connect(audioCtx.destination);
+  masterGain = audioCtx.createGain(); masterGain.gain.value = 0.6; masterGain.connect(audioCtx.destination);
   convolver = audioCtx.createConvolver(); convolver.buffer = makeReverbIR(audioCtx);
   reverbBus = audioCtx.createGain(); reverbBus.gain.value = 0.42;
   convolver.connect(reverbBus); reverbBus.connect(masterGain);
@@ -676,18 +670,13 @@ function playBell(freq, start, dur) {
 function scheduleOrchestra() {
   if (!musicOn || !audioCtx) return;
   const t0 = audioCtx.currentTime + 0.12;
-  for (let bar = 0; bar < TOTAL_BEATS / 4; bar++) {
-    const chord = CHORDS[bar % CHORDS.length]; const t = t0 + bar * BAR;
-    playPad(chord.notes, t, BAR * 1.01); playBass(chord.root, t, BAR * 0.96);
-  }
+  for (let bar = 0; bar < TOTAL_BEATS / 4; bar++) { const chord = CHORDS[bar % CHORDS.length]; const t = t0 + bar * BAR; playPad(chord.notes, t, BAR * 1.01); playBass(chord.root, t, BAR * 0.96); }
   for (const [freq, sb, db] of MELODY) playBell(freq, t0 + sb * BEAT, db * BEAT);
   musicTimer = setTimeout(scheduleOrchestra, TOTAL_BEATS * BEAT * 1000 - 80);
 }
 function toggleMusic() {
-  initAudio();
-  if (audioCtx.state === 'suspended') audioCtx.resume();
-  musicOn = !musicOn; const btn = $('btnMusic');
-  btn.textContent = musicOn ? '♫' : '♪'; btn.classList.toggle('muted', !musicOn);
+  initAudio(); if (audioCtx.state === 'suspended') audioCtx.resume();
+  musicOn = !musicOn; const btn = $('btnMusic'); btn.textContent = musicOn ? '♫' : '♪'; btn.classList.toggle('muted', !musicOn);
   if (musicOn) { clearTimeout(musicTimer); scheduleOrchestra(); }
   else { clearTimeout(musicTimer); activeOscs.forEach(o => { try { o.stop(); } catch (e) {} }); activeOscs = []; }
 }
@@ -698,247 +687,118 @@ function autoStartMusic() {
   musicStarted = true; initAudio();
   if (audioCtx.state === 'suspended') audioCtx.resume();
   scheduleOrchestra();
-  document.removeEventListener('pointerdown', autoStartMusic);
-  document.removeEventListener('keydown', autoStartMusic);
+  document.removeEventListener('pointerdown', autoStartMusic); document.removeEventListener('keydown', autoStartMusic);
 }
-document.addEventListener('pointerdown', autoStartMusic);
-document.addEventListener('keydown', autoStartMusic);
+document.addEventListener('pointerdown', autoStartMusic); document.addEventListener('keydown', autoStartMusic);
 
 /* ============================================================
-   摄像头
+   状态
    ============================================================ */
-async function startCamera() {
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    toast('当前浏览器不支持摄像头，请换用 Chrome / Safari / Edge 打开。');
-    return false;
-  }
-  try {
-    state.stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: state.facing, width: { ideal: 1280 }, height: { ideal: 720 } },
-      audio: false
-    });
-    $('camVideo').srcObject = state.stream;
-    $('camVideo').style.transform = state.facing === 'user' ? 'scaleX(-1)' : 'none';
-    await $('camVideo').play();
-    $('camLabel').textContent = state.facing === 'user' ? '· 前置' : '· 后置';
-    initSegmentation();
-    return true;
-  } catch (err) {
-    toast('无法访问摄像头：' + err.message);
-    return false;
-  }
-}
-function stopCamera() {
-  if (state.stream) { state.stream.getTracks().forEach(t => t.stop()); state.stream = null; }
-}
-async function switchCamera() {
-  const prev = state.facing;
-  stopCamera();
-  state.facing = prev === 'user' ? 'environment' : 'user';
-  const ok = await startCamera();
-  if (!ok) { state.facing = prev; await startCamera(); }
-}
-document.querySelectorAll('.btn-switch-cam').forEach(b => b.addEventListener('click', switchCamera));
+const state = {
+  stage: 0, spinning: false, treeRotation: 0, animating: true,
+  tags: { study: null, social: null, mindset: null, keyword: null },
+  colors: null
+};
+let currentMemoryPage = 0;
 
 /* ============================================================
-   颜色提取
+   Memory 标签选择
    ============================================================ */
-function rgbToHsl(r, g, b) {
-  r /= 255; g /= 255; b /= 255;
-  const max = Math.max(r, g, b), min = Math.min(r, g, b);
-  const l = (max + min) / 2; let h = 0, s = 0;
-  if (max !== min) {
-    const d = max - min; s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-    switch (max) { case r: h = ((g - b) / d + (g < b ? 6 : 0)); break; case g: h = ((b - r) / d + 2); break; case b: h = ((r - g) / d + 4); break; }
-    h /= 6;
-  }
-  return { h, s, l };
-}
-function hslToRgb(h, s, l) {
-  if (s === 0) { const v = Math.round(l * 255); return { r: v, g: v, b: v }; }
-  const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-  const p = 2 * l - q;
-  const hue2rgb = (t) => { if (t < 0) t += 1; if (t > 1) t -= 1; if (t < 1/6) return p + (q - p) * 6 * t; if (t < 1/2) return q; if (t < 2/3) return p + (q - p) * (2/3 - t) * 6; return p; };
-  return { r: Math.round(hue2rgb(h + 1/3) * 255), g: Math.round(hue2rgb(h) * 255), b: Math.round(hue2rgb(h - 1/3) * 255) };
-}
-function boostSaturation(c) {
-  const { h, s, l } = rgbToHsl(c.r, c.g, c.b);
-  const ns = s >= 0.5 ? s : Math.min(1, 0.5 * Math.pow(s / 0.5, 0.65));
-  return hslToRgb(h, ns, l);
-}
-function clusterColors(data, mask, useMask, random) {
-  const buckets = {}; const total = data.length / 4; const indices = [];
-  if (random) for (let k = 0; k < 9000; k++) indices.push((Math.random() * total) | 0);
-  else for (let i = 0; i < total; i++) indices.push(i);
-  for (const i of indices) {
-    const idx = i * 4;
-    if (useMask && mask && mask[idx] < 110) continue;
-    const r = data[idx], g = data[idx + 1], b = data[idx + 2];
-    const { h, s, l } = rgbToHsl(r, g, b);
-    const minS = useMask ? 0.15 : 0.05, minL = useMask ? 0.12 : 0.06, maxL = useMask ? 0.92 : 0.97;
-    if (s < minS || l < minL || l > maxL) continue;
-    const hb = Math.floor(h * 24), sb = Math.min(2, Math.floor(s * 3));
-    const key = hb * 10 + sb;
-    if (!buckets[key]) buckets[key] = { n: 0, r: 0, g: 0, b: 0, sSum: 0 };
-    buckets[key].n++; buckets[key].r += r; buckets[key].g += g; buckets[key].b += b; buckets[key].sSum += s;
-  }
-  const sorted = Object.values(buckets)
-    .map(d => ({ ...d, sAvg: d.sSum / d.n }))
-    .sort((a, b) => { const sa = a.n * (0.35 + 1.3 * a.sAvg), sb = b.n * (0.35 + 1.3 * b.sAvg); return sb - sa; });
-  const defaults = [{ r: 255, g: 190, b: 60 }, { r: 255, g: 70, b: 110 }, { r: 80, g: 180, b: 255 }];
-  const chosen = [];
-  for (const d of sorted) {
-    const col = { r: Math.round(d.r / d.n), g: Math.round(d.g / d.n), b: Math.round(d.b / d.n) };
-    if (chosen.some(c => colorDistance(c, col) < 55)) continue;
-    chosen.push(col);
-    if (chosen.length === 3) break;
-  }
-  const boosted = chosen.map(c => boostSaturation(c));
-  for (let i = boosted.length; i < 3; i++) boosted.push(defaults[i]);
-  return boosted;
-}
-function colorDistance(a, b) { return Math.sqrt((a.r - b.r) ** 2 + (a.g - b.g) ** 2 + (a.b - b.b) ** 2); }
-function css(c, alpha = 1) { return `rgba(${c.r},${c.g},${c.b},${alpha})`; }
-function lighten(c, amt) { return { r: Math.min(255, Math.round(c.r + (255 - c.r) * amt)), g: Math.min(255, Math.round(c.g + (255 - c.g) * amt)), b: Math.min(255, Math.round(c.b + (255 - c.b) * amt)) }; }
+function renderMemoryPage(idx) {
+  const page = MEMORY_PAGES[idx];
+  const container = $('memoryPage');
+  const currentSel = state.tags[page.key];
 
-let segmentation = null;
-async function initSegmentation() {
-  if (segmentation) return true;
-  if (typeof SelfieSegmentation === 'undefined') return false;
-  try {
-    segmentation = new SelfieSegmentation({ locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation@0.1.1675465747/${file}` });
-    segmentation.setOptions({ modelSelection: 1 });
-    return true;
-  } catch (e) { segmentation = null; return false; }
-}
-function detectPerson(video) {
-  return new Promise(resolve => {
-    if (!segmentation) { resolve(null); return; }
-    let settled = false;
-    const finish = (val) => { if (!settled) { settled = true; resolve(val); } };
-    segmentation.onResults(results => {
-      try {
-        const mc = document.createElement('canvas'); mc.width = 100; mc.height = 100;
-        const mctx = mc.getContext('2d', { willReadFrequently: true });
-        mctx.drawImage(results.segmentationMask, 0, 0, 100, 100);
-        const md = mctx.getImageData(0, 0, 100, 100).data;
-        let fg = 0;
-        for (let i = 0; i < md.length; i += 4) if (md[i] > 110) fg++;
-        finish({ mask: md, ratio: fg / 10000 });
-      } catch (e) { finish(null); }
+  container.innerHTML = `
+    <div class="title" data-en="${page.titleEn}">${page.title}</div>
+    <div class="subtitle" data-en="${page.subtitleEn}">${page.subtitle}</div>
+    <div class="tag-container">
+      <div class="tag-chips" id="chipGroup">
+        ${page.chips.map((c, i) => `
+          <div class="chip ${currentSel === c.zh ? 'selected' : ''} quick-enter" style="animation-delay: ${i * 60}ms" data-val="${c.zh}" data-en="${c.en}">${c.zh}</div>
+        `).join('')}
+        ${page.allowCustom ? `<div style="width:100%; margin-top:12px;"><input type="text" class="keyword-input" id="customKeyword" placeholder="或输入自己的关键词…" maxlength="8" value="${currentSel && !page.chips.find(c => c.zh === currentSel) ? currentSel : ''}"></div>` : ''}
+      </div>
+    </div>
+  `;
+
+  container.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      container.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+      chip.classList.add('selected');
+      state.tags[page.key] = chip.dataset.val;
+      if ($('customKeyword')) $('customKeyword').value = '';
+      updateButtons();
     });
-    try { segmentation.send({ image: video }).catch(() => finish(null)); }
-    catch (e) { finish(null); }
   });
+  const kw = $('customKeyword');
+  if (kw) kw.addEventListener('input', () => {
+    const v = kw.value.trim();
+    container.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+    state.tags[page.key] = v || null;
+    updateButtons();
+  });
+
+  updateButtons(); updateProgressDots();
+  $('pageIndicator').textContent = `${idx + 1} / ${MEMORY_PAGES.length}`;
 }
-function captureFrame(video, useCenterOnly = false) {
-  const c = document.createElement('canvas'); const cx = c.getContext('2d', { willReadFrequently: true });
-  const W = 100, H = 100; c.width = W; c.height = H;
-  const vw = video.videoWidth, vh = video.videoHeight;
-  if (useCenterOnly) { const sw = vw * 0.5, sh = vh * 0.6; cx.drawImage(video, (vw - sw) / 2, (vh - sh) / 2, sw, sh, 0, 0, W, H); }
-  else cx.drawImage(video, 0, 0, vw, vh, 0, 0, W, H);
-  return cx.getImageData(0, 0, W, H).data;
+function updateButtons() {
+  const page = MEMORY_PAGES[currentMemoryPage];
+  const done = state.tags[page.key] !== null && state.tags[page.key] !== '';
+  $('btnNextMemory').disabled = !done;
+  $('btnPrevMemory').style.visibility = currentMemoryPage === 0 ? 'hidden' : 'visible';
 }
-async function extractColorsSmart(video) {
-  await initSegmentation();
-  const person = await detectPerson(video);
-  const hasPerson = person && person.ratio > 0.04;
-  if (hasPerson) {
-    const frame = captureFrame(video, false);
-    return { colors: clusterColors(frame, person.mask, true, false), hasPerson: true, ratio: person.ratio };
+function updateProgressDots() {
+  for (let i = 0; i < MEMORY_PAGES.length; i++) {
+    const d = $(`progDot${i}`); if (!d) continue;
+    d.className = 'dot';
+    if (i < currentMemoryPage) d.classList.add('done');
+    else if (i === currentMemoryPage) d.classList.add('active');
   }
-  const frame = captureFrame(video, false);
-  return { colors: clusterColors(frame, null, false, true), hasPerson: false, ratio: person ? person.ratio : 0 };
 }
 
-/* Capture 交互 */
-$('btnCapture').onclick = async () => {
-  const v = $('camVideo');
-  if (v.readyState < 2) { toast('摄像头还没准备好，请稍等。'); return; }
-  $('btnCapture').disabled = true; setBilingual('btnCapture', '检测中…', 'Detecting...');
-  let result;
-  try { result = await extractColorsSmart(v); }
-  catch (e) { result = { colors: clusterColors(captureFrame(v, true), null, false, false), hasPerson: false }; }
-  state.colors = result.colors;
-  ['sw0', 'sw1', 'sw2'].forEach((id, i) => { $(id).style.background = css(result.colors[i]); $(id).classList.add('show'); });
-  setBilingual('captureTip',
-    result.hasPerson ? '✓ 已提取衣服上的 3 种颜色' : '✓ 已提取环境中的 3 种颜色',
-    result.hasPerson ? 'Person detected — 3 outfit colors extracted' : 'No person — top 3 environment colors');
-  $('btnToExper').disabled = false; $('btnCapture').disabled = false;
-  setBilingual('btnCapture', '重新提取', 'Extract Again');
-};
-$('btnRecapture').onclick = () => {
-  state.colors = null;
-  ['sw0', 'sw1', 'sw2'].forEach(id => $(id).classList.remove('show'));
-  $('btnToExper').disabled = true; $('btnCapture').disabled = false;
-  setBilingual('btnCapture', '提取颜色', 'Extract');
-  setBilingual('captureTip', '站在镜头前让衣服占满取景框。', 'Fill the frame with your outfit.');
-};
-$('btnPickImage').onclick = () => $('imageInput').click();
-$('imageInput').addEventListener('change', (e) => {
-  const file = e.target.files && e.target.files[0]; if (!file) return;
-  const img = new Image();
-  img.onload = () => {
-    try {
-      const c = document.createElement('canvas'); const cx = c.getContext('2d', { willReadFrequently: true });
-      c.width = 100; c.height = 100; cx.drawImage(img, 0, 0, 100, 100);
-      const data = cx.getImageData(0, 0, 100, 100).data;
-      const colors = clusterColors(data, null, false, true);
-      state.colors = colors;
-      ['sw0', 'sw1', 'sw2'].forEach((id, i) => { $(id).style.background = css(colors[i]); $(id).classList.add('show'); });
-      setBilingual('captureTip', '✓ 已从图片提取 3 种主色', '✓ 3 main colors extracted from the image');
-      $('btnToExper').disabled = false; $('btnCapture').disabled = false;
-      setBilingual('btnCapture', '重新提取', 'Extract Again');
-    } catch (err) { toast('图片处理失败：' + err.message); }
-    URL.revokeObjectURL(img.src);
-  };
-  img.src = URL.createObjectURL(file); e.target.value = '';
-});
-$('btnToExper').onclick = () => {
-  if (!state.colors) return;
-  stopCamera();
-  showScreen('experience');
-  resetExperience();
+/* Landing / Memory 按钮 */
+$('btnStart').onclick = () => { currentMemoryPage = 0; showScreen('memory'); renderMemoryPage(0); };
+$('btnBackLanding').onclick = () => showScreen('landing');
+$('btnPrevMemory').onclick = () => { if (currentMemoryPage > 0) { currentMemoryPage--; renderMemoryPage(currentMemoryPage); } };
+$('btnNextMemory').onclick = () => {
+  const page = MEMORY_PAGES[currentMemoryPage];
+  if (!state.tags[page.key]) return;
+  if (currentMemoryPage < MEMORY_PAGES.length - 1) { currentMemoryPage++; renderMemoryPage(currentMemoryPage); }
+  else {
+    /* 4 页全部完成 → 构建颜色 → 进入 Experience */
+    state.colors = buildColors(state.tags);
+    showScreen('experience');
+    resetExperience();
+  }
 };
 
 /* ============================================================
    6 阶段树生长
-   阶段 0: 空背景
-   阶段 1: 树根（学业）
-   阶段 2: 树干（社交）
-   阶段 3: 树枝（心态）
-   阶段 4: 彩灯（关键词）
-   阶段 5: 礼物（取色）
-   阶段 6: 树顶星星 + 光带（完成）
    ============================================================ */
-
 const STAGE_HINTS = [
-  { big: '点击一下，种下记忆的根 🌱', bigEn: 'Tap once, plant the root of memory 🌱', sub: '你的学业/工作努力会让树根更扎实', subEn: 'Your study/work effort shapes a solid root' },
-  { big: '再点一下，长出树干 🌲', bigEn: 'Tap again, grow the trunk 🌲', sub: '社交节奏决定树干的挺拔程度', subEn: 'Your social rhythm shapes how tall it stands' },
+  { big: '点击一下，种下记忆的根 🌱', bigEn: 'Tap once, plant the root 🌱', sub: '你的学业/工作努力会让树根更扎实', subEn: 'Your study/effort shapes a solid root' },
+  { big: '再点一下，长出树干 🌲', bigEn: 'Tap again, grow the trunk 🌲', sub: '社交节奏决定树干的挺拔程度', subEn: 'Social rhythm shapes how tall it stands' },
   { big: '点击第三下，展开枝桠 🌿', bigEn: 'Third tap, branches unfold 🌿', sub: '你的内心状态塑造每一根枝条', subEn: 'Your mindset bends every branch' },
   { big: '点亮彩灯 ✨', bigEn: 'Light up the ornaments ✨', sub: '年度关键词化为闪烁的光芒', subEn: 'Your keyword becomes twinkling light' },
-  { big: '堆起礼物 🎁', bigEn: 'Stack up the gifts 🎁', sub: '你提取的颜色会包裹这些礼物', subEn: 'Your extracted colors wrap each gift' },
+  { big: '堆起礼物 🎁', bigEn: 'Stack up the gifts 🎁', sub: '色彩聚合系统的慰藉色包裹这些礼物', subEn: 'Comfort colors wrap each gift' },
   { big: '最后一下，点亮树顶星星 ⭐', bigEn: 'Final tap, light the star ⭐', sub: '让记忆完整发光，和光带一起旋转吧', subEn: 'Memories fully lit, ribbons start spinning' }
 ];
-
+let stageTimes = {};
 function setStage(stage) {
   if (stage <= state.stage) return;
-  state.stage = stage;
-  stageTimes[stage] = time;
-  setBilingual('stageText', stage + ' / 6', `STAGE ${stage}/6`);
+  state.stage = stage; stageTimes[stage] = time;
+  setBilingual('stageText', `${stage} / 6`, `STAGE ${stage}/6`);
   document.querySelectorAll('#progress .p').forEach((p, i) => p.classList.toggle('on', i < stage));
   if (stage < 6) {
     setBilingual('hintBig', STAGE_HINTS[stage - 1].big, STAGE_HINTS[stage - 1].bigEn);
     setBilingual('hintSub', STAGE_HINTS[stage - 1].sub, STAGE_HINTS[stage - 1].subEn);
   } else {
     setBilingual('hintBig', '✨ 你的年度记忆树完成啦 ✨', '✨ Your memory tree is complete ✨');
-    setBilingual('hintSub', '树已开始旋转 · 点击「保存图片」留住这一刻', 'The tree spins · Tap Save PNG to keep this moment');
-    state.spinning = true;
-    burstCelebration();
+    setBilingual('hintSub', '树已开始旋转 · 点击「保存图片」留住这一刻', 'The tree spins · Tap Save PNG');
+    state.spinning = true; burstCelebration();
   }
 }
-
-/* 点击解锁阶段 */
 let clickCount = 0, clickTimer = null;
 $('treeCanvas').addEventListener('click', () => {
   if (state.stage >= 6) return;
@@ -948,16 +808,32 @@ $('treeCanvas').addEventListener('click', () => {
   if (clickCount >= need) { clickCount = 0; clearTimeout(clickTimer); setStage(state.stage + 1); }
 });
 
+function updateMemorySnapshot() {
+  const t = state.tags;
+  if (!t.study) return;
+  const pages = { study: MEMORY_PAGES[0], social: MEMORY_PAGES[1], mindset: MEMORY_PAGES[2], keyword: MEMORY_PAGES[3] };
+  for (const k of ['study', 'social', 'mindset', 'keyword']) {
+    const page = pages[k];
+    const chip = page.chips.find(c => c.zh === t[k]);
+    const zh = chip?.zh ?? t[k] ?? '—';
+    const en = chip?.en ?? t[k] ?? '';
+    const row = $(k === 'keyword' ? 'msKeyword' : `ms${k.charAt(0).toUpperCase() + k.slice(1)}`);
+    if (row) {
+      row.textContent = zh;
+      if (en) row.dataset.en = en; else row.removeAttribute('data-en');
+    }
+  }
+}
+
 function resetExperience() {
-  state.stage = 0;
-  state.spinning = false; state.treeRotation = 0;
+  state.stage = 0; state.spinning = false; state.treeRotation = 0;
   clickCount = 0; clearTimeout(clickTimer);
   resetSnow(); tree.rebuild();
   setBilingual('stageText', '0 / 6', 'STAGE 0/6');
   document.querySelectorAll('#progress .p').forEach(p => p.classList.remove('on'));
   setBilingual('hintBig', STAGE_HINTS[0].big, STAGE_HINTS[0].bigEn);
   setBilingual('hintSub', STAGE_HINTS[0].sub, STAGE_HINTS[0].subEn);
-  stageTimes = {};
+  updateMemorySnapshot(); stageTimes = {};
 }
 $('btnRestart').onclick = resetExperience;
 
@@ -984,179 +860,79 @@ $('btnSave').onclick = () => {
       if (isWeChat()) showSaveSheet(dataUrl);
       else { const link = document.createElement('a'); link.download = 'memory-tree-' + Date.now() + '.png'; link.href = dataUrl; document.body.appendChild(link); link.click(); link.remove(); }
     };
-    const bg = new Image(); bg.onload = () => draw(bg); bg.onerror = () => draw(null); bg.src = currentBgSrc;
+    const idx = 1 + Math.floor(Math.random() * 9);
+    const bg = new Image(); bg.onload = () => draw(bg); bg.onerror = () => draw(null); bg.src = `bg-${idx}.jpg`;
   } catch (e) { toast('保存失败：' + e.message); }
 };
 
 /* ============================================================
-   Canvas 渲染
+   Canvas 粒子圣诞树
    ============================================================ */
 const canvas = $('treeCanvas');
 const ctx = canvas.getContext('2d');
-let W = 0, H = 0, DPR = 1;
-let time = 0, lastTs = 0;
-let stageTimes = {};
-
-/* ---------- 形态参数由标签决定 ---------- */
-function getTreeParams() {
-  const t = state.tags;
-  // 学业 → 树的高度系数（树根扎实度）
-  const studyHeights = { '深度学习': 1.08, '稳扎稳打': 1.0, '多方尝试': 0.92, '探索边界': 1.12, '需要更多方向': 0.85 };
-  // 社交 → 树干粗壮 + 礼物数量
-  const socialGiftMult = { '热热闹闹': 1.4, '偶尔小聚': 1.0, '独处充电': 0.8, '新友相遇': 1.2, '联系变少了': 0.7 };
-  // 心态 → 树枝密度 + 颜色倾向
-  const mindsetDensity = { '充实满足': 1.3, '稳步成长': 1.1, '经历低谷': 0.7, '寻找自己': 1.0, '平静如水': 0.9 };
-  // 关键词 → 彩灯闪烁速度 + 星星独特性（随机化）
-
-  return {
-    heightMult: studyHeights[t.study] ?? 1.0,
-    trunkWidthMult: socialGiftMult[t.social] ?? 1.0,
-    giftMult: socialGiftMult[t.social] ?? 1.0,
-    branchDensityMult: mindsetDensity[t.mindset] ?? 1.0,
-    twinkleMult: 0.8 + Math.random() * 0.6,
-    keywordSeed: hashString(t.keyword ?? 'tree')
-  };
-}
-function hashString(s) { let h = 0; for (let i = 0; i < s.length; i++) h = ((h << 5) - h + s.charCodeAt(i)) | 0; return Math.abs(h); }
+let W = 0, H = 0, DPR = 1, time = 0, lastTs = 0;
+function css(c, a = 1) { return `rgba(${c.r},${c.g},${c.b},${a})`; }
+function lighten(c, amt) { return { r: Math.min(255, Math.round(c.r + (255 - c.r) * amt)), g: Math.min(255, Math.round(c.g + (255 - c.g) * amt)), b: Math.min(255, Math.round(c.b + (255 - c.b) * amt)) }; }
 
 const tree = {
-  particles: [], lights: [], dots: [], twinkles: [], glints: [], starSparks: [],
-  gifts: [], rootParticles: [], trunkParticles: [], branches: [],
+  particles: [], lights: [], dots: [], twinkles: [], glints: [], starSparks: [], gifts: [], rootParticles: [], trunkParticles: [],
   rebuild() {
-    const p = getTreeParams();
-    const cx = 0.5; // 归一化坐标
-    // ===== 树根 =====
+    const params = getTreeParams(state.tags);
+    const cx = 0.5; const col0 = state.colors?.[0] || { r: 255, g: 216, b: 107 };
     this.rootParticles = [];
-    const rootCount = Math.floor(600 * p.heightMult);
-    for (let i = 0; i < rootCount; i++) {
-      const ang = Math.PI * 0.5 + (Math.random() - 0.5) * Math.PI * 0.9; // 向下扇形
-      const dist = 0.02 + Math.random() * 0.06;
+    for (let i = 0; i < Math.floor(600 * params.heightMult * params.rootC * 1.6); i++) {
+      const ang = Math.PI * 0.5 + (Math.random() - 0.5) * Math.PI * 0.9;
       this.rootParticles.push({
-        ax: cx + Math.cos(ang) * dist,
-        ay: 0.91 + Math.sin(ang) * dist * 0.8,
+        ax: cx + Math.cos(ang) * (0.02 + Math.random() * 0.06),
+        ay: 0.91 + Math.sin(ang) * (0.02 + Math.random() * 0.06) * 0.8,
         thickness: 0.3 + Math.random() * 0.6,
-        swayPhase: Math.random() * Math.PI * 2,
-        swaySpeed: 0.3 + Math.random() * 0.6
+        swayPhase: Math.random() * Math.PI * 2, swaySpeed: 0.3 + Math.random() * 0.6
       });
     }
-
-    // ===== 树干 =====
     this.trunkParticles = [];
-    const trunkCount = Math.floor(400 * p.trunkWidthMult);
-    const trunkTopY = 0.62, trunkBotY = 0.91;
-    for (let i = 0; i < trunkCount; i++) {
+    for (let i = 0; i < Math.floor(400 * params.trunkW); i++) {
       const t = Math.random();
-      const y = trunkTopY + t * (trunkBotY - trunkTopY);
-      const width = (0.018 + 0.015 * t) * p.trunkWidthMult;
-      const x = cx + (Math.random() - 0.5) * width * 2;
-      this.trunkParticles.push({ x, y, size: 0.5 + Math.random() * 0.8, phase: Math.random() * Math.PI * 2 });
+      const y = 0.62 + t * 0.29;
+      const width = (0.018 + 0.015 * t) * params.trunkW;
+      this.trunkParticles.push({ x: cx + (Math.random() - 0.5) * width * 2, y, size: 0.5 + Math.random() * 0.8, phase: Math.random() * Math.PI * 2 });
     }
-
-    // ===== 树枝（锥形体） =====
     this.particles = [];
-    const branchCount = Math.floor(12000 * p.branchDensityMult);
-    for (let i = 0; i < branchCount; i++) {
-      const t = Math.pow(Math.random(), 0.62);
-      const ang = Math.random() * Math.PI * 2;
+    for (let i = 0; i < Math.floor(12000 * params.branchD); i++) {
+      const t = Math.pow(Math.random(), 0.62); const ang = Math.random() * Math.PI * 2;
       const edge = Math.random() < 0.62;
       const r = edge ? 0.72 + 0.36 * Math.random() : Math.sqrt(Math.random()) * 0.92;
       const scatter = edge ? (Math.random() - 0.5) * 0.085 * (0.4 + t) : 0;
-      this.particles.push({
-        t, ang, r, scatter,
-        jy: (Math.random() - 0.5) * 0.013,
-        size: 0.22 + Math.random() * 0.95,
-        phase: Math.random() * Math.PI * 2,
-        speed: 0.3 + Math.random() * 1.5,
-        streak: Math.random() < 0.8 ? 0.9 + Math.random() * 0.95 : 0,
-        edge
-      });
+      this.particles.push({ t, ang, r, scatter, jy: (Math.random() - 0.5) * 0.013, size: 0.22 + Math.random() * 0.95, phase: Math.random() * Math.PI * 2, speed: 0.3 + Math.random() * 1.5, streak: Math.random() < 0.8 ? 0.9 + Math.random() * 0.95 : 0, edge });
     }
-
-    // ===== 彩灯 =====
     this.lights = [];
-    const lightCount = Math.floor(700 * p.twinkleMult);
-    for (let i = 0; i < lightCount; i++) {
-      const t = Math.pow(Math.random(), 0.6);
-      const ang = Math.random() * Math.PI * 2;
-      this.lights.push({
-        t, ang,
-        r: 0.35 + 0.65 * Math.random(),
-        ci: i % 3,
-        size: 0.9 + Math.random() * 1.8,
-        phase: Math.random() * Math.PI * 2,
-        speed: (0.6 + Math.random() * 1.4) * p.twinkleMult
-      });
+    for (let i = 0; i < Math.floor(700 * (0.8 + Math.random() * 0.6)); i++) {
+      const t = Math.pow(Math.random(), 0.6); const ang = Math.random() * Math.PI * 2;
+      this.lights.push({ t, ang, r: 0.35 + 0.65 * Math.random(), ci: i % 3, size: 0.9 + Math.random() * 1.8, phase: Math.random() * Math.PI * 2, speed: 0.6 + Math.random() * 1.4 });
     }
-
-    // ===== 礼物（围绕树干底部） =====
     this.gifts = [];
-    const giftCount = Math.floor(14 * p.giftMult);
-    for (let i = 0; i < giftCount; i++) {
+    const giftColors = state.colors || [{ r: 255, g: 190, b: 60 }, { r: 255, g: 70, b: 110 }, { r: 80, g: 180, b: 255 }];
+    for (let i = 0; i < params.giftN; i++) {
       const ang = Math.random() * Math.PI * 2;
-      const dist = 0.08 + Math.random() * 0.05;
-      const colors = state.colors || [{ r: 255, g: 190, b: 60 }, { r: 255, g: 70, b: 110 }, { r: 80, g: 180, b: 255 }];
       this.gifts.push({
-        x: cx + Math.cos(ang) * dist,
+        x: cx + Math.cos(ang) * (0.08 + Math.random() * 0.05),
         y: 0.92 + Math.random() * 0.03,
-        w: 0.025 + Math.random() * 0.025,
-        h: 0.02 + Math.random() * 0.02,
-        color: colors[i % 3],
-        ribbonColor: colors[(i + 1) % 3],
+        w: 0.025 + Math.random() * 0.025, h: 0.02 + Math.random() * 0.02,
+        color: giftColors[i % 3], ribbonColor: giftColors[(i + 1) % 3],
         phase: Math.random() * Math.PI * 2
       });
     }
-
-    // ===== 飘动光点 =====
     this.dots = [];
     for (let i = 0; i < 110; i++) {
-      const t = Math.random();
-      const inTree = Math.random() < 0.6;
+      const t = Math.random(), inTree = Math.random() < 0.6;
       const spread = inTree ? (0.1 + t * 0.4) : (0.3 + t * 0.75);
-      this.dots.push({
-        nx: 0.5 + (Math.random() - 0.5) * spread * 2,
-        ny: 0.1 + Math.random() * 0.82,
-        size: 0.5 + Math.random() * 1.9,
-        phase: Math.random() * Math.PI * 2,
-        speed: 0.2 + Math.random() * 0.9,
-        vy: 0.00001 + Math.random() * 0.00005
-      });
+      this.dots.push({ nx: 0.5 + (Math.random() - 0.5) * spread * 2, ny: 0.1 + Math.random() * 0.82, size: 0.5 + Math.random() * 1.9, phase: Math.random() * Math.PI * 2, speed: 0.2 + Math.random() * 0.9, vy: 0.00001 + Math.random() * 0.00005 });
     }
-
-    // ===== 闪烁星点 & 闪光 =====
     this.twinkles = [];
-    for (let i = 0; i < 220; i++) {
-      this.twinkles.push({
-        t: Math.pow(Math.random(), 0.62),
-        ang: Math.random() * Math.PI * 2,
-        r: 0.3 + 0.7 * Math.random(),
-        size: 0.7 + Math.random() * 1.6,
-        phase: Math.random() * Math.PI * 2,
-        speed: 1.2 + Math.random() * 2.2
-      });
-    }
+    for (let i = 0; i < 220; i++) this.twinkles.push({ t: Math.pow(Math.random(), 0.62), ang: Math.random() * Math.PI * 2, r: 0.3 + 0.7 * Math.random(), size: 0.7 + Math.random() * 1.6, phase: Math.random() * Math.PI * 2, speed: 1.2 + Math.random() * 2.2 });
     this.glints = [];
-    for (let i = 0; i < 46; i++) {
-      this.glints.push({
-        t: Math.pow(Math.random(), 0.7),
-        ang: Math.random() * Math.PI * 2,
-        r: 0.35 + 0.6 * Math.random(),
-        size: 1.8 + Math.random() * 2.2,
-        phase: Math.random() * Math.PI * 2,
-        speed: 0.8 + Math.random() * 1.6,
-        tint: Math.random() < 0.65 ? 0 : (Math.random() < 0.5 ? 1 : 2)
-      });
-    }
-
-    // ===== 树顶星星芒 =====
+    for (let i = 0; i < 46; i++) this.glints.push({ t: Math.pow(Math.random(), 0.7), ang: Math.random() * Math.PI * 2, r: 0.35 + 0.6 * Math.random(), size: 1.8 + Math.random() * 2.2, phase: Math.random() * Math.PI * 2, speed: 0.8 + Math.random() * 1.6, tint: Math.random() < 0.65 ? 0 : (Math.random() < 0.5 ? 1 : 2) });
     this.starSparks = [];
-    for (let i = 0; i < 48; i++) {
-      this.starSparks.push({
-        angle: Math.random() * Math.PI * 2,
-        len: 8 + Math.random() * 55,
-        phase: Math.random() * Math.PI * 2,
-        speed: 0.5 + Math.random()
-      });
-    }
+    for (let i = 0; i < 48; i++) this.starSparks.push({ angle: Math.random() * Math.PI * 2, len: 8 + Math.random() * 55, phase: Math.random() * Math.PI * 2, speed: 0.5 + Math.random() });
   },
   init() { this.rebuild(); window.addEventListener('resize', () => this.resize()); this.resize(); },
   resize() {
@@ -1167,61 +943,46 @@ const tree = {
   }
 };
 
-function growProgress(stage) {
-  // 阶段生长进度 0→1
-  const t0 = stageTimes[stage] ?? time;
-  return Math.min(1, (time - t0) / 2.0);
-}
-function growEase(stage) {
-  return 1 - Math.pow(1 - growProgress(stage), 3);
-}
+function growProgress(stage) { const t0 = stageTimes[stage] ?? time; return Math.min(1, (time - t0) / 2.0); }
+function growEase(stage) { return 1 - Math.pow(1 - growProgress(stage), 3); }
 
 function render(ts) {
   requestAnimationFrame(render);
   if (!lastTs) lastTs = ts;
   const dt = Math.min(50, ts - lastTs) / 1000;
   lastTs = ts; time += dt;
-
   if (state.stage >= 6) state.treeRotation += dt * 0.5;
-
   ctx.clearRect(0, 0, W, H);
   drawBackground(dt);
-
-  // 6 层从后到前绘制
   if (state.stage >= 3) drawMistBack();
-  if (state.stage >= 1) drawRoot();       // Stage 1: 树根
-  if (state.stage >= 2) drawTrunk();     // Stage 2: 树干
-  if (state.stage >= 3) drawBranches();  // Stage 3: 树枝（锥形）
-  if (state.stage >= 4) drawLights();    // Stage 4: 彩灯
-  if (state.stage >= 4) drawTwinkles();
-  if (state.stage >= 4) drawGlints();
-  if (state.stage >= 5) drawGifts();     // Stage 5: 礼物
-  if (state.stage >= 6) drawTopStar();   // Stage 6: 星星
-  if (state.stage >= 6) drawSpiralRibbons();
+  if (state.stage >= 1) drawRoot();
+  if (state.stage >= 2) drawTrunk();
+  if (state.stage >= 3) drawBranches();
+  if (state.stage >= 4) { drawLights(); drawTwinkles(); drawGlints(); }
+  if (state.stage >= 5) drawGifts();
+  if (state.stage >= 6) { drawTopStar(); drawSpiralRibbons(); }
   if (state.stage >= 3) drawMistFront();
   if (state.stage >= 6) drawFloatingDots();
   drawSnowPile();
-
   if (celebration.length) drawCelebration(dt);
 }
 
-/* ---------- 通用树度量 ---------- */
+/* ---------- 树度量 ---------- */
 function treeMetrics() {
+  const params = getTreeParams(state.tags);
   const cx = W / 2;
-  const params = getTreeParams();
   const baseY = H * 0.91;
-  const topY = H * 0.08 + (1 - params.heightMult) * H * 0.05;
+  const topY = H * 0.08 - (params.heightMult - 1) * H * 0.04;
   const height = baseY - topY;
   const halfW = Math.min(W * 0.48, height * 0.7);
-  return { cx, baseY, topY, height, halfW };
+  return { cx, baseY, topY, height, halfW, params };
 }
 
 /* ---------- 背景 & 雪花 ---------- */
 const sparkles = [], snowfall = [], SNOW_BINS = 64;
 let snowBank = new Array(SNOW_BINS).fill(0.006), snowDrifts = [];
 function resetSnow() {
-  snowBank = new Array(SNOW_BINS).fill(0.006);
-  snowDrifts = [];
+  snowBank = new Array(SNOW_BINS).fill(0.006); snowDrifts = [];
   for (let i = 0; i < 26; i++) snowDrifts.push({ x: Math.random(), r: 18 + Math.random() * 46, bump: 0.35 + Math.random() * 0.9, phase: Math.random() * Math.PI * 2 });
   sparkles.length = 0;
   for (let i = 0; i < 18; i++) sparkles.push({ x: 0.04 + Math.random() * 0.92, y: 0.05 + Math.random() * 0.80, size: 1.4 + Math.random() * 2.2, phase: Math.random() * Math.PI * 2, speed: 0.6 + Math.random() * 1.3 });
@@ -1268,11 +1029,7 @@ function updateSnow(dt) {
 function drawSnowPile() {
   ctx.save();
   const step = W / (SNOW_BINS - 1); const ys = snowBank.map(h => H * (1 - h)); const top = Math.min(...ys);
-  const trace = () => {
-    ctx.beginPath(); ctx.moveTo(0, H); ctx.lineTo(0, ys[0]);
-    for (let i = 0; i < SNOW_BINS - 1; i++) { const x0 = i * step, x1 = (i + 1) * step; ctx.quadraticCurveTo(x0, ys[i], (x0 + x1) / 2, (ys[i] + ys[i + 1]) / 2); }
-    ctx.lineTo(W, ys[SNOW_BINS - 1]); ctx.lineTo(W, H); ctx.closePath();
-  };
+  const trace = () => { ctx.beginPath(); ctx.moveTo(0, H); ctx.lineTo(0, ys[0]); for (let i = 0; i < SNOW_BINS - 1; i++) { const x0 = i * step, x1 = (i + 1) * step; ctx.quadraticCurveTo(x0, ys[i], (x0 + x1) / 2, (ys[i] + ys[i + 1]) / 2); } ctx.lineTo(W, ys[SNOW_BINS - 1]); ctx.lineTo(W, H); ctx.closePath(); };
   trace();
   const g = ctx.createLinearGradient(0, top, 0, H);
   g.addColorStop(0, 'rgba(255,255,255,0.99)'); g.addColorStop(0.22, 'rgba(246,250,255,0.98)'); g.addColorStop(0.55, 'rgba(214,228,244,0.96)'); g.addColorStop(1, 'rgba(158,182,212,0.97)');
@@ -1295,8 +1052,9 @@ function drawSnowPile() {
 
 /* ---------- 薄雾 ---------- */
 function drawMistBack() {
+  if (!state.colors) return;
   const { cx, topY, height, halfW } = treeMetrics();
-  const col = state.colors ? state.colors[1] : { r: 255, g: 200, b: 140 };
+  const col = state.colors[1];
   ctx.save(); ctx.globalCompositeOperation = 'lighter';
   const cy = topY + height * 0.58;
   const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, halfW * 2.5);
@@ -1314,65 +1072,52 @@ function drawMistFront() {
   ctx.restore();
 }
 
-/* ---------- Stage 1: 树根 ---------- */
+/* ---------- 6 层生长 ---------- */
 function drawRoot() {
-  const { cx, baseY } = treeMetrics();
-  const grow = growEase(1);
+  const grow = growEase(1); if (grow <= 0) return;
   const silver = { r: 232, g: 227, b: 212 };
   ctx.save(); ctx.globalCompositeOperation = 'lighter';
   for (const r of tree.rootParticles) {
     const sway = Math.sin(time * r.swaySpeed + r.swayPhase) * 2;
-    const x = r.ax * W + sway * grow;
-    const y = r.ay * H;
-    const appear = Math.min(1, (grow - (r.ay - 0.91) * 5) * 3);
-    if (appear <= 0) continue;
+    const x = r.ax * W + sway * grow; const y = r.ay * H;
+    const appear = Math.min(1, (grow - (r.ay - 0.91) * 5) * 3); if (appear <= 0) continue;
     const sz = r.thickness * 1.2 * grow;
     const flick = 0.55 + 0.45 * Math.sin(time * 1.5 + r.swayPhase);
-    ctx.fillStyle = css(silver, 0.06 * flick * appear);
-    ctx.beginPath(); ctx.arc(x, y, sz * 2.4, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = css(silver, 0.35 * flick * appear);
-    ctx.beginPath(); ctx.arc(x, y, sz, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = css(silver, 0.06 * flick * appear); ctx.beginPath(); ctx.arc(x, y, sz * 2.4, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = css(silver, 0.35 * flick * appear); ctx.beginPath(); ctx.arc(x, y, sz, 0, Math.PI * 2); ctx.fill();
   }
   ctx.restore();
 }
-
-/* ---------- Stage 2: 树干 ---------- */
 function drawTrunk() {
-  const grow = growEase(2);
-  const bark = { r: 180, g: 140, b: 100 };
+  const grow = growEase(2); if (grow <= 0) return;
+  const params = getTreeParams(state.tags);
+  const bark = { r: 180 + (params.trunkW - 1) * 30, g: 140, b: 100 };
   const barkDark = { r: 120, g: 90, b: 60 };
   ctx.save(); ctx.globalCompositeOperation = 'lighter';
   for (const p of tree.trunkParticles) {
     const x = p.x * W; const y = p.y * H;
-    const appear = Math.min(1, (grow - (0.91 - p.y / H) * 2) * 2.5);
-    if (appear <= 0) continue;
+    const appear = Math.min(1, (grow - (0.91 - p.y) * 1.5) * 2.5); if (appear <= 0) continue;
     const flick = 0.6 + 0.4 * Math.sin(time * 1.2 + p.phase);
     const col = p.phase % 0.5 > 0.25 ? bark : barkDark;
-    ctx.fillStyle = css(col, 0.12 * flick * appear);
-    ctx.beginPath(); ctx.arc(x, y, p.size * 2, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = css(col, 0.4 * flick * appear);
-    ctx.beginPath(); ctx.arc(x, y, p.size, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = css(col, 0.12 * flick * appear); ctx.beginPath(); ctx.arc(x, y, p.size * 2, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = css(col, 0.4 * flick * appear); ctx.beginPath(); ctx.arc(x, y, p.size, 0, Math.PI * 2); ctx.fill();
   }
   ctx.restore();
 }
-
-/* ---------- Stage 3: 树枝（锥形体） ---------- */
 function drawBranches() {
   const { cx, topY, height, halfW } = treeMetrics();
   const silver = { r: 232, g: 227, b: 212 };
-  const grow = growEase(3);
+  const grow = growEase(3); if (grow <= 0) return;
   ctx.save(); ctx.globalCompositeOperation = 'lighter';
   for (const p of tree.particles) {
-    const delta = grow - p.t;
-    if (delta < 0) continue;
+    const delta = grow - p.t; if (delta < 0) continue;
     const appear = Math.min(1, delta * 5);
     const ang = p.ang + state.treeRotation;
     const maxR = halfW * Math.pow(p.t, 0.92);
     const depth = (Math.cos(ang) + 1) / 2;
     const rad = (maxR * p.r + p.scatter * halfW) * (0.9 + 0.1 * depth);
     const sway = Math.sin(time * p.speed + p.phase) * 1.7;
-    const x = cx + Math.cos(ang) * rad + sway;
-    const y = topY + p.t * height + p.jy * height;
+    const x = cx + Math.cos(ang) * rad + sway; const y = topY + p.t * height + p.jy * height;
     const flick = 0.55 + 0.45 * Math.sin(time * p.speed * 1.6 + p.phase);
     const sz = p.size * (0.65 + 0.6 * flick);
     if (p.streak) {
@@ -1384,54 +1129,40 @@ function drawBranches() {
       ctx.beginPath(); ctx.moveTo(x, y); ctx.quadraticCurveTo(x + wind * 0.25, y + len * 0.55, tipX, y + len); ctx.stroke();
     }
     const shade = 0.35 + 0.65 * depth;
-    ctx.fillStyle = css(silver, 0.028 * flick * appear * shade);
-    ctx.beginPath(); ctx.arc(x, y, sz * 2.6, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = css(silver, (0.18 + 0.3 * flick) * appear * shade);
-    ctx.beginPath(); ctx.arc(x, y, sz, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = css(silver, 0.028 * flick * appear * shade); ctx.beginPath(); ctx.arc(x, y, sz * 2.6, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = css(silver, (0.18 + 0.3 * flick) * appear * shade); ctx.beginPath(); ctx.arc(x, y, sz, 0, Math.PI * 2); ctx.fill();
   }
   ctx.restore();
 }
-
-/* ---------- Stage 4: 彩灯 ---------- */
 function drawLights() {
-  if (!state.colors || !tree.lights) return;
+  if (!state.colors) return;
   const { cx, topY, height, halfW } = treeMetrics();
-  const grow = growEase(4);
+  const grow = growEase(4); if (grow <= 0) return;
   ctx.save(); ctx.globalCompositeOperation = 'lighter';
   for (const p of tree.lights) {
-    const delta = grow - p.t;
-    if (delta < 0) continue;
+    const delta = grow - p.t; if (delta < 0) continue;
     const appear = Math.min(1, delta * 5);
-    const ang = p.ang + state.treeRotation;
-    const depth = (Math.cos(ang) + 1) / 2;
+    const ang = p.ang + state.treeRotation; const depth = (Math.cos(ang) + 1) / 2;
     const maxR = halfW * Math.pow(p.t, 0.92);
-    const x = cx + Math.cos(ang) * maxR * p.r * (0.9 + 0.1 * depth);
-    const y = topY + p.t * height;
+    const x = cx + Math.cos(ang) * maxR * p.r * (0.9 + 0.1 * depth); const y = topY + p.t * height;
     const col = state.colors[p.ci];
     const tw = 0.45 + 0.55 * Math.sin(time * p.speed * 2.2 + p.phase);
     const sz = p.size * (0.65 + 0.55 * tw) * (0.85 + 0.25 * depth);
-    const bright = lighten(col, 0.35);
-    const shade = 0.3 + 0.7 * depth;
-    ctx.fillStyle = css(col, 0.18 * tw * appear * shade);
-    ctx.beginPath(); ctx.arc(x, y, sz * 3.4, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = css(bright, (0.55 + 0.45 * tw) * appear * shade);
-    ctx.beginPath(); ctx.arc(x, y, sz, 0, Math.PI * 2); ctx.fill();
+    const bright = lighten(col, 0.35); const shade = 0.3 + 0.7 * depth;
+    ctx.fillStyle = css(col, 0.18 * tw * appear * shade); ctx.beginPath(); ctx.arc(x, y, sz * 3.4, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = css(bright, (0.55 + 0.45 * tw) * appear * shade); ctx.beginPath(); ctx.arc(x, y, sz, 0, Math.PI * 2); ctx.fill();
   }
   ctx.restore();
 }
-
 function drawTwinkles() {
-  if (!tree.twinkles) return;
   const { cx, topY, height, halfW } = treeMetrics();
-  const grow = growEase(4);
+  const grow = growEase(4); if (grow <= 0) return;
   ctx.save(); ctx.globalCompositeOperation = 'lighter';
   for (const p of tree.twinkles) {
     if (p.t > grow) continue;
-    const ang = p.ang + state.treeRotation;
-    const depth = (Math.cos(ang) + 1) / 2;
+    const ang = p.ang + state.treeRotation; const depth = (Math.cos(ang) + 1) / 2;
     const maxR = halfW * Math.pow(p.t, 0.92);
-    const x = cx + Math.cos(ang) * maxR * p.r * (0.9 + 0.1 * depth);
-    const y = topY + p.t * height;
+    const x = cx + Math.cos(ang) * maxR * p.r * (0.9 + 0.1 * depth); const y = topY + p.t * height;
     const tw = Math.pow(Math.max(0, Math.sin(time * p.speed * 2.6 + p.phase)), 8) * (0.4 + 0.6 * depth);
     if (tw < 0.12) continue;
     const l = p.size * (2 + tw * 7);
@@ -1444,22 +1175,18 @@ function drawTwinkles() {
 function drawGlints() {
   if (!tree.glints || !state.colors) return;
   const { cx, topY, height, halfW } = treeMetrics();
-  const grow = growEase(4);
+  const grow = growEase(4); if (grow <= 0) return;
   ctx.save(); ctx.globalCompositeOperation = 'lighter';
   for (const p of tree.glints) {
     if (p.t > grow) continue;
-    const ang = p.ang + state.treeRotation;
-    const depth = (Math.cos(ang) + 1) / 2;
+    const ang = p.ang + state.treeRotation; const depth = (Math.cos(ang) + 1) / 2;
     const maxR = halfW * Math.pow(p.t, 0.92);
-    const x = cx + Math.cos(ang) * maxR * p.r * (0.9 + 0.1 * depth);
-    const y = topY + p.t * height;
+    const x = cx + Math.cos(ang) * maxR * p.r * (0.9 + 0.1 * depth); const y = topY + p.t * height;
     const wave = Math.sin(time * p.speed + p.phase);
     const tw = Math.pow(Math.max(0, wave), 4) * (0.45 + 0.55 * depth);
     const col = lighten(state.colors[p.tint], 0.55);
-    ctx.fillStyle = css(col, 0.1 + 0.22 * tw);
-    ctx.beginPath(); ctx.arc(x, y, p.size * 3.2, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = css(col, 0.55 + 0.4 * tw);
-    ctx.beginPath(); ctx.arc(x, y, p.size * 0.7, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = css(col, 0.1 + 0.22 * tw); ctx.beginPath(); ctx.arc(x, y, p.size * 3.2, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = css(col, 0.55 + 0.4 * tw); ctx.beginPath(); ctx.arc(x, y, p.size * 0.7, 0, Math.PI * 2); ctx.fill();
     if (tw > 0.4) {
       const l = p.size * (1.5 + tw * 2.4);
       ctx.strokeStyle = css(col, 0.45 * tw); ctx.lineWidth = 0.9;
@@ -1468,31 +1195,20 @@ function drawGlints() {
   }
   ctx.restore();
 }
-
-/* ---------- Stage 5: 礼物 ---------- */
 function drawGifts() {
-  const grow = growEase(5);
-  if (grow <= 0) return;
+  const grow = growEase(5); if (grow <= 0) return;
   const baseY = H * 0.93;
   ctx.save();
   for (const g of tree.gifts) {
     const gx = g.x * W, gy = g.y * H;
     const gw = g.w * W * 2, gh = g.h * H * 1.5;
-    // 从雪堆"长出来"的效果
-    const emerge = Math.min(1, Math.max(0, (grow - (gy / H - 0.9) * 3) * 2));
-    if (emerge <= 0) continue;
-    // 阴影
-    ctx.fillStyle = 'rgba(0,0,0,.25)';
-    ctx.beginPath(); ctx.ellipse(gx, baseY + 8, gw * 0.5, 3, 0, 0, Math.PI * 2); ctx.fill();
-    // 礼物盒
-    ctx.fillStyle = css(g.color, emerge);
-    ctx.fillRect(gx - gw / 2, gy - gh, gw * emerge, gh * emerge);
-    // 丝带交叉
-    ctx.fillStyle = css(g.ribbonColor, emerge);
+    const emerge = Math.min(1, Math.max(0, (grow - (gy / H - 0.9) * 3) * 2)); if (emerge <= 0) continue;
+    ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(gx, baseY + 8, gw * 0.5, 3, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = css(g.color, emerge); ctx.fillRect(gx - gw / 2, gy - gh, gw * emerge, gh * emerge);
     const rw = gw * 0.12;
+    ctx.fillStyle = css(g.ribbonColor, emerge);
     ctx.fillRect(gx - gw / 2, gy - gh * 0.55 * emerge, gw * emerge, rw * emerge);
     ctx.fillRect(gx - rw / 2, gy - gh, rw * emerge, gh * emerge);
-    // 蝴蝶结
     const bx = gx, by = gy - gh;
     ctx.beginPath();
     ctx.moveTo(bx - rw, by); ctx.lineTo(bx - rw * 2.2, by - rw * 0.8); ctx.lineTo(bx - rw, by - rw * 0.2);
@@ -1503,17 +1219,14 @@ function drawGifts() {
   }
   ctx.restore();
 }
-
-/* ---------- Stage 6: 星星 & 光带 & 飘浮光点 ---------- */
 function drawTopStar() {
   const { cx, topY } = treeMetrics();
-  const col = state.colors ? state.colors[0] : { r: 255, g: 216, b: 107 };
-  const bright = lighten(col, 0.5);
-  const grow = growEase(6);
+  if (!state.colors) return;
+  const col = state.colors[0]; const bright = lighten(col, 0.5);
+  const grow = growEase(6); if (grow <= 0) return;
   const x = cx, y = topY - 10 * grow;
   const pulse = 1 + 0.11 * Math.sin(time * 2.1);
   const R = Math.min(W, H) * 0.026 * pulse * grow;
-  if (R <= 0.5) return;
   ctx.save(); ctx.globalCompositeOperation = 'lighter';
   for (let k = 3; k >= 1; k--) {
     const rr = R * (1.4 + k * 1.5);
@@ -1521,7 +1234,7 @@ function drawTopStar() {
     g.addColorStop(0, css(bright, 0.34 / k * grow)); g.addColorStop(0.4, css(col, 0.14 / k * grow)); g.addColorStop(1, css(col, 0));
     ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, rr, 0, Math.PI * 2); ctx.fill();
   }
-  const beam = R * 8 * grow;
+  const beam = R * 8;
   const gx = ctx.createLinearGradient(x - beam, y, x + beam, y);
   gx.addColorStop(0, css(bright, 0)); gx.addColorStop(0.5, css(bright, 0.95)); gx.addColorStop(1, css(bright, 0));
   ctx.fillStyle = gx; ctx.fillRect(x - beam, y - 1.6, beam * 2, 3.2);
@@ -1529,12 +1242,7 @@ function drawTopStar() {
   gy.addColorStop(0, css(bright, 0)); gy.addColorStop(0.5, css(bright, 0.95)); gy.addColorStop(1, css(bright, 0));
   ctx.fillStyle = gy; ctx.fillRect(x - 1.6, y - beam, 3.2, beam * 2);
   ctx.beginPath();
-  for (let i = 0; i < 10; i++) {
-    const a = i * Math.PI / 5 - Math.PI / 2;
-    const rr = i % 2 === 0 ? R : R * 0.44;
-    const px = x + Math.cos(a) * rr, py = y + Math.sin(a) * rr;
-    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-  }
+  for (let i = 0; i < 10; i++) { const a = i * Math.PI / 5 - Math.PI / 2; const rr = i % 2 === 0 ? R : R * 0.44; const px = x + Math.cos(a) * rr, py = y + Math.sin(a) * rr; if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py); }
   ctx.closePath();
   ctx.fillStyle = '#fffdf5'; ctx.shadowBlur = 26; ctx.shadowColor = css(col, 1); ctx.fill(); ctx.shadowBlur = 0;
   for (const s of tree.starSparks) {
@@ -1546,16 +1254,16 @@ function drawTopStar() {
   ctx.restore();
 }
 function drawSpiralRibbons() {
+  if (!state.colors) return;
   const { cx, topY, height, halfW } = treeMetrics();
-  const baseCol = state.colors ? state.colors[1] : { r: 255, g: 70, b: 110 };
+  const baseCol = state.colors[1];
   const hslc = rgbToHsl(baseCol.r, baseCol.g, baseCol.b);
   const col = hslToRgb(hslc.h, Math.min(1, Math.max(hslc.s, 0.75)), 0.6);
-  const grow = growEase(6);
+  const grow = growEase(6); if (grow <= 0) return;
   const turns = 4.5, segs = 200;
   const pts = [];
   for (let i = 0; i <= segs; i++) {
-    const t = i / segs;
-    if (t > grow) break;
+    const t = i / segs; if (t > grow) break;
     const ang = t * Math.PI * 2 * turns + time * 0.32 + state.treeRotation;
     const y = topY + 0.05 * height + t * 0.88 * height;
     const r = halfW * Math.pow(t, 0.78) * (0.94 + 0.06 * Math.sin(time * 1.2 + t * 7));
@@ -1566,20 +1274,19 @@ function drawSpiralRibbons() {
   pts.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y));
   ctx.strokeStyle = css(col, 0.3 * grow); ctx.lineWidth = 13; ctx.stroke();
   for (let i = 1; i < pts.length; i++) {
-    const a = pts[i - 1], b = pts[i];
-    const depth = (a.depth + b.depth) / 2;
+    const a = pts[i - 1], b = pts[i]; const depth = (a.depth + b.depth) / 2;
     ctx.strokeStyle = css(col, 0.28 + 0.72 * depth); ctx.lineWidth = 2.8 + depth * 3.6;
     ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
   }
   ctx.restore();
 }
 function drawFloatingDots() {
+  if (!state.colors) return;
   const { cx, topY, height, halfW } = treeMetrics();
-  const col = state.colors ? state.colors[2] : { r: 80, g: 180, b: 255 };
+  const col = state.colors[2];
   ctx.save(); ctx.globalCompositeOperation = 'lighter';
   for (const d of tree.dots) {
-    d.ny -= d.vy * 16;
-    if (d.ny < 0.08) { d.ny = 0.95; d.nx = 0.5 + (Math.random() - 0.5) * 0.9; }
+    d.ny -= d.vy * 16; if (d.ny < 0.08) { d.ny = 0.95; d.nx = 0.5 + (Math.random() - 0.5) * 0.9; }
     const x = cx + (d.nx - 0.5) * halfW * 2.2 + Math.sin(time * 0.8 + d.phase) * 12;
     const y = topY + (d.ny - 0.1) / 0.85 * height;
     const tw = 0.4 + 0.6 * Math.sin(time * d.speed * 3 + d.phase);
@@ -1597,11 +1304,10 @@ function drawFloatingDots() {
 /* ---------- 庆祝粒子 ---------- */
 const celebration = [];
 function burstCelebration() {
-  const col = state.colors ? state.colors[0] : { r: 255, g: 216, b: 107 };
-  const { cx, topY } = treeMetrics();
+  if (!state.colors) return;
+  const col = state.colors[0]; const { cx, topY } = treeMetrics();
   for (let i = 0; i < 90; i++) {
-    const a = Math.random() * Math.PI * 2;
-    const sp = 60 + Math.random() * 220;
+    const a = Math.random() * Math.PI * 2; const sp = 60 + Math.random() * 220;
     celebration.push({ x: cx, y: topY, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 60, life: 1, color: i % 2 ? col : { r: 255, g: 255, b: 255 } });
   }
 }
@@ -1617,13 +1323,12 @@ function drawCelebration(dt) {
   ctx.restore();
 }
 
-/* ============================================================
-   启动
-   ============================================================ */
-function init() {
-  tree.init();
-  requestAnimationFrame(render);
-}
+/* ---------- HSL 工具 ---------- */
+function rgbToHsl(r, g, b) { r /= 255; g /= 255; b /= 255; const max = Math.max(r, g, b), min = Math.min(r, g, b); const l = (max + min) / 2; let h = 0, s = 0; if (max !== min) { const d = max - min; s = l > 0.5 ? d / (2 - max - min) : d / (max + min); switch (max) { case r: h = ((g - b) / d + (g < b ? 6 : 0)); break; case g: h = ((b - r) / d + 2); break; case b: h = ((r - g) / d + 4); break; } h /= 6; } return { h, s, l }; }
+function hslToRgb(h, s, l) { if (s === 0) { const v = Math.round(l * 255); return { r: v, g: v, b: v }; } const q = l < 0.5 ? l * (1 + s) : l + s - l * s; const p = 2 * l - q; const hue2rgb = (t) => { if (t < 0) t += 1; if (t > 1) t -= 1; if (t < 1/6) return p + (q - p) * 6 * t; if (t < 1/2) return q; if (t < 2/3) return p + (q - p) * (2/3 - t) * 6; return p; }; return { r: Math.round(hue2rgb(h + 1/3) * 255), g: Math.round(hue2rgb(h) * 255), b: Math.round(hue2rgb(h - 1/3) * 255) }; }
+
+/* ---------- 启动 ---------- */
+function init() { tree.init(); requestAnimationFrame(render); }
 init();
 </script>
 </body>
