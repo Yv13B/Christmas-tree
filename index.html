@@ -13,7 +13,7 @@
   @font-face {
     font-family: 'SiteFont';
     src: url('site-font.ttf') format('truetype');
-    font-weight: 400 900;
+    font-weight: normal;
     font-style: normal;
     font-display: swap;
   }
@@ -21,7 +21,7 @@
   @font-face {
     font-family: 'EnLanding';
     src: url('en-landing.ttf') format('truetype');
-    font-weight: 400 900;
+    font-weight: normal;
     font-style: normal;
     font-display: swap;
     unicode-range: U+0000-024F, U+2000-206F, U+20A0-20CF, U+2100-214F, U+2190-21FF, U+2212, U+FEFF;
@@ -29,7 +29,7 @@
   @font-face {
     font-family: 'EnOther';
     src: url('en-other.ttf') format('truetype');
-    font-weight: 400 900;
+    font-weight: normal;
     font-style: normal;
     font-display: swap;
     unicode-range: U+0000-024F, U+2000-206F, U+20A0-20CF, U+2100-214F, U+2190-21FF, U+2212, U+FEFF;
@@ -55,8 +55,17 @@
   }
   button:active { transform: scale(.97); }
   button.ghost {
-    background: rgba(10,12,24,.62); border: 1px solid rgba(255,255,255,.22);
-    color: #d8d3e8; box-shadow: none; backdrop-filter: blur(8px);
+    --glass-tint: #f5f1ff; --glass-ink: #f5f1ff; --glass-opacity: 0.15; --glass-blur: 8px;
+    border-radius: 999px; position: relative; overflow: hidden;
+    border: none;
+    -webkit-backdrop-filter: saturate(1.3) blur(var(--glass-blur));
+    backdrop-filter: saturate(1.3) blur(var(--glass-blur));
+    background: color-mix(in srgb, var(--glass-tint) calc(var(--glass-opacity) * 100%), transparent);
+    color: var(--glass-ink); box-shadow: none;
+  }
+  button.ghost::after {
+    content: ""; position: absolute; inset: 0; border-radius: inherit;
+    border: 1.5px solid rgb(255 255 255 / 0.4); pointer-events: none;
   }
   button:disabled { opacity: .35; cursor: not-allowed; }
 
@@ -97,7 +106,11 @@
   /* ---------- Memory Tag ---------- */
   #memory {
     background-color: #050810;
-    background-image: radial-gradient(ellipse at 50% 100%, rgba(100,160,220,.08), transparent 60%);
+    background-image:
+      linear-gradient(rgba(3,5,12,.55), rgba(3,5,12,.65)),
+      radial-gradient(ellipse at 50% 0%, rgba(232,201,122,.10), transparent 60%),
+      url('landing-bg.jpg');
+    background-position: center; background-size: cover;
     display: flex; flex-direction: column;
     padding: calc(20px + env(safe-area-inset-top)) 20px calc(20px + env(safe-area-inset-bottom));
   }
@@ -109,21 +122,31 @@
   #memory .progress-bar .dot.done { background: linear-gradient(90deg, #e8c97a, #d4a84a); }
   #memory .progress-bar .dot.active { background: rgba(232,201,122,.5); }
   #memory .title { font-size: clamp(22px, 5.5vw, 30px); font-weight: 700; margin-bottom: 6px; text-shadow: 0 2px 14px rgba(0,0,0,.7); }
-  #memory .subtitle { font-size: 14px; color: #a8a2c0; line-height: 1.6; margin-bottom: 16px; }
+  #memory .subtitle { font-size: 14px; color: #c8c0e0; line-height: 1.6; margin-bottom: 16px; text-shadow: 0 1px 6px rgba(0,0,0,.8); }
   #memory .tag-container { flex: 1; display: flex; flex-direction: column; justify-content: center; }
   #memory .tag-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+  /* 玻璃质感 chip：用 backdrop-filter + color-mix + 白色 rim，复用 glass-card 逻辑 */
   #memory .chip {
+    --glass-tint: #f5f1ff; --glass-ink: #f5f1ff; --glass-opacity: 0.12; --glass-blur: 8px; --glass-radius: 999px;
     padding: 11px 18px; border-radius: 999px;
-    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.15);
-    color: #d8d3e8; font-size: 14px; transition: all .25s cubic-bezier(.2,.7,.2,1);
+    -webkit-backdrop-filter: saturate(1.3) blur(var(--glass-blur));
+    backdrop-filter: saturate(1.3) blur(var(--glass-blur));
+    background: color-mix(in srgb, var(--glass-tint) calc(var(--glass-opacity) * 100%), transparent);
+    color: var(--glass-ink); font-size: 14px; transition: all .25s cubic-bezier(.2,.7,.2,1);
     cursor: pointer; user-select: none;
+    border: none; position: relative;
+  }
+  #memory .chip::after {
+    content: ""; position: absolute; inset: 0; border-radius: inherit;
+    border: 1.5px solid rgb(255 255 255 / 0.35); pointer-events: none;
   }
   #memory .chip.selected {
     transform: scale(1.04);
-    background: linear-gradient(135deg, rgba(232,201,122,.3), rgba(212,168,74,.15));
-    border-color: rgba(232,201,122,.7); color: #fff;
-    box-shadow: 0 0 24px rgba(232,201,122,.25), inset 0 1px 0 rgba(255,255,255,.2);
+    --glass-tint: #e8c97a; --glass-opacity: 0.42; --glass-blur: 10px;
+    color: #fff;
+    box-shadow: 0 0 28px rgba(232,201,122,.35);
   }
+  #memory .chip.selected::after { border-color: rgb(255 255 255 / 0.7); }
   #memory .chip.quick-enter {
     animation: chipPop .45s cubic-bezier(.2,.7,.2,1) both;
   }
@@ -133,7 +156,10 @@
   }
   #memory .keyword-input {
     width: 100%; max-width: 240px; padding: 12px 18px; border-radius: 999px;
-    background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.2);
+    background: color-mix(in srgb, #f5f1ff 14%, transparent);
+    -webkit-backdrop-filter: saturate(1.3) blur(8px);
+    backdrop-filter: saturate(1.3) blur(8px);
+    border: 1.5px solid rgba(255,255,255,.3);
     color: #fff; font-size: 15px; text-align: center; outline: none;
     font-family: inherit;
   }
@@ -176,7 +202,7 @@
     position: absolute; top: calc(74px + env(safe-area-inset-top)); left: 12px;
     z-index: 4; display: flex; flex-direction: column; gap: 8px; align-items: flex-start;
   }
-  #experience .top-actions button { padding: 8px 13px; font-size: 13px; background: rgba(10,12,24,.62); border: 1px solid var(--line); box-shadow: none; backdrop-filter: blur(8px); white-space: nowrap; }
+  #experience .top-actions button { padding: 8px 13px; font-size: 13px; background: rgba(10,12,24,.65); border: 1px solid var(--line); box-shadow: none; backdrop-filter: blur(8px); white-space: nowrap; color: #f5f1ff !important; }
 
   /* ---------- Toast & Save ---------- */
   #toast {
@@ -205,6 +231,52 @@
   #saveSheet .tip { color: #fff; font-size: 15px; text-align: center; line-height: 1.6; }
   #saveSheet img { width: 100%; max-height: 68vh; object-fit: contain; border-radius: 12px; border: 1px solid var(--line); box-shadow: 0 12px 40px rgba(0,0,0,.6); -webkit-touch-callout: default; user-select: auto; }
   #saveSheet button { padding: 10px 28px; font-size: 14px; }
+
+  /* ============================================================
+     Glass Card — from https://github.com/alexko0421/glass-card-web
+     Frosted color, softly layered. backdrop-filter samples whatever
+     is painted behind the card. Works in Safari / Chrome / Edge.
+     Do NOT put filter/opacity<1/mask/clip-path/backdrop-filter on ancestors.
+     ============================================================ */
+  .glass-card {
+    --glass-tint: #3769f5;
+    --glass-ink: #f5f1ff;
+    --glass-opacity: 0.58;
+    --glass-blur: 10px;
+    --glass-radius: 20px;
+    position: relative;
+    box-sizing: border-box;
+    padding: 16px;
+    border-radius: var(--glass-radius);
+    overflow: hidden;
+    color: var(--glass-ink);
+    -webkit-backdrop-filter: saturate(1.5) blur(var(--glass-blur));
+    backdrop-filter: saturate(1.5) blur(var(--glass-blur));
+    background: color-mix(in srgb, var(--glass-tint) calc(var(--glass-opacity) * 100%), transparent);
+  }
+  .glass-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1.5px solid rgb(255 255 255 / 0.55);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+  .glass-card[data-swatch="blue"] { --glass-tint: #3769f5; --glass-ink: #ffffff; }
+  .glass-card[data-swatch="rose"] { --glass-tint: #ee556d; --glass-ink: #ffffff; }
+  .glass-card[data-swatch="violet"] { --glass-tint: #9b38ec; --glass-ink: #ffffff; }
+  .glass-card[data-swatch="mint"] { --glass-tint: #68bd81; --glass-ink: #ffffff; }
+  .glass-card[data-swatch="lemon"] { --glass-tint: #f2f766; --glass-ink: #3a3d09; }
+  .glass-card[data-swatch="orange"] { --glass-tint: #f5963c; --glass-ink: #ffffff; }
+  .glass-card[data-swatch="teal"] { --glass-tint: #2ec2c4; --glass-ink: #ffffff; }
+  .glass-card[data-swatch="graphite"] { --glass-tint: #3a3f4a; --glass-ink: #ffffff; }
+  .glass-card[data-swatch="pearl"] { --glass-tint: #ffffff; --glass-ink: #1a1a1a; --glass-opacity: 0.45; }
+  .glass-card[data-swatch="star"] { --glass-tint: #ffd86b; --glass-ink: #3a2a00; }
+  .glass-card[data-swatch="gift"] { --glass-tint: #ff648c; --glass-ink: #ffffff; }
+  .glass-card[data-swatch="lights"] { --glass-tint: #ff6aa5; --glass-ink: #ffffff; }
+  .glass-card[data-swatch="ribbon"] { --glass-tint: #7cc8ff; --glass-ink: #ffffff; }
+  .glass-card[data-swatch="dots"] { --glass-tint: #b088ff; --glass-ink: #ffffff; }
+  .glass-card[data-swatch="snow"] { --glass-tint: #e8f0ff; --glass-ink: #1a2440; --glass-opacity: 0.5; }
 
   @media (max-width: 480px) {
     #memory .title { font-size: 20px; }
@@ -278,6 +350,31 @@
       </div>
     </div>
   </section>
+
+  <!-- 完成前颜色说明模态框（遮罩层不用 backdrop-filter 以免玻璃失效） -->
+  <div id="colorModal" style="position:absolute;inset:0;z-index:15;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;padding:20px;">
+    <div class="glass-card" id="colorModalInner" style="max-width:380px;text-align:center;box-shadow:0 16px 50px rgba(0,0,0,.5);">
+      <div style="font-size:11px;letter-spacing:2px;color:rgba(255,255,255,.7);margin-bottom:10px;">COLOR · EMOTION · SCIENCE</div>
+      <div style="font-size:18px;font-weight:700;margin-bottom:8px;" data-en="These colors ARE your year 🎨">树上的颜色，就是你的一年 🎨</div>
+      <div style="font-size:13px;line-height:1.7;margin-bottom:14px;opacity:.9;">心理学 128 年研究显示，颜色与情绪有跨文化的稳定关联 🧠<br>你的每一个选择都携带情绪倾向，<br>依据 Jonauskaite &amp; Mohr (2025)，<br>把情绪映射成主色 + 慰藉色，聚合成这三种光。</div>
+      <div id="colorModalSwatches" style="display:flex;justify-content:center;gap:10px;margin-bottom:16px;"></div>
+      <button id="colorModalBtn" style="padding:12px 30px;font-size:15px;" data-en="Finish and light up →">点亮最后的星星 →</button>
+    </div>
+  </div>
+
+  <!-- 完成后颜色小提示 -->
+  <div id="colorHint" style="position:absolute;left:50%;bottom:calc(120px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:4;padding:8px 18px;background:rgba(10,12,24,.72);border:1px solid rgba(255,255,255,.16);border-radius:999px;font-size:12px;color:#d0cbe0;backdrop-filter:blur(8px);display:none;pointer-events:none;">点击<span style="color:rgba(232,201,122,.9);">✨星星</span>·<span style="color:rgba(232,201,122,.9);">🎁礼物</span>·<span style="color:rgba(232,201,122,.9);">🎵彩灯</span>查看颜色由来</div>
+
+  <!-- 点击后的颜色提示卡（玻璃质感，动态 tint） -->
+  <div id="colorCard" class="glass-card" style="position:absolute;z-index:17;max-width:260px;padding:12px 14px 14px;box-shadow:0 10px 40px rgba(0,0,0,.25);display:none;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+      <div id="ccDot" style="width:18px;height:18px;border-radius:50%;border:1.5px solid rgba(255,255,255,.7);"></div>
+      <div id="ccTitle" style="font-size:13px;font-weight:700;flex:1;"></div>
+      <div id="ccClose" style="font-size:14px;opacity:.6;cursor:pointer;padding:0 4px;line-height:1;">✕</div>
+    </div>
+    <div id="ccColorVal" style="font-size:10px;opacity:.65;margin-bottom:8px;font-family:'EnOther',monospace;letter-spacing:.5px;"></div>
+    <div id="ccBody" style="font-size:11.5px;line-height:1.65;opacity:.95;"></div>
+  </div>
 
   <div id="toast"></div>
   <div id="saveSheet">
@@ -573,6 +670,153 @@ function buildColors(tags) {
   return final.map(c => hsToRgb(c.h, c.s, c.l));
 }
 
+/* ============================================================
+   颜色交互系统：检测点击 → 显示颜色提示卡
+   ============================================================ */
+
+/* 记录树的可点击部位（Canvas 渲染时同步更新） */
+const hitRegions = {
+  star: null,       // { x, y, r }
+  gifts: [],        // [{ x, y, r, colorIdx }]
+  lightsSample: [], // [{ x, y, r, colorIdx }] 只采样少量
+  ribbonsCenter: null,
+  dotsSample: [],
+  snowSurface: null
+};
+
+/* 颜色映射：part → state.colors 索引 */
+const PART_COLOR_MAP = { star: 0, lights: 0, gift: null, ribbon: 1, dots: 2, snow: null };
+
+function handleColorTap(e) {
+  const rect = canvas.getBoundingClientRect();
+  const cx = (e.clientX - rect.left) * (canvas.width / DPR / rect.width);
+  const cy = (e.clientY - rect.top) * (canvas.height / DPR / rect.height);
+
+  /* 距离树底部的 Y 比例，决定可能是什么部位 */
+  const my = cy / H;
+
+  // 1. 星星（顶端）
+  if (hitRegions.star) {
+    const d = Math.hypot(cx - hitRegions.star.x, cy - hitRegions.star.y);
+    if (d < hitRegions.star.r * 2.8) { showColorCard(cx, cy, 'star'); return; }
+  }
+  // 2. 彩带/光带
+  if (hitRegions.ribbonsCenter) {
+    const { x, y, r } = hitRegions.ribbonsCenter;
+    const dx = cx - x; const dy = cy - y;
+    const inBand = Math.abs(dx) < r + 20 && Math.abs(dy) < 200;
+    if (inBand && hitRegions.ribbonsCenter.segs > 10) { showColorCard(cx, cy, 'ribbon'); return; }
+  }
+  // 3. 彩灯（采样）
+  if (hitRegions.lightsSample.length) {
+    for (const l of hitRegions.lightsSample) {
+      const d = Math.hypot(cx - l.x, cy - l.y);
+      if (d < l.r + 14) { showColorCard(cx, cy, 'lights'); return; }
+    }
+  }
+  // 4. 礼物（底部区域）
+  if (hitRegions.gifts.length && my > 0.85) {
+    for (const g of hitRegions.gifts) {
+      const d = Math.hypot(cx - g.x, cy - g.y);
+      if (d < 45) { showColorCard(cx, cy, 'gift', g.colorIdx); return; }
+    }
+  }
+  // 5. 飘浮光点
+  if (hitRegions.dotsSample.length) {
+    for (const d of hitRegions.dotsSample) {
+      const dist = Math.hypot(cx - d.x, cy - d.y);
+      if (dist < 22) { showColorCard(cx, cy, 'dots'); return; }
+    }
+  }
+  // 6. 积雪（最底部）
+  if (my > 0.90) { showColorCard(cx, cy, 'snow'); return; }
+
+  // 点击空白 → 关闭卡片
+  hideColorCard();
+}
+
+function showColorCard(x, y, part, colorIdx) {
+  const card = $('colorCard');
+  const hsl = rgbToHsl(0, 0, 0); // 备用
+  let col, hslStr, rgbStr;
+  const colors = state.colors || [{r:255,g:216,b:107},{r:255,g:100,b:140},{r:120,g:200,b:255}];
+  if (part === 'star') col = colors[0];
+  else if (part === 'ribbon') col = colors[1];
+  else if (part === 'dots') col = colors[2];
+  else if (part === 'gift') col = colors[colorIdx ?? 0];
+  else if (part === 'lights') col = colors[Math.floor(Math.random() * 3)];
+  else col = { r: 245, g: 240, b: 250 };
+
+  const hslObj = rgbToHsl(col.r, col.g, col.b);
+  hslStr = `H ${Math.round(hslObj.h * 360)}° · S ${Math.round(hslObj.s * 100)}% · L ${Math.round(hslObj.l * 100)}%`;
+  rgbStr = `rgb(${col.r},${col.g},${col.b})`;
+
+  // 动态文案
+  const t = state.tags;
+  let title = '', body = '';
+  const chipMap = { study: MEMORY_PAGES[0], social: MEMORY_PAGES[1], mindset: MEMORY_PAGES[2], keyword: MEMORY_PAGES[3] };
+  function chipOf(key) { return chipMap[key].chips.find(c => c.zh === t[key]) || { zh: t[key], valence: 'pos', arousal: 'medium', emotion: 'trust' }; }
+  const cStudy = chipOf('study'), cSocial = chipOf('social'), cMindset = chipOf('mindset'), cKw = chipOf('keyword');
+
+  const hDeg = hslObj.h * 360;
+  let hueTag = '';
+  if ((hDeg >= 0 && hDeg < 20) || hDeg >= 340) hueTag = '红';
+  else if (hDeg >= 20 && hDeg < 65) hueTag = '黄/橙';
+  else if (hDeg >= 65 && hDeg < 150) hueTag = '绿';
+  else if (hDeg >= 150 && hDeg < 230) hueTag = '蓝/青';
+  else if (hDeg >= 230 && hDeg < 300) hueTag = '紫';
+  else hueTag = '粉';
+  const sTag = hslObj.s > 0.65 ? '高饱和' : hslObj.s > 0.35 ? '中饱和' : '低饱和';
+  const lTag = hslObj.l > 0.65 ? '明亮' : hslObj.l > 0.4 ? '适中' : '深';
+
+  if (part === 'star') {
+    title = '⭐ 树顶的星星';
+    body = `来自你的年度关键词「${cKw.zh}」✨。研究表明，${lTag}而${sTag}的${hueTag}色会激活大脑的奖赏系统 —— 它让你感到"被看见"和"被认可"。这颗星是你一年的高潮。`;
+  } else if (part === 'gift') {
+    title = '🎁 树下的礼物';
+    body = `这是色彩聚合系统生成的慰藉色 🧡。当经历「${cStudy.zh}」这样的体验时，大脑会无意识寻找温暖的色调。心理学实验显示，柔暖颜色降低皮质醇水平，让我们感到"被接住"。`;
+  } else if (part === 'lights') {
+    title = '🎵 树上的彩灯';
+    body = `融合了你在「${cStudy.zh}」「${cSocial.zh}」「${cMindset.zh}」三个维度的情绪 🎊。${hueTag}色对应 ${cMindset.emotion || '平静'}，${sTag}度的${hueTag}色让每盏灯都带着你某个时刻的感受。`;
+  } else if (part === 'ribbon') {
+    title = '🌈 缠绕的光带';
+    body = `综合你社交节奏「${cSocial.zh}」和内心状态「${cMindset.zh}」的结果 💫。暖色带=高能量，冷色带=独处充电。它环绕整棵树 —— 象征你如何把"忙碌的我"和"平静的我"缠绕成一个整体。`;
+  } else if (part === 'dots') {
+    title = '✨ 飘动的光点';
+    body = `这是那些"说不清但真实存在"的感受 ✨。${sTag}${hueTag}色在心理学研究中被归类为低唤醒情绪 —— 不那么耀眼，但稳定存在。它是你默默陪伴自己的那部分。`;
+  } else if (part === 'snow') {
+    title = '❄️ 积雪';
+    body = `来自内心状态中"平静"和"接受"的力量 ❄️。研究显示白色关联解脱、新的开始、希望 —— 覆盖一切，也让一切重新开始。是你这一年最后的温柔。`;
+  }
+
+  /* 设置 glass-card 动态 tint（颜色本身，亮度高时用深墨水，暗时用浅墨水） */
+  const inkLightness = hslObj.l > 0.55 ? 0.18 : 0.98;
+  const inkCol = hslToRgb(hslObj.h, Math.min(hslObj.s, 0.3), inkLightness);
+  const tintCss = `rgb(${col.r},${col.g},${col.b})`;
+  $('colorCard').style.setProperty('--glass-tint', tintCss);
+  $('colorCard').style.setProperty('--glass-ink', `rgb(${inkCol.r},${inkCol.g},${inkCol.b})`);
+  $('colorCard').style.setProperty('--glass-opacity', hslObj.l > 0.75 ? '0.48' : '0.55');
+  $('colorCard').removeAttribute('data-swatch');
+
+  $('ccDot').style.background = rgbStr;
+  $('ccTitle').textContent = title;
+  $('ccColorVal').textContent = `${rgbStr} — ${hslStr} — ${sTag}${hueTag}${lTag}`;
+  $('ccBody').textContent = body;
+
+  // 定位：贴近点击点，不超出屏幕
+  const cardW = 260, cardH = 160;
+  let left = x + 14, top = y - 30;
+  const vw = window.innerWidth, vh = window.innerHeight;
+  if (left + cardW > vw - 8) left = x - cardW - 14;
+  if (top + cardH > vh - 8) top = vh - cardH - 8;
+  if (top < 70) top = 70;
+  card.style.left = left + 'px';
+  card.style.top = top + 'px';
+  card.style.display = 'block';
+}
+function hideColorCard() { $('colorCard').style.display = 'none'; }
+$('ccClose').onclick = hideColorCard;
+
 /* 形态参数：情绪 → 树的物理形状 */
 function getTreeParams(tags) {
   const pmap = {
@@ -785,23 +1029,99 @@ const STAGE_HINTS = [
   { big: '最后一下，点亮树顶星星 ⭐', bigEn: 'Final tap, light the star ⭐', sub: '让记忆完整发光，和光带一起旋转吧', subEn: 'Memories fully lit, ribbons start spinning' }
 ];
 let stageTimes = {};
+/* 颜色文案系统：每个颜色一个温暖解释 */
+const COLOR_STORIES = {
+  star: { title: '⭐ 树顶的星星', emoji: '⭐', explain: '来自「' + '${keyword}' + '」这个年度关键词。暖色 = 希望与成就，冷色 = 理性与锚点。心理学发现，亮而饱和的颜色让我们感到"被看见"。' },
+  gift: { title: '🎁 树下的礼物', emoji: '🎁', explain: '这是慰藉色 —— 当你经历低谷或消耗时，它出现在你身边。研究表明柔暖的颜色降低皮质醇（压力激素），让我们感到被接住。' },
+  lights: { title: '🎵 树上的彩灯', emoji: '🎵', explain: '混合了你学业、社交、心态三个维度的情绪。每个灯泡都对应你某个时刻的感受 —— 它们不完美，但拼在一起就是你这一年的全貌。' },
+  ribbon: { title: '🌈 缠绕的光带', emoji: '🌈', explain: '是社交节奏和内心状态的综合。暖色带 = 高能量社交，冷色带 = 独处充电。它环绕整棵树，象征你如何把自己整理成一个整体。' },
+  dots: { title: '✨ 飘动的光点', emoji: '✨', explain: '这是那些"说不清但真实存在"的感受 —— 微小但持续。研究显示低饱和色调让人进入平静状态，它是你这一年默默陪伴自己的那部分。' },
+  snow: { title: '❄️ 积雪', emoji: '❄️', explain: '来自心态维度中"平静"和"接受"的力量。心理学认为白色 = 解脱和新的开始。覆盖一切，也让一切重新开始。' }
+};
+
+function explainColorPart(part) {
+  const t = state.tags;
+  const chipMap = { study: MEMORY_PAGES[0], social: MEMORY_PAGES[1], mindset: MEMORY_PAGES[2], keyword: MEMORY_PAGES[3] };
+  const tagTexts = { study: t.study, social: t.social, mindset: t.mindset, keyword: t.keyword };
+  const chipTexts = {};
+  for (const k of ['study', 'social', 'mindset', 'keyword']) {
+    const page = chipMap[k];
+    const chip = page.chips.find(c => c.zh === tagTexts[k]);
+    chipTexts[k] = chip || { zh: tagTexts[k], en: tagTexts[k] };
+  }
+  return COLOR_STORIES[part];
+}
+
+function buildColorModal() {
+  const sw = $('colorModalSwatches');
+  sw.innerHTML = '';
+  (state.colors || []).forEach((c, i) => {
+    const el = document.createElement('div');
+    el.style.cssText = `width:42px;height:42px;border-radius:12px;background:rgb(${c.r},${c.g},${c.b});box-shadow:0 4px 16px rgba(${c.r},${c.g},${c.b},.35);border:1px solid rgba(255,255,255,.15);`;
+    sw.appendChild(el);
+  });
+  // glass-card tint = 三个颜色平均
+  const cols = state.colors || [{r:255,g:216,b:107},{r:255,g:100,b:140},{r:120,g:200,b:255}];
+  const avg = { r: Math.round(cols.reduce((a,c)=>a+c.r,0)/cols.length), g: Math.round(cols.reduce((a,c)=>a+c.g,0)/cols.length), b: Math.round(cols.reduce((a,c)=>a+c.b,0)/cols.length) };
+  const hsl = rgbToHsl(avg.r, avg.g, avg.b);
+  const inkL = hsl.l > 0.55 ? 0.15 : 0.98;
+  const inkC = hslToRgb(hsl.h, 0.2, inkL);
+  const modal = $('colorModalInner');
+  modal.style.setProperty('--glass-tint', `rgb(${avg.r},${avg.g},${avg.b})`);
+  modal.style.setProperty('--glass-ink', `rgb(${inkC.r},${inkC.g},${inkC.b})`);
+  modal.style.setProperty('--glass-opacity', hsl.l > 0.7 ? '0.45' : '0.55');
+}
+$('colorModalBtn').addEventListener('click', () => {
+  $('colorModal').style.display = 'none';
+  clickCount = 5; // 直接解锁最后一步
+  clearTimeout(clickTimer);
+  clickTimer = setTimeout(() => { clickCount = 0; }, 900);
+  setStage(6);
+});
+
 function setStage(stage) {
   if (stage <= state.stage) return;
   state.stage = stage; stageTimes[stage] = time;
   setBilingual('stageText', `${stage} / 6`, `STAGE ${stage}/6`);
   document.querySelectorAll('#progress .p').forEach((p, i) => p.classList.toggle('on', i < stage));
+
+  // 阶段 5 → 6 之间插入颜色说明弹窗
+  if (stage === 6) {
+    if ($('colorModal').style.display !== 'none') return; // 已显示
+    $('colorModal').style.display = 'flex';
+    buildColorModal();
+    return; // 等用户确认再真正触发完成
+  }
+
   if (stage < 6) {
     setBilingual('hintBig', STAGE_HINTS[stage - 1].big, STAGE_HINTS[stage - 1].bigEn);
     setBilingual('hintSub', STAGE_HINTS[stage - 1].sub, STAGE_HINTS[stage - 1].subEn);
-  } else {
-    setBilingual('hintBig', '✨ 你的年度记忆树完成啦 ✨', '✨ Your memory tree is complete ✨');
-    setBilingual('hintSub', '树已开始旋转 · 点击「保存图片」留住这一刻', 'The tree spins · Tap Save PNG');
-    state.spinning = true; burstCelebration();
   }
 }
+// 被 colorModalBtn 触发后，完整执行 stage 6 完成流程
+function completeStage6() {
+  state.stage = 6; stageTimes[6] = time;
+  setBilingual('stageText', `6 / 6`, `STAGE 6/6`);
+  document.querySelectorAll('#progress .p').forEach(p => p.classList.toggle('on', true));
+  setBilingual('hintBig', '✨ 你的年度记忆树完成啦 ✨', '✨ Your memory tree is complete ✨');
+  setBilingual('hintSub', '点击星星/礼物/彩灯查看颜色由来', 'Tap parts of the tree to read about colors');
+  state.spinning = true; burstCelebration();
+  $('colorHint').style.display = 'block';
+  setTimeout(() => { $('colorHint').style.opacity = 0.3; }, 6000);
+}
+$('colorModalBtn').onclick = null; // 清掉旧监听器
+$('colorModalBtn').addEventListener('click', () => {
+  $('colorModal').style.display = 'none';
+  completeStage6();
+});
+
 let clickCount = 0, clickTimer = null;
-$('treeCanvas').addEventListener('click', () => {
-  if (state.stage >= 6) return;
+$('treeCanvas').addEventListener('click', (e) => {
+  // 阶段 6 后 → 颜色交互模式
+  if (state.stage >= 6) {
+    handleColorTap(e);
+    return;
+  }
   clickCount++; clearTimeout(clickTimer);
   clickTimer = setTimeout(() => { clickCount = 0; }, 900);
   const need = state.stage + 1;
@@ -979,15 +1299,26 @@ function treeMetrics() {
 }
 
 /* ---------- 背景 & 雪花 ---------- */
-const sparkles = [], snowfall = [], SNOW_BINS = 64;
-let snowBank = new Array(SNOW_BINS).fill(0.006), snowDrifts = [];
+const sparkles = [], snowfall = [], SNOW_BINS = 96;
+let snowBank = new Array(SNOW_BINS).fill(0.01), snowDrifts = [];
+let windTime = 0;
 function resetSnow() {
-  snowBank = new Array(SNOW_BINS).fill(0.006); snowDrifts = [];
-  for (let i = 0; i < 26; i++) snowDrifts.push({ x: Math.random(), r: 18 + Math.random() * 46, bump: 0.35 + Math.random() * 0.9, phase: Math.random() * Math.PI * 2 });
+  snowBank = new Array(SNOW_BINS).fill(0.01); snowDrifts = [];
+  // 积雪堆（椭圆高光团）
+  for (let i = 0; i < 38; i++) snowDrifts.push({
+    x: Math.random(),
+    r: 14 + Math.random() * 58,
+    bump: 0.4 + Math.random() * 1.0,
+    phase: Math.random() * Math.PI * 2,
+    layer: Math.random() < 0.5 ? 'front' : 'back'
+  });
   sparkles.length = 0;
   for (let i = 0; i < 18; i++) sparkles.push({ x: 0.04 + Math.random() * 0.92, y: 0.05 + Math.random() * 0.80, size: 1.4 + Math.random() * 2.2, phase: Math.random() * Math.PI * 2, speed: 0.6 + Math.random() * 1.3 });
   snowfall.length = 0;
-  for (let i = 0; i < 95; i++) snowfall.push({ x: Math.random(), y: Math.random(), r: 0.7 + Math.random() * 2.2, vy: 0.02 + Math.random() * 0.05, drift: Math.random() * Math.PI * 2, sway: 0.25 + Math.random() * 0.8, alpha: 0.25 + Math.random() * 0.55, depth: 0.5 + Math.random() * 0.9 });
+  // 三层雪景：远景小快、中景、近景大慢
+  for (let i = 0; i < 70; i++) snowfall.push({ layer: 'far', x: Math.random(), y: Math.random(), r: 0.5 + Math.random() * 1.0, vy: 0.04 + Math.random() * 0.06, drift: Math.random() * Math.PI * 2, sway: 0.2 + Math.random() * 0.6, alpha: 0.2 + Math.random() * 0.35, rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 2 });
+  for (let i = 0; i < 65; i++) snowfall.push({ layer: 'mid', x: Math.random(), y: Math.random(), r: 1.0 + Math.random() * 1.8, vy: 0.028 + Math.random() * 0.04, drift: Math.random() * Math.PI * 2, sway: 0.3 + Math.random() * 0.8, alpha: 0.35 + Math.random() * 0.4, rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 1.5 });
+  for (let i = 0; i < 25; i++) snowfall.push({ layer: 'near', x: Math.random(), y: Math.random(), r: 2.0 + Math.random() * 3.5, vy: 0.015 + Math.random() * 0.025, drift: Math.random() * Math.PI * 2, sway: 0.15 + Math.random() * 0.4, alpha: 0.55 + Math.random() * 0.35, rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 1.0, depth: 1 });
 }
 resetSnow();
 
@@ -995,6 +1326,7 @@ function drawBackground(dt) {
   const g = ctx.createRadialGradient(W / 2, H * 0.46, Math.min(W, H) * 0.1, W / 2, H * 0.5, Math.max(W, H) * 0.78);
   g.addColorStop(0, 'rgba(2,3,8,0)'); g.addColorStop(0.55, 'rgba(2,3,8,0.10)'); g.addColorStop(1, 'rgba(2,3,8,0.68)');
   ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  windTime += dt;
   drawSparkles(); drawSnowfall(dt); updateSnow(dt);
 }
 function drawSparkles() {
@@ -1010,19 +1342,62 @@ function drawSparkles() {
   ctx.restore();
 }
 function drawSnowfall(dt) {
-  ctx.save(); ctx.fillStyle = '#ffffff';
+  const windX = Math.sin(windTime * 0.3) * 0.0008; // 柔和风
+  ctx.save();
   for (const f of snowfall) {
-    f.y += f.vy * dt * f.depth; f.x += Math.sin(time * f.sway + f.drift) * 0.0003;
-    if (f.x < -0.02) f.x = 1.02; if (f.x > 1.02) f.x = -0.02;
+    // 更新
+    f.y += f.vy * dt * 60;
+    f.x += Math.sin(time * f.sway + f.drift) * 0.0003 + windX * (f.layer === 'near' ? 2.5 : f.layer === 'mid' ? 1.5 : 0.8);
+    f.rot += f.rotSpeed * dt;
+    if (f.x < -0.05) f.x = 1.05; if (f.x > 1.05) f.x = -0.05;
     if (f.y > 1.02) { f.y = -0.02; f.x = Math.random(); }
-    ctx.globalAlpha = f.alpha;
-    ctx.beginPath(); ctx.arc(f.x * W, f.y * H, f.r * f.depth, 0, Math.PI * 2); ctx.fill();
+    const x = f.x * W, y = f.y * H, r = f.r * (f.depth ?? 1);
+    // 三层：远景简单圆点、中景带高光、近景六边形+闪烁
+    if (f.layer === 'far') {
+      ctx.fillStyle = `rgba(255,255,255,${f.alpha})`;
+      ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+    } else if (f.layer === 'mid') {
+      ctx.fillStyle = `rgba(255,255,255,${f.alpha})`;
+      ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+      // 高光点
+      ctx.fillStyle = `rgba(255,255,255,${f.alpha * 0.6})`;
+      ctx.beginPath(); ctx.arc(x - r * 0.3, y - r * 0.3, r * 0.35, 0, Math.PI * 2); ctx.fill();
+    } else {
+      // 近景：绘制旋转的雪花形状
+      ctx.save(); ctx.translate(x, y); ctx.rotate(f.rot);
+      const bright = 0.7 + 0.3 * Math.sin(time * 3 + f.drift);
+      ctx.fillStyle = `rgba(255,255,255,${f.alpha})`;
+      // 主圆
+      ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fill();
+      // 顶部高光
+      ctx.fillStyle = `rgba(255,255,255,${f.alpha * bright})`;
+      ctx.beginPath(); ctx.arc(-r * 0.35, -r * 0.35, r * 0.4, 0, Math.PI * 2); ctx.fill();
+      // 六个小尖（六边形感）
+      ctx.fillStyle = `rgba(255,255,255,${f.alpha * 0.6})`;
+      for (let k = 0; k < 6; k++) {
+        const ang = k * Math.PI / 3;
+        const ex = Math.cos(ang) * r * 1.3, ey = Math.sin(ang) * r * 1.3;
+        ctx.beginPath(); ctx.arc(ex, ey, r * 0.3, 0, Math.PI * 2); ctx.fill();
+      }
+      // 轻微光晕
+      ctx.fillStyle = `rgba(220,235,255,${f.alpha * 0.15 * bright})`;
+      ctx.beginPath(); ctx.arc(0, 0, r * 2.2, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+    }
   }
   ctx.restore();
 }
 function snowSurfaceAt(x) { const i = Math.max(0, Math.min(SNOW_BINS - 1, Math.floor(x * SNOW_BINS))); return 1 - snowBank[i]; }
 function updateSnow(dt) {
-  for (let i = 0; i < SNOW_BINS; i++) { const rate = 0.00028 * (0.7 + 0.55 * Math.sin(i * 1.7 + 2.3)); snowBank[i] = Math.min(0.15, snowBank[i] + rate * dt * 60); }
+  const rate = 0.0006; // 更快的积雪速度
+  for (let i = 0; i < SNOW_BINS; i++) { snowBank[i] = Math.min(0.22, snowBank[i] + rate * dt * 60); }
+  // 中心区域更容易积雪（树周围）
+  const cxBin = Math.floor(SNOW_BINS / 2);
+  for (let i = 0; i < SNOW_BINS; i++) {
+    const d = Math.abs(i - cxBin) / (SNOW_BINS / 2);
+    if (d < 0.7) snowBank[i] = Math.min(0.22, snowBank[i] + 0.0003 * (1 - d) * dt * 60);
+  }
+  // 平滑
   const smooth = snowBank.slice();
   for (let i = 0; i < SNOW_BINS; i++) { const l = smooth[Math.max(0, i - 1)], r = smooth[Math.min(SNOW_BINS - 1, i + 1)]; snowBank[i] += ((l + r) / 2 - smooth[i]) * Math.min(1, dt * 1.1); }
 }
@@ -1030,23 +1405,85 @@ function drawSnowPile() {
   ctx.save();
   const step = W / (SNOW_BINS - 1); const ys = snowBank.map(h => H * (1 - h)); const top = Math.min(...ys);
   const trace = () => { ctx.beginPath(); ctx.moveTo(0, H); ctx.lineTo(0, ys[0]); for (let i = 0; i < SNOW_BINS - 1; i++) { const x0 = i * step, x1 = (i + 1) * step; ctx.quadraticCurveTo(x0, ys[i], (x0 + x1) / 2, (ys[i] + ys[i + 1]) / 2); } ctx.lineTo(W, ys[SNOW_BINS - 1]); ctx.lineTo(W, H); ctx.closePath(); };
+  // 底部阴影层（先画）
+  trace();
+  const shadowG = ctx.createLinearGradient(0, top - 20, 0, H);
+  shadowG.addColorStop(0, 'rgba(180,200,230,0)'); shadowG.addColorStop(0.5, 'rgba(120,150,185,0.22)'); shadowG.addColorStop(1, 'rgba(60,80,110,0.35)');
+  ctx.fillStyle = shadowG; ctx.fill();
+
+  // 积雪主体（多层渐变）
   trace();
   const g = ctx.createLinearGradient(0, top, 0, H);
-  g.addColorStop(0, 'rgba(255,255,255,0.99)'); g.addColorStop(0.22, 'rgba(246,250,255,0.98)'); g.addColorStop(0.55, 'rgba(214,228,244,0.96)'); g.addColorStop(1, 'rgba(158,182,212,0.97)');
-  ctx.fillStyle = g; ctx.shadowColor = 'rgba(226,240,255,.45)'; ctx.shadowBlur = 16; ctx.fill(); ctx.shadowBlur = 0;
-  for (const d of snowDrifts) {
-    const dx = d.x * W; const surface = snowSurfaceAt(d.x) * H; const dy = surface + d.r * 0.18;
+  g.addColorStop(0, 'rgba(255,255,255,1)');       // 顶部纯白
+  g.addColorStop(0.15, 'rgba(252,254,255,0.99)');  // 微蓝白
+  g.addColorStop(0.4, 'rgba(232,242,252,0.98)');
+  g.addColorStop(0.7, 'rgba(196,214,234,0.96)');
+  g.addColorStop(1, 'rgba(140,166,196,0.97)');     // 底部阴影蓝
+  ctx.fillStyle = g;
+  ctx.shadowColor = 'rgba(200,220,245,.35)'; ctx.shadowBlur = 20; ctx.shadowOffsetY = -4;
+  ctx.fill();
+  ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
+
+  // 远景雪堆（在描边前画，被主体覆盖一部分）
+  for (const d of snowDrifts.filter(d => d.layer === 'back')) {
+    const dx = d.x * W; const surface = snowSurfaceAt(d.x) * H; const dy = surface + d.r * 0.15;
     ctx.save();
-    const rg = ctx.createRadialGradient(dx - d.r * 0.25, dy - d.r * 0.35, d.r * 0.1, dx, dy, d.r);
-    rg.addColorStop(0, 'rgba(255,255,255,0.85)'); rg.addColorStop(0.6, 'rgba(248,251,255,0.45)'); rg.addColorStop(1, 'rgba(235,243,252,0)');
-    ctx.fillStyle = rg; ctx.beginPath(); ctx.ellipse(dx, dy, d.r * 1.15, d.r * (0.5 + d.bump * 0.18), 0, 0, Math.PI * 2); ctx.fill();
+    const rg = ctx.createRadialGradient(dx - d.r * 0.2, dy - d.r * 0.4, d.r * 0.1, dx, dy, d.r);
+    rg.addColorStop(0, 'rgba(255,255,255,0.7)'); rg.addColorStop(0.5, 'rgba(240,250,255,0.3)'); rg.addColorStop(1, 'rgba(220,235,250,0)');
+    ctx.fillStyle = rg; ctx.beginPath(); ctx.ellipse(dx, dy, d.r * 1.05, d.r * (0.45 + d.bump * 0.18), 0, 0, Math.PI * 2); ctx.fill();
     ctx.restore();
   }
+
+  // 表面高光描边（两条，上面亮下面稍暗）
   ctx.beginPath(); ctx.moveTo(0, ys[0]);
   for (let i = 0; i < SNOW_BINS - 1; i++) { const x0 = i * step, x1 = (i + 1) * step; ctx.quadraticCurveTo(x0, ys[i], (x0 + x1) / 2, (ys[i] + ys[i + 1]) / 2); }
-  ctx.lineTo(W, ys[SNOW_BINS - 1]); ctx.strokeStyle = 'rgba(255,255,255,.92)'; ctx.lineWidth = 2; ctx.stroke();
-  ctx.fillStyle = 'rgba(255,255,255,.9)';
-  for (let i = 0; i < 80; i++) { const x = ((i * 97.3) % 100) / 100 * W; const surface = snowSurfaceAt(x / W) * H; const y = surface + ((i * 53.7) % 100) / 100 * (H - surface) * 0.72; ctx.globalAlpha = 0.12 + 0.42 * Math.abs(Math.sin(time * 1.2 + i)); ctx.fillRect(x, y, i % 5 === 0 ? 1.7 : 1.2, i % 5 === 0 ? 1.7 : 1.2); }
+  ctx.lineTo(W, ys[SNOW_BINS - 1]);
+  ctx.strokeStyle = 'rgba(255,255,255,1)'; ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.stroke();
+  // 第二层稍暗的描边（下方）
+  ctx.beginPath(); ctx.moveTo(0, ys[0] + 4);
+  for (let i = 0; i < SNOW_BINS - 1; i++) { const x0 = i * step, x1 = (i + 1) * step; ctx.quadraticCurveTo(x0, ys[i] + 4, (x0 + x1) / 2, (ys[i] + ys[i + 1]) / 2 + 4); }
+  ctx.lineTo(W, ys[SNOW_BINS - 1]);
+  ctx.strokeStyle = 'rgba(230,240,250,0.6)'; ctx.lineWidth = 2; ctx.stroke();
+
+  // 近景雪堆（在描边后画，更突出）
+  for (const d of snowDrifts.filter(d => d.layer === 'front')) {
+    const dx = d.x * W; const surface = snowSurfaceAt(d.x) * H; const dy = surface + d.r * 0.2;
+    ctx.save();
+    const rg = ctx.createRadialGradient(dx - d.r * 0.3, dy - d.r * 0.45, d.r * 0.1, dx, dy, d.r * 1.2);
+    rg.addColorStop(0, 'rgba(255,255,255,0.95)');
+    rg.addColorStop(0.3, 'rgba(250,253,255,0.6)');
+    rg.addColorStop(0.7, 'rgba(235,245,255,0.2)');
+    rg.addColorStop(1, 'rgba(220,235,250,0)');
+    ctx.fillStyle = rg; ctx.beginPath(); ctx.ellipse(dx, dy, d.r * 1.2, d.r * (0.5 + d.bump * 0.2), 0, 0, Math.PI * 2); ctx.fill();
+    // 高光尖
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.beginPath(); ctx.arc(dx - d.r * 0.25, dy - d.r * 0.35, d.r * 0.18, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+  }
+
+  // 表面散雪粒（小亮点 + 雪花点）
+  for (let i = 0; i < 140; i++) {
+    const x = ((i * 97.3 + Math.sin(time * 0.3) * 20) % 1) * W;
+    const surface = snowSurfaceAt(x / W) * H;
+    if (surface < H * 0.85) continue; // 只在积雪上
+    const dy = ((i * 53.7) % 1) * (H - surface) * 0.65;
+    const y = surface + dy;
+    const twinkle = 0.15 + 0.55 * Math.abs(Math.sin(time * 1.1 + i * 0.37));
+    const sz = i % 7 === 0 ? 2 : 1;
+    ctx.fillStyle = `rgba(255,255,255,${twinkle})`;
+    ctx.fillRect(x, y, sz, sz);
+  }
+  // 雪面大亮点（模拟雪晶反光）
+  for (let i = 0; i < 14; i++) {
+    const seed = i * 137.5;
+    const x = ((seed * 0.01) % 1) * W;
+    const surface = snowSurfaceAt(x / W) * H;
+    if (surface < H * 0.85) continue;
+    const bright = 0.4 + 0.6 * Math.abs(Math.sin(time * 0.8 + seed));
+    ctx.fillStyle = `rgba(255,255,255,${bright})`;
+    ctx.beginPath(); ctx.arc(x, surface + 2 + (seed % 5), 1.8, 0, Math.PI * 2); ctx.fill();
+  }
+
   ctx.restore();
 }
 
@@ -1138,6 +1575,19 @@ function drawLights() {
   if (!state.colors) return;
   const { cx, topY, height, halfW } = treeMetrics();
   const grow = growEase(4); if (grow <= 0) return;
+  if (state.stage >= 6) {
+    hitRegions.lightsSample = [];
+    // 采样少量彩灯记录命中区域
+    const step = Math.max(1, Math.floor(tree.lights.length / 40));
+    for (let i = 0; i < tree.lights.length; i += step) {
+      const p = tree.lights[i];
+      const ang = p.ang + state.treeRotation;
+      const maxR = halfW * Math.pow(p.t, 0.92);
+      const x = cx + Math.cos(ang) * maxR * p.r;
+      const y = topY + p.t * height;
+      hitRegions.lightsSample.push({ x, y, r: p.size * 3, colorIdx: p.ci });
+    }
+  }
   ctx.save(); ctx.globalCompositeOperation = 'lighter';
   for (const p of tree.lights) {
     const delta = grow - p.t; if (delta < 0) continue;
@@ -1198,11 +1648,15 @@ function drawGlints() {
 function drawGifts() {
   const grow = growEase(5); if (grow <= 0) return;
   const baseY = H * 0.93;
+  if (state.stage >= 6) hitRegions.gifts = [];
   ctx.save();
   for (const g of tree.gifts) {
     const gx = g.x * W, gy = g.y * H;
     const gw = g.w * W * 2, gh = g.h * H * 1.5;
     const emerge = Math.min(1, Math.max(0, (grow - (gy / H - 0.9) * 3) * 2)); if (emerge <= 0) continue;
+    if (state.stage >= 6) {
+      hitRegions.gifts.push({ x: gx, y: gy - gh / 2, r: Math.max(gw, gh), colorIdx: tree.gifts.indexOf(g) % 3 });
+    }
     ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(gx, baseY + 8, gw * 0.5, 3, 0, 0, Math.PI * 2); ctx.fill();
     ctx.fillStyle = css(g.color, emerge); ctx.fillRect(gx - gw / 2, gy - gh, gw * emerge, gh * emerge);
     const rw = gw * 0.12;
@@ -1227,6 +1681,7 @@ function drawTopStar() {
   const x = cx, y = topY - 10 * grow;
   const pulse = 1 + 0.11 * Math.sin(time * 2.1);
   const R = Math.min(W, H) * 0.026 * pulse * grow;
+  if (state.stage >= 6) hitRegions.star = { x, y, r: R * 1.3 };
   ctx.save(); ctx.globalCompositeOperation = 'lighter';
   for (let k = 3; k >= 1; k--) {
     const rr = R * (1.4 + k * 1.5);
@@ -1261,6 +1716,7 @@ function drawSpiralRibbons() {
   const col = hslToRgb(hslc.h, Math.min(1, Math.max(hslc.s, 0.75)), 0.6);
   const grow = growEase(6); if (grow <= 0) return;
   const turns = 4.5, segs = 200;
+  if (state.stage >= 6) hitRegions.ribbonsCenter = { x: cx, y: topY + height / 2, r: halfW * 0.7, segs: segs };
   const pts = [];
   for (let i = 0; i <= segs; i++) {
     const t = i / segs; if (t > grow) break;
@@ -1284,13 +1740,16 @@ function drawFloatingDots() {
   if (!state.colors) return;
   const { cx, topY, height, halfW } = treeMetrics();
   const col = state.colors[2];
+  if (state.stage >= 6) hitRegions.dotsSample = [];
   ctx.save(); ctx.globalCompositeOperation = 'lighter';
-  for (const d of tree.dots) {
+  for (let di = 0; di < tree.dots.length; di++) {
+    const d = tree.dots[di];
     d.ny -= d.vy * 16; if (d.ny < 0.08) { d.ny = 0.95; d.nx = 0.5 + (Math.random() - 0.5) * 0.9; }
     const x = cx + (d.nx - 0.5) * halfW * 2.2 + Math.sin(time * 0.8 + d.phase) * 12;
     const y = topY + (d.ny - 0.1) / 0.85 * height;
     const tw = 0.4 + 0.6 * Math.sin(time * d.speed * 3 + d.phase);
     const sz = d.size * (0.6 + 0.5 * tw);
+    if (state.stage >= 6 && di % 3 === 0) hitRegions.dotsSample.push({ x, y, r: sz + 18 });
     ctx.fillStyle = css(col, 0.32 + 0.68 * tw); ctx.shadowBlur = 12; ctx.shadowColor = css(col, 1);
     ctx.beginPath(); ctx.arc(x, y, sz, 0, Math.PI * 2); ctx.fill();
     if (d.size > 1.7 && tw > 0.68) {
