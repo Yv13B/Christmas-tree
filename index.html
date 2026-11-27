@@ -445,6 +445,56 @@
   .gal-actions button { flex: 1; }
   #btnGallerySave { background: linear-gradient(135deg,#e8c97a 0%,#d4a84a 100%); color:#1a1205; }
 
+  /* 好友的树：整棵完整树卡片 */
+  #galleryList.gal-full { display: flex; flex-direction: column; gap: 16px; }
+  .gal-full-card {
+    position: relative; border-radius: 20px; overflow: hidden; cursor: pointer;
+    border: 1.5px solid rgba(255,255,255,.16);
+    background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.03));
+    box-shadow: 0 8px 24px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.18);
+    transition: transform .2s, box-shadow .22s, border-color .22s;
+  }
+  .gal-full-card:active { transform: scale(.985); }
+  .gal-full-card.self { border-color: rgba(232,201,122,.6); box-shadow: 0 0 24px rgba(232,201,122,.22), 0 8px 24px rgba(0,0,0,.3); }
+  .gal-full-card canvas.full-tree { display: block; border-radius: 20px; }
+  .gal-full-card .gal-overlay {
+    position: absolute; left: 0; right: 0; bottom: 0; padding: 14px 16px;
+    display: flex; align-items: flex-end; justify-content: space-between; gap: 10px;
+    background: linear-gradient(0deg, rgba(3,5,12,.82) 0%, rgba(3,5,12,.42) 62%, rgba(3,5,12,0) 100%);
+  }
+  .gal-full-card .gal-name { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-shadow: 0 2px 8px rgba(0,0,0,.6); }
+  .gal-full-card .gal-av { width: 26px; height: 26px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0; }
+  .gal-full-card .gal-sim { font-size: 12px; color: rgba(255,255,255,.72); text-align: right; line-height: 1.5; }
+  .gal-full-card .gal-sim b { color: var(--gold); font-size: 16px; }
+
+  /* 整片树林：横向错落森林，可拖动 */
+  #galleryList.gal-forest {
+    position: relative; height: 60vh; min-height: 330px; margin: 0 -16px;
+    overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; cursor: grab;
+  }
+  #galleryList.gal-forest::-webkit-scrollbar { display: none; }
+  #galleryList.gal-forest.dragging { cursor: grabbing; }
+  #galleryList.gal-forest .forest-inner { position: relative; height: 100%; }
+  #galleryList.gal-forest .forest-ground {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 24%;
+    background: linear-gradient(0deg, rgba(228,240,252,.92) 0%, rgba(206,223,243,.5) 58%, rgba(206,223,243,0) 100%);
+    pointer-events: none;
+  }
+  .forest-tree { position: absolute; transform-origin: bottom center; cursor: pointer; transition: filter .2s; }
+  .forest-tree:active { filter: brightness(1.18); }
+  .forest-tree canvas { display: block; }
+  .forest-tree .ft-label {
+    position: absolute; left: 50%; bottom: -4px; transform: translateX(-50%);
+    font-size: 11px; font-weight: 600; color: #fff; white-space: nowrap;
+    text-shadow: 0 1px 5px rgba(0,0,0,.85); pointer-events: none;
+  }
+  .forest-tree .ft-sim {
+    position: absolute; left: 50%; top: -20px; transform: translateX(-50%);
+    font-size: 10px; color: var(--gold); white-space: nowrap; pointer-events: none;
+    text-shadow: 0 1px 4px rgba(0,0,0,.9);
+  }
+
   /* ---------- 相似度徽标（查看他人树时） ---------- */
   #simBadge {
     position: absolute; top: calc(18px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%);
@@ -1661,7 +1711,7 @@ $('btnSave').onclick = () => {
    Canvas 粒子圣诞树
    ============================================================ */
 const canvas = $('treeCanvas');
-const ctx = canvas.getContext('2d');
+let ctx = canvas.getContext('2d');
 let W = 0, H = 0, DPR = 1, time = 0, lastTs = 0;
 function css(c, a = 1) { return `rgba(${c.r},${c.g},${c.b},${a})`; }
 function lighten(c, amt) { return { r: Math.min(255, Math.round(c.r + (255 - c.r) * amt)), g: Math.min(255, Math.round(c.g + (255 - c.g) * amt)), b: Math.min(255, Math.round(c.b + (255 - c.b) * amt)) }; }
@@ -2127,13 +2177,25 @@ function drawGlints() {
 }
 
 /* ---------- 悬挂文字挂饰：把用户选择的选项英文挂到树枝上，带悬垂摆动 + 发光 ---------- */
+/* 从所有身份/维度里按中文标签找 chip（不依赖当前 MEMORY_PAGES，图鉴渲染他人也能取到英文） */
+function chipEnByZh(zh) {
+  if (!zh) return null;
+  for (const id in IDENTITY_STUDY) {
+    const c = (IDENTITY_STUDY[id].chips || []).find(x => x.zh === zh);
+    if (c && c.en) return c;
+  }
+  for (const p of COMMON_PAGES) {
+    const c = (p.chips || []).find(x => x.zh === zh);
+    if (c && c.en) return c;
+  }
+  return null;
+}
+
 function getOrnaments() {
   const keys = ['study', 'social', 'mindset'];
-  const pages = { study: MEMORY_PAGES[0], social: MEMORY_PAGES[1], mindset: MEMORY_PAGES[2] };
   const out = [];
   for (let i = 0; i < keys.length; i++) {
-    const k = keys[i];
-    const chip = pages[k].chips.find(c => c.zh === state.tags[k]);
+    const chip = chipEnByZh(state.tags[keys[i]]);
     if (!chip || !chip.en) continue;
     out.push({
       text: chip.en,
@@ -2747,39 +2809,140 @@ async function renderGallery() {
     else if (source === 'local') note.textContent = '未配置共享后端 · 当前为本机模式（仅本浏览器可见）';
     else note.textContent = '云端连接失败 · 已显示本机缓存' + (_cloudErr ? '（' + String(_cloudErr).slice(0, 70) + '）' : '');
   }
+  list.className = '';
   list.innerHTML = '';
   if (!items.length) {
-    list.innerHTML = `<div class="gal-empty" style="grid-column:1/-1;"><div class="big">🌲</div>${galleryTab === 'friends'
+    list.innerHTML = `<div class="gal-empty"><div class="big">🌲</div>${galleryTab === 'friends'
       ? '还没有好友的树。<br>把「邀请好友」链接发到微信，<br>好友打开并种下树后会出现在这里。'
       : '树林还空空的。<br>先去种一棵属于你的树吧。'}</div>`;
     return;
   }
-  items.forEach(e => {
+
+  const simOf = (e) => {
     const isSelf = e.id === sid;
-    const canSim = !isSelf && store.user && store.user.hasTree && e.tags && e.tags.study;
-    const sim = canSim ? similarity(store.user.tags, store.user.identity, e.tags, e.identity) : null;
-    const av = e.avatar || avatarOf(e.nick);
-    const card = document.createElement('div');
-    card.className = 'gal-card' + (isSelf ? ' self' : '');
-    const cw = 200, chh = Math.round(200 * 1.12);
-    const cv = document.createElement('canvas'); cv.className = 'mini';
-    cv.width = cw * 2; cv.height = chh * 2;
-    drawMiniTree(cv.getContext('2d'), cw, chh, 2, e);
-    card.appendChild(cv);
-    const meta = document.createElement('div'); meta.className = 'gal-meta';
-    meta.innerHTML = `
-      <div class="gal-name"><span class="gal-av" style="${avatarStyle(av)}">${escapeHtml(av.char)}</span>${escapeHtml(e.nick)}${isSelf ? '（我）' : ''}</div>
-      <div class="gal-sim">${isSelf ? '<span style="opacity:.6">你的树</span>' : (sim == null ? '<span style="opacity:.5">先种一棵树才能算相似度</span>' : `相似度 <b>${sim}%</b>${sim === 100 ? ' 🎆' : ''}`)}</div>
-      <div class="gal-tagline">${escapeHtml(e.tags && e.tags.keyword ? e.tags.keyword : (e.identity === 'worker' ? '上班族' : e.identity === 'freelance' ? '自由职业' : '学生党'))}</div>`;
-    card.appendChild(meta);
-    card.addEventListener('click', () => {
-      if (!isSelf && (!e.tags || !e.tags.study || e.hasTree === false)) { toast('TA 还没有种下自己的树', 'They have not grown a tree yet'); return; }
-      if (isSelf) { enterView(e, { from: galleryTab, isSelf: true }); return; }
-      if (!store.user || !store.user.hasTree) { toast('先种一棵属于你自己的树，<br>才能和 TA 比较相似度', 'Grow your own tree first'); return; }
-      enterView(e, { from: galleryTab, isSelf: false });
+    if (isSelf) return { isSelf: true, sim: null };
+    const canSim = store.user && store.user.hasTree && e.tags && e.tags.study;
+    return { isSelf: false, sim: canSim ? similarity(store.user.tags, store.user.identity, e.tags, e.identity) : null };
+  };
+  const openFor = (e, isSelf) => {
+    if (!isSelf && (!e.tags || !e.tags.study || e.hasTree === false)) { toast('TA 还没有种下自己的树', 'They have not grown a tree yet'); return; }
+    if (isSelf) { enterView(e, { from: galleryTab, isSelf: true }); return; }
+    if (!store.user || !store.user.hasTree) { toast('先种一棵属于你自己的树，<br>才能和 TA 比较相似度', 'Grow your own tree first'); return; }
+    enterView(e, { from: galleryTab, isSelf: false });
+  };
+  const tagOf = (e) => e.tags && e.tags.keyword ? e.tags.keyword : (e.identity === 'worker' ? '上班族' : e.identity === 'freelance' ? '自由职业' : '学生党');
+
+  if (galleryTab === 'friends') {
+    /* 完整树：一屏一棵大图 */
+    list.className = 'gal-full';
+    if (note) note.textContent += ' · 点树看详情';
+    const cw = Math.round(list.clientWidth || (window.innerWidth - 32));
+    const ch = Math.round(Math.min(460, Math.max(320, window.innerHeight * 0.56)));
+    items.forEach(e => {
+      const { isSelf, sim } = simOf(e);
+      const av = e.avatar || avatarOf(e.nick);
+      const card = document.createElement('div');
+      card.className = 'gal-full-card' + (isSelf ? ' self' : '');
+      const cv = document.createElement('canvas'); cv.className = 'full-tree';
+      cv.width = cw * 2; cv.height = ch * 2; cv.style.width = cw + 'px'; cv.style.height = ch + 'px';
+      if (!renderFullTreeTo(cv, e, cw, ch, 2)) drawMiniTree(cv.getContext('2d'), cw, ch, 2, e);
+      card.appendChild(cv);
+      const ov = document.createElement('div'); ov.className = 'gal-overlay';
+      ov.innerHTML = `
+        <div>
+          <div class="gal-name"><span class="gal-av" style="${avatarStyle(av)}">${escapeHtml(av.char)}</span>${escapeHtml(e.nick)}${isSelf ? '（我）' : ''}</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:4px;">${escapeHtml(tagOf(e))}</div>
+        </div>
+        <div class="gal-sim">${isSelf ? '你的树' : (sim == null ? '先种一棵树<br>才能算相似度' : `相似度<br><b>${sim}%</b>${sim === 100 ? ' 🎆' : ''}`)}</div>`;
+      card.appendChild(ov);
+      card.addEventListener('click', () => openFor(e, isSelf));
+      list.appendChild(card);
     });
-    list.appendChild(card);
+    return;
+  }
+
+  /* 整片森林：横向错落、可拖动，点树进详情 */
+  list.className = 'gal-forest';
+  if (note) note.textContent += ' · 左右拖动浏览';
+  const inner = document.createElement('div'); inner.className = 'forest-inner';
+  const stepX = 128;
+  const baseW0 = list.clientWidth || window.innerWidth;
+  inner.style.width = Math.max(baseW0, 90 + items.length * stepX) + 'px';
+  const ground = document.createElement('div'); ground.className = 'forest-ground'; inner.appendChild(ground);
+  items.forEach((e, i) => {
+    const { isSelf, sim } = simOf(e);
+    const bw = 116 + (i % 3) * 12;
+    const bh = Math.round(bw * 1.42);
+    const scale = 0.86 + (((i * 41) % 100) / 100) * 0.36;
+    const left = 46 + i * stepX + (((i * 53) % 40) - 20);
+    const bottom = 30 + ((i * 67) % 64);
+    const node = document.createElement('div'); node.className = 'forest-tree';
+    node.style.width = bw + 'px'; node.style.height = bh + 'px';
+    node.style.left = left + 'px'; node.style.bottom = bottom + 'px';
+    node.style.transform = 'scale(' + scale.toFixed(3) + ')';
+    node.style.zIndex = String(10 + ((i * 29) % 9));
+    const cv = document.createElement('canvas');
+    cv.width = bw * 2; cv.height = bh * 2; cv.style.width = bw + 'px'; cv.style.height = bh + 'px';
+    if (!renderFullTreeTo(cv, e, bw, bh, 2)) drawMiniTree(cv.getContext('2d'), bw, bh, 2, e);
+    node.appendChild(cv);
+    const lab = document.createElement('div'); lab.className = 'ft-label'; lab.textContent = (e.nick || '') + (isSelf ? '（我）' : '');
+    node.appendChild(lab);
+    if (!isSelf && sim != null) { const s = document.createElement('div'); s.className = 'ft-sim'; s.textContent = sim + '%' + (sim === 100 ? ' 🎆' : ''); node.appendChild(s); }
+    node.addEventListener('click', () => openFor(e, isSelf));
+    inner.appendChild(node);
   });
+  list.appendChild(inner);
+}
+
+/* ---- 用真实绘制管线渲染某个成员的完整树到离屏 canvas ---- */
+function renderFullTreeTo(cv, e, cssW, cssH, dpr) {
+  const tags = e && e.tags;
+  if (!tags || !tags.study) return false;
+  const cols = (e.colors && e.colors.length === 3)
+    ? e.colors.map(c => Array.isArray(c) ? { r: c[0], g: c[1], b: c[2] } : c)
+    : [{ r: 232, g: 201, b: 122 }, { r: 120, g: 200, b: 255 }, { r: 255, g: 120, b: 180 }];
+  const sCtx = ctx, sW = W, sH = H, sTime = time, sWind = windTime, sBank = snowBank, sST = stageTimes;
+  const sState = { identity: state.identity, stage: state.stage, spinning: state.spinning, treeRotation: state.treeRotation, animating: state.animating, tags: state.tags, colors: state.colors };
+  const keys = ['particles', 'lights', 'dots', 'twinkles', 'glints', 'starSparks', 'gifts', 'rootParticles', 'trunkParticles'];
+  const sTree = {}; keys.forEach(k => sTree[k] = tree[k]);
+  try {
+    W = cssW; H = cssH; time = 60; windTime = 0;
+    state.identity = e.identity || 'student';
+    state.tags = { study: tags.study, social: tags.social, mindset: tags.mindset, keyword: tags.keyword };
+    state.colors = cols; state.stage = 6; state.spinning = false; state.treeRotation = 0; state.animating = false;
+    stageTimes = { 1: time - 2, 2: time - 2, 3: time - 2, 4: time - 2, 5: time - 2, 6: time - 2 };
+    snowBank = new Array(SNOW_BINS).fill(0.105);
+    tree.rebuild();
+    /* 小尺寸时降低粒子密度，避免过密发白，保留真实树的形态与配色 */
+    const area = cssW * cssH;
+    const dens = Math.min(1, Math.max(0.2, area / (380 * 620)));
+    if (dens < 1) {
+      const shuffle = (a) => { for (let i = a.length - 1; i > 0; i--) { const j = (Math.random() * (i + 1)) | 0; const t = a[i]; a[i] = a[j]; a[j] = t; } };
+      const trim = (a, d) => { const n = Math.max(8, Math.round(a.length * d)); a.length = n; };
+      [['particles', dens], ['lights', Math.min(1, dens + 0.16)], ['twinkles', Math.min(1, dens + 0.06)], ['glints', Math.min(1, dens + 0.1)], ['dots', dens]].forEach(([k, d]) => { shuffle(tree[k]); trim(tree[k], d); });
+    }
+    ctx = cv.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, cssW, cssH);
+    const bg = ctx.createLinearGradient(0, 0, 0, cssH);
+    bg.addColorStop(0, '#0a1020'); bg.addColorStop(0.6, '#070c18'); bg.addColorStop(1, '#04060d');
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, cssW, cssH);
+    const glow = ctx.createRadialGradient(cssW / 2, cssH * 0.42, 0, cssW / 2, cssH * 0.5, Math.max(cssW, cssH) * 0.75);
+    glow.addColorStop(0, 'rgba(255,220,150,0.10)'); glow.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = glow; ctx.fillRect(0, 0, cssW, cssH);
+    drawMistBack(); drawRoot(); drawTrunk(); drawBranches();
+    drawLights(); drawTwinkles(); drawGlints();
+    drawTopStar(); drawSpiralRibbons(); drawMistFront(); drawFloatingDots();
+    drawOrnaments(); drawSnowPile(); drawGifts();
+    return true;
+  } catch (err) {
+    console.warn('[full tree]', err);
+    return false;
+  } finally {
+    ctx = sCtx; W = sW; H = sH; time = sTime; windTime = sWind; snowBank = sBank; stageTimes = sST;
+    Object.assign(state, sState);
+    keys.forEach(k => tree[k] = sTree[k]);
+  }
 }
 
 /* ---- 迷你树缩略图 ---- */
@@ -3023,6 +3186,28 @@ document.querySelectorAll('.gal-tab').forEach(t => t.addEventListener('click', (
   document.querySelectorAll('.gal-tab').forEach(x => x.classList.toggle('on', x === t));
   renderGallery();
 }));
+
+/* 森林：桌面端按住拖动平移（移动端用原生横向滚动） */
+(function initForestPan() {
+  const el = $('galleryList');
+  let down = false, sx = 0, sl = 0, moved = false;
+  el.addEventListener('pointerdown', (e) => {
+    if (galleryTab !== 'forest') return;
+    down = true; moved = false; sx = e.clientX; sl = el.scrollLeft; el.classList.add('dragging');
+  });
+  el.addEventListener('pointermove', (e) => {
+    if (!down) return;
+    const dx = e.clientX - sx;
+    if (Math.abs(dx) > 5) moved = true;
+    el.scrollLeft = sl - dx;
+  });
+  const end = () => { down = false; el.classList.remove('dragging'); };
+  el.addEventListener('pointerup', end);
+  el.addEventListener('pointercancel', end);
+  el.addEventListener('pointerleave', end);
+  el.addEventListener('click', (e) => { if (moved) { e.stopPropagation(); e.preventDefault(); moved = false; } }, true);
+  el.addEventListener('dragstart', (e) => e.preventDefault());
+})();
 $('btnShare').addEventListener('click', () => {
   if (!store.user || !store.user.hasTree || !store.user.tags.study) { toast('先点亮你的树，再分享给好友吧', 'Light up your tree first'); return; }
   $('shareLink').textContent = buildShareLink();
