@@ -28,6 +28,16 @@
     font-display: block;
     unicode-range: U+0000-024F, U+2000-206F, U+20A0-20CF, U+2100-214F, U+2190-21FF, U+2212, U+FEFF;
   }
+  /* 树上悬挂挂饰用的装饰英文字体 */
+  @font-face {
+    font-family: 'HangFont';
+    src: url('hang-font.woff2') format('woff2'),
+         url('hang-font.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: block;
+    unicode-range: U+0000-024F, U+2000-206F, U+2018-201F, U+20A0-20CF, U+2100-214F, U+2190-21FF, U+2212, U+FEFF;
+  }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html, body { width: 100%; height: 100%; overflow: hidden; }
   body {
@@ -347,12 +357,144 @@
     #experience .top-actions { top: calc(56px + env(safe-area-inset-top)); left: 8px; gap: 6px; }
     #experience .top-actions button { padding: 7px 10px; font-size: 12px; }
   }
+
+  /* ==================== 微信登录 / 好友 / 树林 ==================== */
+  .bg-screen {
+    background-color: #050810;
+    background-image:
+      linear-gradient(180deg, rgba(5,8,16,.58) 0%, rgba(5,8,16,.30) 42%, rgba(5,8,16,.74) 100%),
+      radial-gradient(ellipse at 50% 0%, rgba(232,201,122,.10), transparent 62%),
+      var(--bg-noise),
+      var(--bg-img);
+    background-position: center, center, 0 0, center;
+    background-size: cover, cover, 170px 170px, cover;
+    background-repeat: no-repeat, no-repeat, repeat, no-repeat;
+  }
+  /* ---------- 登录 ---------- */
+  #login { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 26px; text-align: center; }
+  #login .wx-badge {
+    letter-spacing: 3px; font-size: 11px; color: #7be3a6;
+    border: 1px solid rgba(7,193,96,.45); padding: 6px 16px; border-radius: 999px;
+    margin-bottom: 26px; text-transform: uppercase;
+  }
+  #login h1 { font-size: clamp(24px, 6.4vw, 33px); font-weight: 700; line-height: 1.25; margin-bottom: 12px; }
+  #login p { font-size: 14px; color: var(--sub); line-height: 1.7; max-width: 330px; margin-bottom: 26px; }
+  .wx-avatar-preview {
+    width: 84px; height: 84px; border-radius: 50%; margin: 0 auto 18px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 34px; font-weight: 700; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,.35);
+    border: 2px solid rgba(255,255,255,.35);
+    box-shadow: 0 8px 30px rgba(0,0,0,.45), inset 0 2px 6px rgba(255,255,255,.35);
+    transition: all .3s;
+  }
+  #login .nick-field {
+    width: 100%; max-width: 320px; padding: 15px 22px; border-radius: 999px;
+    background: linear-gradient(180deg, rgba(255,255,255,.20) 0%, rgba(255,255,255,.06) 45%, rgba(255,255,255,.12) 100%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    backdrop-filter: blur(16px) saturate(180%);
+    border: 1.5px solid rgba(255,255,255,.34);
+    box-shadow: inset 0 1px 1px rgba(255,255,255,.55), 0 6px 18px rgba(0,0,0,.28);
+    color: #fff; font-size: 16px; text-align: center; outline: none; font-family: inherit;
+  }
+  #login .nick-field::placeholder { color: rgba(255,255,255,.42); }
+  #login .nick-field:focus { border-color: rgba(123,227,166,.85); box-shadow: inset 0 1px 1px rgba(255,255,255,.6), 0 0 22px rgba(7,193,96,.35); }
+  .btn-wechat {
+    background: linear-gradient(135deg, #07C160 0%, #05a850 100%) !important;
+    color: #fff !important; box-shadow: 0 8px 26px rgba(7,193,96,.4), inset 0 1px 0 rgba(255,255,255,.35) !important;
+  }
+  #login .login-note { margin-top: 20px; font-size: 11.5px; color: rgba(255,255,255,.4); line-height: 1.6; max-width: 300px; }
+
+  /* ---------- 好友 / 树林 ---------- */
+  #gallery { display: flex; flex-direction: column; padding: calc(20px + env(safe-area-inset-top)) 16px calc(20px + env(safe-area-inset-bottom)); overflow-y: auto; }
+  #gallery .gal-head { text-align: center; margin-bottom: 16px; flex-shrink: 0; }
+  #gallery .gal-head .t { font-size: clamp(21px, 5.4vw, 27px); font-weight: 700; }
+  #gallery .gal-head .s { font-size: 13px; color: var(--sub); margin-top: 6px; line-height: 1.5; }
+  .gal-tabs { display: flex; gap: 8px; justify-content: center; margin-bottom: 18px; flex-shrink: 0; }
+  .gal-tab {
+    padding: 9px 22px; border-radius: 999px; font-size: 14px; font-weight: 600; cursor: pointer;
+    background: rgba(255,255,255,.07); border: 1.5px solid rgba(255,255,255,.16);
+    color: rgba(235,230,250,.72); transition: all .22s; backdrop-filter: blur(10px);
+  }
+  .gal-tab.on {
+    color: #1a1205; border-color: rgba(255,240,205,.9);
+    background: linear-gradient(180deg, #ffe9b8 0%, #e8c97a 100%);
+    box-shadow: 0 0 22px rgba(232,201,122,.45), inset 0 1px 2px rgba(255,255,255,.9);
+  }
+  .gal-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .gal-card {
+    position: relative; border-radius: 18px; overflow: hidden; cursor: pointer;
+    background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.03));
+    border: 1.5px solid rgba(255,255,255,.16);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    backdrop-filter: blur(14px) saturate(160%);
+    box-shadow: 0 8px 24px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.18);
+    transition: transform .2s, box-shadow .22s, border-color .22s;
+  }
+  .gal-card:active { transform: scale(.97); }
+  .gal-card.self { border-color: rgba(232,201,122,.6); box-shadow: 0 0 24px rgba(232,201,122,.22), 0 8px 24px rgba(0,0,0,.3); }
+  .gal-card .mini { display: block; width: 100%; aspect-ratio: 1 / 1.12; }
+  .gal-card .gal-meta { padding: 10px 12px 12px; }
+  .gal-card .gal-name { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px; }
+  .gal-card .gal-av { width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #fff; }
+  .gal-card .gal-sim { font-size: 11.5px; margin-top: 5px; color: rgba(255,255,255,.62); display: flex; align-items: center; gap: 5px; }
+  .gal-card .gal-sim b { color: var(--gold); font-size: 13px; }
+  .gal-card .gal-tagline { font-size: 10.5px; color: rgba(255,255,255,.42); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .gal-empty { text-align: center; color: var(--sub); font-size: 14px; line-height: 1.8; padding: 40px 20px; }
+  .gal-empty .big { font-size: 40px; margin-bottom: 14px; }
+  .gal-actions { display: flex; gap: 10px; margin-top: 22px; flex-shrink: 0; }
+  .gal-actions button { flex: 1; }
+  #btnGallerySave { background: linear-gradient(135deg,#e8c97a 0%,#d4a84a 100%); color:#1a1205; }
+
+  /* ---------- 相似度徽标（查看他人树时） ---------- */
+  #simBadge {
+    position: absolute; top: calc(18px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%);
+    z-index: 5; padding: 9px 18px; border-radius: 999px; font-size: 13px; white-space: nowrap;
+    background: rgba(10,12,24,.72); border: 1px solid rgba(232,201,122,.5);
+    box-shadow: 0 0 22px rgba(232,201,122,.25), inset 0 1px 0 rgba(255,255,255,.12);
+    backdrop-filter: blur(10px); color: #f5f1ff; display: none;
+  }
+  #simBadge b { color: var(--gold); font-size: 15px; }
+  #btnViewBack { display: none; }
+
+  /* ---------- 分享面板 ---------- */
+  #shareSheet {
+    position: fixed; inset: 0; z-index: 45; display: none; align-items: center; justify-content: center; padding: 22px;
+    background: rgba(0,0,0,.86); backdrop-filter: blur(6px);
+  }
+  #shareSheet.show { display: flex; }
+  #shareSheet .panel {
+    width: 100%; max-width: 400px; border-radius: 22px; padding: 24px 22px;
+    background: linear-gradient(160deg, rgba(40,46,64,.96), rgba(18,22,34,.96));
+    border: 1px solid rgba(255,255,255,.14); box-shadow: 0 24px 70px rgba(0,0,0,.6); text-align: center;
+  }
+  #shareSheet .panel .pt { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  #shareSheet .panel .ps { font-size: 13px; color: var(--sub); line-height: 1.6; margin-bottom: 16px; }
+  #shareSheet .share-link {
+    width: 100%; font-size: 11px; color: rgba(255,255,255,.7); word-break: break-all;
+    background: rgba(0,0,0,.35); border: 1px solid rgba(255,255,255,.12); border-radius: 12px;
+    padding: 12px; margin-bottom: 14px; max-height: 110px; overflow-y: auto; text-align: left;
+    user-select: all; -webkit-user-select: all;
+  }
+  #shareSheet .panel .row { display: flex; gap: 10px; }
+  #shareSheet .panel .row button { flex: 1; }
 </style>
 </head>
 <body>
 <div id="app">
 
   <button id="btnMusic" title="Music on / off">♪</button>
+
+  <!-- ============ 微信登录 ============ -->
+  <section id="login" class="screen bg-screen">
+    <div class="wx-badge">WECHAT · LOGIN</div>
+    <h1 data-en="Sign in to plant your memory">用微信登录<br>种下你的年末记忆</h1>
+    <p data-en="Set a name and avatar. Everything stays on your device.">给自己取个名字、选个头像。<br>所有数据只保存在你的设备本地。</p>
+    <div class="wx-avatar-preview" id="loginAvatar">🎄</div>
+    <input type="text" class="nick-field" id="loginNick" placeholder="输入你的微信昵称" maxlength="12" autocomplete="off">
+    <div style="height:22px;"></div>
+    <button class="btn-wechat" id="btnLogin" data-en="Sign in with WeChat">微信登录</button>
+    <div class="login-note" data-en="Simulated login — this is a static site; no real WeChat account is connected and no data leaves your browser.">模拟登录：本站为纯静态页面，不会连接真实微信账号，数据也不会离开你的浏览器。</div>
+  </section>
 
   <!-- ============ Landing ============ -->
   <section id="landing" class="screen active">
@@ -365,6 +507,7 @@
       <div style="background:rgba(10,12,24,.58); border:1px solid rgba(255,255,255,.16); border-radius:16px; padding:14px 18px; font-size:14px; width:110px; color:var(--text); backdrop-filter:blur(6px);" data-en="③ Light up"><b style="font-size:20px; display:block; margin-bottom:6px;">③</b>点亮成长</div>
     </div>
     <button id="btnStart" data-en="Start curating my year →">开始策展我的年度记忆 →</button>
+    <button id="btnOpenGallery" class="ghost" style="margin-top:12px;padding:11px 26px;font-size:15px;border:1.5px solid rgba(232,201,122,.6);box-shadow:0 0 20px rgba(232,201,122,.22);color:#ffe9b8;" data-en="🌲 Friends' trees & the forest">🌲 看看好友的树 / 我的树林</button>
     <div class="note" data-en="Everything stays on your device — no data is uploaded. Based on 128 years of color-emotion psychology research (Jonauskaite & Mohr 2025).">一切数据仅在你的设备本地处理。<br>色彩映射基于128年色-情绪心理学研究综述（Jonauskaite & Mohr 2025）。</div>
   </section>
 
@@ -424,6 +567,7 @@
   <!-- ============ Experience ============ -->
   <section id="experience" class="screen">
     <canvas id="treeCanvas"></canvas>
+    <div id="simBadge">与 TA 的相似度 <b id="simBadgeVal">—</b></div>
     <div id="stageBadge">STAGE <b id="stageText">0 / 6</b></div>
     <div id="memorySnapshot">
       <div class="ms-title">YOUR MEMORY</div>
@@ -433,7 +577,10 @@
       <div class="ms-row" id="msKeyword">—</div>
     </div>
     <div class="top-actions">
+      <button id="btnViewBack" style="padding:6px 12px; font-size:12px; border-color:rgba(232,201,122,.6); color:#ffe9b8 !important;" data-en="← Back">← 返回</button>
       <button id="btnRestart" style="padding:6px 10px; font-size:12px;" data-en="Replay">重新生成</button>
+      <button id="btnOpenGallery2" style="padding:6px 12px; font-size:12px; border-color:rgba(232,201,122,.7); color:#ffe9b8 !important; box-shadow:0 0 16px rgba(232,201,122,.3);" data-en="🌲 Friends' trees">🌲 好友的树</button>
+      <button id="btnShare" style="padding:6px 10px; font-size:12px;" data-en="Invite friends">邀请好友</button>
       <button id="btnSave" style="padding:6px 10px; font-size:12px;" data-en="Save PNG">保存图片</button>
       <button id="btnDecode" style="padding:6px 10px; font-size:12px;" data-en="Decode">🧠 记忆解码</button>
     </div>
@@ -447,7 +594,37 @@
     </div>
   </section>
 
-  <!-- 完成前颜色说明模态框（遮罩层不用 backdrop-filter 以免玻璃失效） -->
+  <!-- ============ 好友 / 树林 ============ -->
+  <section id="gallery" class="screen bg-screen">
+    <div class="gal-head">
+      <div class="t" data-en="Friends &amp; the forest">好友的树 · 整片树林</div>
+      <div class="s" data-en="Only friends who invited you can be viewed">只能查看通过邀请链接认识的微信好友</div>
+    </div>
+    <div class="gal-tabs">
+      <div class="gal-tab on" data-tab="friends" data-en="Friends">好友的树</div>
+      <div class="gal-tab" data-tab="forest" data-en="Whole forest">整片树林</div>
+    </div>
+    <div id="galNote" style="text-align:center;font-size:11.5px;color:rgba(255,255,255,.45);margin-bottom:10px;min-height:14px;"></div>
+    <div class="gal-grid" id="galleryList"></div>
+    <div class="gal-actions">
+      <button class="ghost" id="btnGalleryBack" data-en="← Back">← 返回</button>
+      <button id="btnGallerySave" data-en="Save image">保存图片</button>
+    </div>
+  </section>
+
+  <!-- ============ 分享面板 ============ -->
+  <div id="shareSheet">
+    <div class="panel">
+      <div class="pt" data-en="Invite a friend">邀请好友来种树</div>
+      <div class="ps" data-en="Send this link to WeChat. Everyone who opens it and grows a tree joins the same forest — all visible to each other.">把这条链接发到微信。所有人点进来种下的树，都会汇入同一个森林，彼此可见、可算相似度。</div>
+      <div class="share-link" id="shareLink"></div>
+      <div class="row">
+        <button class="ghost" id="btnShareClose" data-en="Close">关闭</button>
+        <button class="btn-wechat" id="btnShareCopy" data-en="Copy link">复制链接</button>
+      </div>
+    </div>
+  </div>
+
   <div id="colorModal" style="position:absolute;inset:0;z-index:15;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;padding:20px;">
     <div class="glass-card" id="colorModalInner" style="max-width:380px;text-align:center;box-shadow:0 16px 50px rgba(0,0,0,.5);">
       <div style="font-size:11px;letter-spacing:2px;color:rgba(255,255,255,.7);margin-bottom:10px;">COLOR · EMOTION · SCIENCE</div>
@@ -1353,6 +1530,7 @@ function completeStage6() {
   state.spinning = true; burstCelebration();
   $('colorHint').style.display = 'block';
   setTimeout(() => { $('colorHint').style.opacity = 0.3; }, 6000);
+  saveOwnTree();
 }
 $('colorModalBtn').onclick = null; // 清掉旧监听器
 $('colorModalBtn').addEventListener('click', () => {
@@ -1572,6 +1750,7 @@ function render(ts) {
   if (state.stage >= 6) state.treeRotation += dt * 0.5;
   ctx.clearRect(0, 0, W, H);
   drawBackground(dt);
+  updateFireworks(dt); drawFireworks();   // 烟花在背景层（树之后），营造"背景炸开"感
   if (state.stage >= 3) drawMistBack();
   if (state.stage >= 1) drawRoot();
   if (state.stage >= 2) drawTrunk();
@@ -1580,8 +1759,10 @@ function render(ts) {
   if (state.stage >= 6) { drawTopStar(); drawSpiralRibbons(); }
   if (state.stage >= 3) drawMistFront();
   if (state.stage >= 6) drawFloatingDots();
+  drawOrnaments();
   drawSnowPile();
   if (state.stage >= 5) drawGifts();   // 礼物画在积雪之上，确保看得见
+  drawNamePlaque();                     // 树旁发光小木牌（微信名 / 相似度）
   if (celebration.length) drawCelebration(dt);
 }
 
@@ -1944,6 +2125,117 @@ function drawGlints() {
   }
   ctx.restore();
 }
+
+/* ---------- 悬挂文字挂饰：把用户选择的选项英文挂到树枝上，带悬垂摆动 + 发光 ---------- */
+function getOrnaments() {
+  const keys = ['study', 'social', 'mindset'];
+  const pages = { study: MEMORY_PAGES[0], social: MEMORY_PAGES[1], mindset: MEMORY_PAGES[2] };
+  const out = [];
+  for (let i = 0; i < keys.length; i++) {
+    const k = keys[i];
+    const chip = pages[k].chips.find(c => c.zh === state.tags[k]);
+    if (!chip || !chip.en) continue;
+    out.push({
+      text: chip.en,
+      color: chipColor(chip),
+      t: [0.27, 0.45, 0.62][i],      // 树高比例：0 顶 ~ 1 底
+      side: [1, -1, 1][i],           // +1 右 / -1 左，左右错落
+      phase: i * 1.7 + 0.4,
+      speed: 0.85 + i * 0.18
+    });
+  }
+  return out;
+}
+
+/* 预加载挂饰字体（未就绪时浏览器会先用后备字体渲染，加载完自动替换，不会空白） */
+let hangFontReady = false;
+if (document.fonts && document.fonts.load) {
+  const tryLoad = () => {
+    document.fonts.load('14px "HangFont"').then(() => { hangFontReady = true; }).catch(() => {});
+    document.fonts.ready.then(() => { hangFontReady = true; }).catch(() => {});
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', tryLoad);
+  else tryLoad();
+}
+
+function drawOrnaments() {
+  if (state.stage < 6) return;
+  const list = getOrnaments();
+  if (!list.length) return;
+
+  const { cx, topY, height, halfW } = treeMetrics();
+  const t6 = stageTimes[6] ?? time;
+  const age = time - t6;
+  const baseAppear = Math.min(1, Math.max(0, age / 0.9));   // 整体淡入
+  if (baseAppear <= 0) return;
+
+  const size = Math.max(11, Math.min(16, Math.round(H * 0.0185)));
+  ctx.save();
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = `${size}px "HangFont", sans-serif`;
+
+  list.forEach((o, i) => {
+    const appear = Math.min(1, Math.max(0, baseAppear - i * 0.16)); // 逐个错峰出现
+    if (appear <= 0) return;
+
+    const maxR = halfW * Math.pow(o.t, 0.92);
+    const anchorX = cx + o.side * maxR * 0.80;
+    const anchorY = topY + o.t * height;
+    const strLen = H * 0.050;
+    const swing = Math.sin(time * o.speed + o.phase);
+    const swayX = swing * (7 + i * 1.5);
+    const angle = swing * 0.075;                        // 钟摆角度
+
+    const metrics = ctx.measureText(o.text);
+    const halfW2 = metrics.width / 2;
+    let tx = anchorX + swayX;
+    const drop = (1 - appear) * 14;                     // 出现时从上方滑入就位
+    const scale = 0.6 + 0.4 * appear;
+    const ty = anchorY + strLen;
+    tx = Math.max(halfW2 + 10, Math.min(W - halfW2 - 10, tx)); // 防出屏
+
+    const { r, g, b } = o.color;
+    const light = lighten(o.color, 0.55);
+
+    // 悬挂的细线 + 锚点小结
+    const textTopY = ty + drop - size * 0.5 * scale;
+    ctx.save();
+    ctx.globalAlpha = appear * 0.55;
+    ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(anchorX, anchorY); ctx.lineTo(tx, textTopY); ctx.stroke();
+    ctx.globalAlpha = appear;
+    ctx.fillStyle = `rgba(${r},${g},${b},0.95)`;
+    ctx.shadowColor = `rgba(${r},${g},${b},0.8)`; ctx.shadowBlur = 6;
+    ctx.beginPath(); ctx.arc(anchorX, anchorY, 2.4, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+
+    // 文字：柔光层 + 亮芯层 → 发光感
+    ctx.save();
+    ctx.globalAlpha = appear;
+    ctx.translate(tx, ty + drop);
+    ctx.rotate(angle);
+    ctx.scale(scale, scale);
+    // 背后彩色光晕
+    const halo = ctx.createRadialGradient(0, 0, 2, 0, 0, halfW2 + 12);
+    halo.addColorStop(0, `rgba(${r},${g},${b},0.32)`);
+    halo.addColorStop(1, `rgba(${r},${g},${b},0)`);
+    ctx.fillStyle = halo;
+    ctx.beginPath(); ctx.ellipse(0, 0, halfW2 + 12, size * 1.15, 0, 0, Math.PI * 2); ctx.fill();
+    // 外层柔光
+    ctx.shadowColor = `rgba(${r},${g},${b},0.9)`; ctx.shadowBlur = 16;
+    ctx.fillStyle = `rgba(${r},${g},${b},0.95)`;
+    ctx.fillText(o.text, 0, 0);
+    // 亮芯
+    ctx.shadowColor = `rgba(${light.r},${light.g},${light.b},0.9)`; ctx.shadowBlur = 6;
+    ctx.fillStyle = `rgb(${light.r},${light.g},${light.b})`;
+    ctx.fillText(o.text, 0, 0);
+    ctx.restore();
+  });
+  ctx.restore();
+}
+
 function drawGifts() {
   const grow = growEase(5); if (grow <= 0) return;
   if (state.stage >= 6) hitRegions.gifts = [];
@@ -2108,6 +2400,656 @@ function drawCelebration(dt) {
 /* ---------- HSL 工具 ---------- */
 function rgbToHsl(r, g, b) { r /= 255; g /= 255; b /= 255; const max = Math.max(r, g, b), min = Math.min(r, g, b); const l = (max + min) / 2; let h = 0, s = 0; if (max !== min) { const d = max - min; s = l > 0.5 ? d / (2 - max - min) : d / (max + min); switch (max) { case r: h = ((g - b) / d + (g < b ? 6 : 0)); break; case g: h = ((b - r) / d + 2); break; case b: h = ((r - g) / d + 4); break; } h /= 6; } return { h, s, l }; }
 function hslToRgb(h, s, l) { if (s === 0) { const v = Math.round(l * 255); return { r: v, g: v, b: v }; } const q = l < 0.5 ? l * (1 + s) : l + s - l * s; const p = 2 * l - q; const hue2rgb = (t) => { if (t < 0) t += 1; if (t > 1) t -= 1; if (t < 1/6) return p + (q - p) * 6 * t; if (t < 1/2) return q; if (t < 2/3) return p + (q - p) * (2/3 - t) * 6; return p; }; return { r: Math.round(hue2rgb(h + 1/3) * 255), g: Math.round(hue2rgb(h) * 255), b: Math.round(hue2rgb(h - 1/3) * 255) }; }
+
+/* ============================================================
+   微信登录 · 好友 · 树林 · 相似度 · 烟花
+   纯静态本机模式：登录为模拟；好友通过「邀请链接」建立关系
+   （跨设备可行，无需服务器；数据仅存于各设备 localStorage）
+   ============================================================ */
+const CT_USER = 'ct_user_v1';
+const CT_FOREST = 'ct_forest_v1';
+const store = { user: null, pendingInvite: null, pendingRoom: null };
+const view = { active: false, user: null, sim: null, from: 'friends', isSelf: false };
+
+/* ================= 腾讯云开发 CloudBase 共享房间后端 =================
+   直接走 NoSQL HTTP API（环境已启用 pgdoc 文档插件）。
+   集合 trees，权限「读取全部数据，修改本人数据」；使用 Publishable Key。
+   未配置时自动退回"本机模式"。 */
+const CLOUD_ENV = 'christmas-tree-d0gp1qxzee355f984';  // 腾讯云开发环境 ID
+const CLOUD_KEY = 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjczZTkwYTI0LWRmZjQtNDhkYS04OWI1LTIzOGRhOTBmMjhjMiJ9.eyJpc3MiOiJodHRwczovL2NocmlzdG1hcy10cmVlLWQwZ3AxcXh6ZWUzNTVmOTg0LmFwLXNoYW5naGFpLnRjYi1hcGkudGVuY2VudGNsb3VkYXBpLmNvbSIsInN1YiI6ImFub24iLCJhdWQiOiJjaHJpc3RtYXMtdHJlZS1kMGdwMXF4emVlMzU1Zjk4NCIsImV4cCI6NDA5OTQyODU5NSwiaWF0IjoxNzk1NzQ1Mzk1LCJub25jZSI6IlZtMnowWXRiVFhpdXV5OUhxZE16cVEiLCJhdF9oYXNoIjoiVm0yejBZdGJUWGl1dXk5SHFkTXpxUSIsIm5hbWUiOiJBbm9ueW1vdXMiLCJzY29wZSI6ImFub255bW91cyIsInByb2plY3RfaWQiOiJjaHJpc3RtYXMtdHJlZS1kMGdwMXF4emVlMzU1Zjk4NCIsIm1ldGEiOnsicGxhdGZvcm0iOiJQdWJsaXNoYWJsZUtleSJ9LCJyb2xlIjoiYW5vbiIsImlzX2Fub255bW91cyI6dHJ1ZSwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiYW5vbnltb3VzIiwicHJvdmlkZXJzIjpbImFub255bW91cyJdfSwidXNlcl9tZXRhZGF0YSI6eyJuYW1lIjoiQW5vbnltb3VzIn0sInVzZXJfdHlwZSI6IiIsImNsaWVudF90eXBlIjoiY2xpZW50X3VzZXIiLCJpc19zeXN0ZW1fYWRtaW4iOmZhbHNlfQ.r48eliMRZnd412RbadKadRgjFdzkhlFvv3clNnSZgRKQBHpDj7uWTunIaCr1xyEBKabrrg9dGxv8kqma3_PyIWDaIwt38KoFbbKLUJVypGo5lbBtFl6xIF5if6Vh1qrU4o07Cze_TgofuU33w5diRpgNaFDZr_CchCYKNO5j5oh9rzD91aE9-qr2UBxWrUd13qqeGuQOy7sSXBsb0bKwwfnlNc16PZNpIoxHK8PyQqYOYHdKUHAFL653SPQiub6CtCkb_aGsNN8_SRu7oetqYPINrXJfo0NoVs5FFTglJRQnDNQmBPBR8zz0lieK06xRRr4UjosT-Q0ilU1NGQuCtQ';  // Publishable Key（anon 角色，可公开）
+const CLOUD_BASE = 'https://' + CLOUD_ENV + '.api.tcloudbasegateway.com/v1/database/instances/(default)/databases/(default)';
+let _cloudErr = '';
+function roomApiReady() { return !!CLOUD_ENV && !!CLOUD_KEY; }
+function cloudHeaders() { return { 'Authorization': 'Bearer ' + CLOUD_KEY }; }
+/* Strict EJSON 数字 → 普通数字 */
+function ejsonNum(v) {
+  if (v && typeof v === 'object') {
+    if ('$numberInt' in v) return parseInt(v.$numberInt, 10);
+    if ('$numberLong' in v) return parseInt(v.$numberLong, 10);
+    if ('$numberDouble' in v) return parseFloat(v.$numberDouble);
+    if ('$numberDecimal' in v) return parseFloat(v.$numberDecimal);
+  }
+  return v;
+}
+const CT_ROOMS = 'ct_rooms_v1';
+function loadRooms() { return lsGet(CT_ROOMS, []); }
+function addRoomLocal(id) { if (!id) return; const a = loadRooms(); if (!a.includes(id)) { a.push(id); lsSet(CT_ROOMS, a); } }
+function activeRoom() { return loadRooms()[loadRooms().length - 1] || null; }
+function newRoomId() { return 'r' + Date.now().toString(36).slice(-5) + Math.random().toString(36).slice(2, 7); }
+/* 写入自己在某个房间的记录（追加式，读取时按 uid 取最新） */
+async function sbUpsertMember(room, m) {
+  if (!room || !roomApiReady()) return false;
+  const doc = {
+    room, uid: m.id, nick: m.nick, avatar: m.avatar || avatarOf(m.nick),
+    identity: m.identity || null, tags: m.tags || null, colors: m.colors || null,
+    has_tree: !!m.hasTree, ts: Date.now()
+  };
+  try {
+    const r = await fetch(CLOUD_BASE + '/collections/trees/documents', {
+      method: 'POST',
+      headers: Object.assign({ 'Content-Type': 'application/json' }, cloudHeaders()),
+      body: JSON.stringify({ data: [doc] })
+    });
+    if (!r.ok) { _cloudErr = 'write HTTP ' + r.status; return false; }
+    _cloudErr = '';
+    return true;
+  } catch (e) { _cloudErr = (e && e.message) || String(e); return false; }
+}
+/* 拉取一个房间的全部成员 */
+async function sbFetchRoom(room) {
+  if (!room || !roomApiReady()) return null;
+  try {
+    const q = encodeURIComponent(JSON.stringify({ room }));
+    const r = await fetch(CLOUD_BASE + '/collections/trees/documents?query=' + q + '&limit=200', { headers: cloudHeaders() });
+    if (!r.ok) { _cloudErr = 'read HTTP ' + r.status; return null; }
+    const j = await r.json();
+    const latest = new Map();
+    for (const row of (j.list || [])) {
+      const t = ejsonNum(row.ts) || 0;
+      const prev = latest.get(row.uid);
+      if (!prev || t >= (prev.ts || 0)) latest.set(row.uid, Object.assign({}, row, { ts: t }));
+    }
+    return Array.from(latest.values()).map(row => ({
+      id: row.uid, nick: row.nick, avatar: row.avatar || avatarOf(row.nick),
+      identity: row.identity, tags: row.tags,
+      colors: (row.colors || []).map(c => ({ r: ejsonNum(c.r), g: ejsonNum(c.g), b: ejsonNum(c.b) })),
+      hasTree: !!row.has_tree, relation: 'friend', addedAt: row.ts || Date.now(),
+      room: row.room
+    }));
+  } catch (e) { _cloudErr = (e && e.message) || String(e); return null; }
+}
+/* 汇总本机加入过的所有房间成员（去重，自己优先） */
+async function cloudMembers() {
+  const rooms = loadRooms();
+  if (!roomApiReady() || !rooms.length) return null;
+  const lists = await Promise.all(rooms.map(sbFetchRoom));
+  if (lists.every(l => l === null)) return null; // 全部失败 → 调用方退回本机
+  const map = new Map();
+  for (const list of lists) { if (!list) continue; for (const m of list) { map.set(m.id, Object.assign(map.get(m.id) || {}, m)); } }
+  return Array.from(map.values());
+}
+
+function lsGet(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
+function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function roundRectPath(c, x, y, w, h, r) {
+  r = Math.min(r, w / 2, h / 2);
+  c.beginPath();
+  c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r);
+  c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath();
+}
+
+/* ---- 头像：昵称哈希 → 渐变圆 + 首字 ---- */
+const AV_GRADS = [
+  ['#07C160', '#0a9d52'], ['#4a90e2', '#2a5fb0'], ['#f5a623', '#d97b12'],
+  ['#e8590c', '#b8440a'], ['#9b59b6', '#713a8a'], ['#e84393', '#b0286d'],
+  ['#00b8a9', '#008577'], ['#5f6caf', '#414a7d']
+];
+function hashStr(s) { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0; return h; }
+function avatarOf(nick) {
+  const h = hashStr(nick || '你'); const g = AV_GRADS[h % AV_GRADS.length];
+  return { char: (nick || '你').trim().charAt(0) || '你', g1: g[0], g2: g[1] };
+}
+function avatarStyle(a) { return `background:linear-gradient(135deg,${a.g1},${a.g2});`; }
+
+/* ---- 当前用户 / 森林存取 ---- */
+function loadSelf() { store.user = lsGet(CT_USER, null); return store.user; }
+function saveSelf(u) { store.user = u; lsSet(CT_USER, u); }
+function loadForest() { return lsGet(CT_FOREST, []); }
+function saveForest(arr) { lsSet(CT_FOREST, arr); }
+function upsertForest(entry) {
+  const arr = loadForest(); const i = arr.findIndex(e => e.id === entry.id);
+  if (i >= 0) arr[i] = Object.assign({}, arr[i], entry); else arr.push(entry);
+  saveForest(arr);
+}
+function forestOthers() { const sid = store.user && store.user.id; return loadForest().filter(e => e.id !== sid); }
+function forestAll() {
+  const sid = store.user && store.user.id; const arr = loadForest();
+  const selfEntry = arr.find(e => e.id === sid); const others = arr.filter(e => e.id !== sid);
+  return selfEntry ? [selfEntry, ...others] : others;
+}
+function selfForestEntry(u) {
+  return { id: u.id, nick: u.nick, avatar: u.avatar || avatarOf(u.nick), identity: u.identity, tags: u.tags, colors: u.colors, hasTree: !!u.hasTree, relation: 'self', addedAt: u.createdAt || Date.now() };
+}
+
+/* ---- 分享链接编解码（base64url，树数据内嵌，无需服务器） ---- */
+function b64e(str) {
+  const bytes = new TextEncoder().encode(str); let bin = '';
+  for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+function b64d(s) {
+  s = s.replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '=';
+  const bin = atob(s); const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
+}
+function buildShareLink() {
+  const u = store.user; if (!u || !u.tags || !u.tags.study) return '';
+  if (roomApiReady()) {
+    // 共享房间模式：链接 = 房间，所有点进来做树的人都会被发起人看到
+    let room = activeRoom();
+    if (!room) { room = newRoomId(); addRoomLocal(room); }
+    sbUpsertMember(room, { id: u.id, nick: u.nick, avatar: u.avatar, identity: u.identity, tags: u.tags, colors: u.colors, hasTree: true });
+    return location.origin + location.pathname + '?room=' + encodeURIComponent(room);
+  }
+  // 本机模式降级：把树数据内嵌进链接
+  const payload = { n: u.nick, k: u.identity, t: u.tags, c: u.colors || null, d: u.id };
+  return location.origin + location.pathname + '?invite=' + b64e(JSON.stringify(payload));
+}
+function parseRoom() {
+  try { const p = new URLSearchParams(location.search).get('room'); return p ? p : null; } catch (e) { return null; }
+}
+function parseInvite() {
+  try {
+    const p = new URLSearchParams(location.search).get('invite'); if (!p) return null;
+    const o = JSON.parse(b64d(p)); if (!o || !o.n || !o.t) return null;
+    return {
+      id: o.d || ('inv_' + hashStr(o.n + JSON.stringify(o.t))), nick: o.n,
+      avatar: avatarOf(o.n), identity: o.k || 'student', tags: o.t, colors: o.c || null,
+      relation: 'friend', addedAt: Date.now()
+    };
+  } catch (e) { return null; }
+}
+
+/* ---- 相似度：4 维度加权；同选项=满分，不同但颜色相近给部分分 ---- */
+const SIM_WEIGHTS = { study: 30, social: 25, mindset: 25, keyword: 20 };
+function findChipColor(tag, key, identity) {
+  if (!tag) return null;
+  let list;
+  if (key === 'study') { const s = IDENTITY_STUDY[identity] || IDENTITY_STUDY.student; list = s.chips; }
+  else { const p = COMMON_PAGES.find(x => x.key === key); list = p ? p.chips : []; }
+  const c = list.find(c => c.zh === tag);
+  return c ? c.primary : null;
+}
+function colorSim(a, b) {
+  if (!a || !b) return 0;
+  let dh = Math.abs(a.h - b.h); dh = Math.min(dh, 360 - dh) / 180;
+  const ds = Math.abs(a.s - b.s), dl = Math.abs(a.l - b.l);
+  return Math.max(0, 1 - (0.6 * dh + 0.2 * ds + 0.2 * dl));
+}
+function dimScore(t1, t2, key, id1, id2) {
+  if (t1 && t2 && t1 === t2) return 1;
+  return 0.7 * colorSim(findChipColor(t1, key, id1), findChipColor(t2, key, id2));
+}
+function similarity(tagsA, idA, tagsB, idB) {
+  if (!tagsA || !tagsB) return 0;
+  let total = 0;
+  for (const k of ['study', 'social', 'mindset', 'keyword']) {
+    total += SIM_WEIGHTS[k] * dimScore(tagsA[k], tagsB[k], k, idA || 'student', idB || 'student');
+  }
+  return Math.max(0, Math.min(100, Math.round(total)));
+}
+
+/* ---- 登录 ---- */
+function refreshLoginAvatar() {
+  const raw = ($('loginNick').value || '').trim(); const a = avatarOf(raw || '你');
+  const el = $('loginAvatar');
+  el.textContent = raw ? a.char : '🎄';
+  el.style.background = raw ? `linear-gradient(135deg,${a.g1},${a.g2})` : 'linear-gradient(135deg,rgba(255,255,255,.16),rgba(255,255,255,.05))';
+}
+function doLogin() {
+  const nick = ($('loginNick').value || '').trim();
+  if (!nick) { toast('请输入一个昵称', 'Please enter a nickname'); $('loginNick').focus(); return; }
+  let u;
+  if (store.user) {
+    u = Object.assign({}, store.user, { nick, avatar: avatarOf(nick) });
+  } else {
+    u = {
+      id: 'u_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      nick, avatar: avatarOf(nick), identity: null,
+      tags: { study: null, social: null, mindset: null, keyword: null },
+      colors: null, hasTree: false, createdAt: Date.now()
+    };
+  }
+  saveSelf(u);
+  if (u.hasTree) upsertForest(selfForestEntry(u));
+  afterLogin();
+}
+function afterLogin() {
+  if (store.pendingRoom) {
+    const room = store.pendingRoom; store.pendingRoom = null;
+    addRoomLocal(room);
+    if (store.user) sbUpsertMember(room, selfForestEntry(store.user));
+    try { history.replaceState({}, '', location.pathname); } catch (e) {}
+    setTimeout(() => toast('已加入共享森林<br>种下你的树后，链接发起人就能看到', 'Joined the shared forest'), 500);
+  }
+  if (store.pendingInvite) {
+    const inv = store.pendingInvite; store.pendingInvite = null;
+    if (!store.user || inv.id !== store.user.id) {
+      upsertForest(inv);
+      try { history.replaceState({}, '', location.pathname); } catch (e) {}
+      setTimeout(() => toast('已添加好友「' + escapeHtml(inv.nick) + '」<br>去「好友的树」看看 TA 的树吧', 'Added friend "' + escapeHtml(inv.nick) + '"'), 500);
+    }
+  }
+  showScreen('landing');
+}
+
+/* ---- 保存自己的树到本地森林 ---- */
+function saveOwnTree() {
+  if (!store.user) return;
+  const u = store.user;
+  u.identity = state.identity; u.tags = Object.assign({}, state.tags); u.colors = state.colors;
+  u.hasTree = true; u.avatar = avatarOf(u.nick);
+  saveSelf(u); upsertForest(selfForestEntry(u));
+  // 同步到本机加入过的所有共享房间（发起人和同房间的人都能看到）
+  if (roomApiReady()) {
+    const rooms = loadRooms();
+    if (!rooms.length) { const r = newRoomId(); addRoomLocal(r); rooms.push(r); }
+    rooms.forEach(r => sbUpsertMember(r, selfForestEntry(u)));
+  }
+}
+
+/* ---- 进入 / 退出「查看他人（或自己）的树」 ---- */
+function enterView(user, opts) {
+  opts = opts || {};
+  view.active = true; view.user = user; view.from = opts.from || 'friends'; view.isSelf = !!opts.isSelf;
+  state.identity = user.identity || 'student';
+  buildMemoryPages();
+  state.tags = Object.assign({}, user.tags);
+  state.colors = (user.colors && user.colors.length === 3)
+    ? user.colors.map(c => Array.isArray(c) ? { r: c[0], g: c[1], b: c[2] } : c)
+    : buildColors(state.tags);
+  state.stage = 6; state.spinning = true; state.treeRotation = 0;
+  view.sim = (!opts.isSelf && store.user && store.user.hasTree) ? similarity(store.user.tags, store.user.identity, user.tags, user.identity) : null;
+  stageTimes = {}; for (let s = 1; s <= 6; s++) stageTimes[s] = time - 2; // 视为已完全长成
+  resetSnow(); tree.rebuild();
+  document.querySelectorAll('#progress .p').forEach(p => p.classList.add('on'));
+  setBilingual('stageText', '6 / 6', 'STAGE 6/6');
+  setBilingual('hintBig', '✨ ' + escapeHtml(user.nick) + ' 的年度记忆树 ✨', '✨ ' + escapeHtml(user.nick) + "'s memory tree ✨");
+  setBilingual('hintSub', '点击星星 / 光带 / 礼物 / 彩灯查看颜色由来', 'Tap parts to read about colors');
+  updateMemorySnapshot();
+  $('colorHint').style.display = 'block'; $('colorHint').style.opacity = 1;
+  $('btnViewBack').style.display = 'block';
+  $('btnRestart').style.display = 'none';
+  $('btnShare').style.display = 'none';
+  $('btnOpenGallery2').style.display = 'none';
+  if (view.sim != null) { $('simBadge').style.display = 'block'; $('simBadgeVal').textContent = view.sim + '%'; }
+  else $('simBadge').style.display = 'none';
+  showScreen('experience');
+  if (view.sim === 100) setTimeout(() => startFireworks(5), 350);
+}
+function exitView() {
+  const from = view.from;
+  view.active = false; view.user = null; view.sim = null;
+  $('btnViewBack').style.display = 'none';
+  $('btnRestart').style.display = '';
+  $('btnShare').style.display = '';
+  $('btnOpenGallery2').style.display = '';
+  $('simBadge').style.display = 'none';
+  $('colorHint').style.display = 'none';
+  if (store.user && store.user.hasTree) {
+    state.identity = store.user.identity; buildMemoryPages();
+    state.tags = Object.assign({}, store.user.tags);
+    state.colors = store.user.colors || buildColors(state.tags);
+    state.stage = 6; state.treeRotation = 0;
+    stageTimes = {}; for (let s = 1; s <= 6; s++) stageTimes[s] = time - 2;
+    resetSnow(); tree.rebuild(); updateMemorySnapshot();
+  }
+  openGallery(from);
+}
+
+/* ---- 好友 / 树林列表 ---- */
+let galleryTab = 'friends';
+let galleryReturn = 'landing';
+let lastGalleryItems = [];
+async function openGallery(tab, returnTo) {
+  if (tab) galleryTab = tab;
+  if (returnTo) galleryReturn = returnTo;
+  document.querySelectorAll('.gal-tab').forEach(t => t.classList.toggle('on', t.dataset.tab === galleryTab));
+  showScreen('gallery');
+  $('galleryList').innerHTML = '<div class="gal-empty" style="grid-column:1/-1;"><div class="big">🌲</div>正在汇聚森林…</div>';
+  await renderGallery();
+}
+/* 云端优先，失败退回本机缓存 */
+async function galleryItems() {
+  const sid = store.user && store.user.id;
+  if (roomApiReady()) {
+    const members = await cloudMembers();
+    if (members) {
+      const arr = members.slice();
+      if (store.user && store.user.hasTree && !arr.find(m => m.id === sid)) arr.push(selfForestEntry(store.user));
+      const withTree = arr.filter(m => (m.hasTree || m.id === sid));
+      if (galleryTab === 'friends') return { items: withTree.filter(m => m.id !== sid), source: 'cloud' };
+      const selfE = withTree.find(m => m.id === sid), others = withTree.filter(m => m.id !== sid);
+      return { items: selfE ? [selfE, ...others] : others, source: 'cloud' };
+    }
+    return { items: galleryTab === 'friends' ? forestOthers() : forestAll(), source: 'fail' };
+  }
+  return { items: galleryTab === 'friends' ? forestOthers() : forestAll(), source: 'local' };
+}
+async function renderGallery() {
+  const list = $('galleryList'); const sid = store.user && store.user.id;
+  const { items, source } = await galleryItems();
+  lastGalleryItems = items;
+  const note = $('galNote');
+  if (note) {
+    if (source === 'cloud') note.textContent = '共享房间已同步 · 共 ' + items.length + ' 棵' + (_cloudErr ? '（写入异常：' + String(_cloudErr).slice(0, 80) + '）' : '');
+    else if (source === 'local') note.textContent = '未配置共享后端 · 当前为本机模式（仅本浏览器可见）';
+    else note.textContent = '云端连接失败 · 已显示本机缓存' + (_cloudErr ? '（' + String(_cloudErr).slice(0, 70) + '）' : '');
+  }
+  list.innerHTML = '';
+  if (!items.length) {
+    list.innerHTML = `<div class="gal-empty" style="grid-column:1/-1;"><div class="big">🌲</div>${galleryTab === 'friends'
+      ? '还没有好友的树。<br>把「邀请好友」链接发到微信，<br>好友打开并种下树后会出现在这里。'
+      : '树林还空空的。<br>先去种一棵属于你的树吧。'}</div>`;
+    return;
+  }
+  items.forEach(e => {
+    const isSelf = e.id === sid;
+    const canSim = !isSelf && store.user && store.user.hasTree && e.tags && e.tags.study;
+    const sim = canSim ? similarity(store.user.tags, store.user.identity, e.tags, e.identity) : null;
+    const av = e.avatar || avatarOf(e.nick);
+    const card = document.createElement('div');
+    card.className = 'gal-card' + (isSelf ? ' self' : '');
+    const cw = 200, chh = Math.round(200 * 1.12);
+    const cv = document.createElement('canvas'); cv.className = 'mini';
+    cv.width = cw * 2; cv.height = chh * 2;
+    drawMiniTree(cv.getContext('2d'), cw, chh, 2, e);
+    card.appendChild(cv);
+    const meta = document.createElement('div'); meta.className = 'gal-meta';
+    meta.innerHTML = `
+      <div class="gal-name"><span class="gal-av" style="${avatarStyle(av)}">${escapeHtml(av.char)}</span>${escapeHtml(e.nick)}${isSelf ? '（我）' : ''}</div>
+      <div class="gal-sim">${isSelf ? '<span style="opacity:.6">你的树</span>' : (sim == null ? '<span style="opacity:.5">先种一棵树才能算相似度</span>' : `相似度 <b>${sim}%</b>${sim === 100 ? ' 🎆' : ''}`)}</div>
+      <div class="gal-tagline">${escapeHtml(e.tags && e.tags.keyword ? e.tags.keyword : (e.identity === 'worker' ? '上班族' : e.identity === 'freelance' ? '自由职业' : '学生党'))}</div>`;
+    card.appendChild(meta);
+    card.addEventListener('click', () => {
+      if (!isSelf && (!e.tags || !e.tags.study || e.hasTree === false)) { toast('TA 还没有种下自己的树', 'They have not grown a tree yet'); return; }
+      if (isSelf) { enterView(e, { from: galleryTab, isSelf: true }); return; }
+      if (!store.user || !store.user.hasTree) { toast('先种一棵属于你自己的树，<br>才能和 TA 比较相似度', 'Grow your own tree first'); return; }
+      enterView(e, { from: galleryTab, isSelf: false });
+    });
+    list.appendChild(card);
+  });
+}
+
+/* ---- 迷你树缩略图 ---- */
+function drawMiniTree(g, w, h, ratio, e) {
+  g.save(); g.scale(ratio, ratio);
+  const bg = g.createLinearGradient(0, 0, 0, h);
+  bg.addColorStop(0, '#0b1226'); bg.addColorStop(1, '#050810');
+  g.fillStyle = bg; g.fillRect(0, 0, w, h);
+  g.fillStyle = 'rgba(255,255,255,.10)';
+  for (let i = 0; i < 46; i++) { g.beginPath(); g.arc(Math.random() * w, Math.random() * h * 0.9, Math.random() * 1.4 + 0.3, 0, 7); g.fill(); }
+  const cols = (e.colors && e.colors.length === 3)
+    ? e.colors.map(c => Array.isArray(c) ? { r: c[0], g: c[1], b: c[2] } : c)
+    : [{ r: 232, g: 201, b: 122 }, { r: 120, g: 200, b: 255 }, { r: 255, g: 120, b: 180 }];
+  const cx = w / 2, topY = h * 0.15, baseY = h * 0.82;
+  const layers = 4;
+  for (let i = 0; i < layers; i++) {
+    const yTop = topY + (baseY - topY) * 0.16 * i;
+    const yBot = yTop + (baseY - topY) * 0.36;
+    const halfW = (w * 0.36) * (0.34 + 0.66 * (i + 1) / layers);
+    const col = cols[i % 3];
+    const grd = g.createLinearGradient(cx, yTop, cx, yBot);
+    grd.addColorStop(0, `rgba(${col.r},${col.g},${col.b},0.95)`);
+    grd.addColorStop(1, `rgba(${col.r},${col.g},${col.b},0.32)`);
+    g.fillStyle = grd;
+    g.beginPath(); g.moveTo(cx, yTop); g.lineTo(cx - halfW, yBot); g.lineTo(cx + halfW, yBot); g.closePath(); g.fill();
+  }
+  g.fillStyle = 'rgba(120,90,60,.9)'; g.fillRect(cx - w * 0.028, baseY - 4, w * 0.056, 12);
+  g.fillStyle = 'rgba(240,245,255,.92)';
+  g.beginPath(); g.ellipse(cx, baseY + 7, w * 0.42, 9, 0, 0, Math.PI * 2); g.fill();
+  const sc = cols[0];
+  g.shadowColor = `rgba(${sc.r},${sc.g},${sc.b},0.95)`; g.shadowBlur = 14;
+  g.fillStyle = '#fffdf5'; const R = w * 0.055;
+  g.beginPath();
+  for (let i = 0; i < 10; i++) { const a = i * Math.PI / 5 - Math.PI / 2; const rr = i % 2 === 0 ? R : R * 0.44; const px = cx + Math.cos(a) * rr, py = topY - 6 + Math.sin(a) * rr; i ? g.lineTo(px, py) : g.moveTo(px, py); }
+  g.closePath(); g.fill(); g.shadowBlur = 0;
+  g.restore();
+}
+
+/* ---- 保存树林图片 ---- */
+function saveGalleryImage() {
+  const items = (lastGalleryItems && lastGalleryItems.length) ? lastGalleryItems : (galleryTab === 'friends' ? forestOthers() : forestAll());
+  if (!items.length) { toast('这里还没有树可以保存', 'Nothing to save yet'); return; }
+  const perRow = items.length === 1 ? 1 : 2;
+  const cellW = 260, cellH = 350, pad = 18, headerH = 96;
+  const rows = Math.ceil(items.length / perRow);
+  const out = document.createElement('canvas');
+  out.width = perRow * cellW + pad * (perRow + 1);
+  out.height = headerH + rows * cellH + pad * (rows + 1);
+  const g = out.getContext('2d');
+  const bg = g.createLinearGradient(0, 0, 0, out.height);
+  bg.addColorStop(0, '#0b1226'); bg.addColorStop(1, '#050810');
+  g.fillStyle = bg; g.fillRect(0, 0, out.width, out.height);
+  g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.fillStyle = '#e8c97a'; g.font = '700 30px "PingFang SC","Microsoft YaHei",sans-serif';
+  g.fillText(galleryTab === 'friends' ? '好友的树' : '整片树林', out.width / 2, 42);
+  g.fillStyle = 'rgba(255,255,255,.6)'; g.font = '400 15px "PingFang SC",sans-serif';
+  g.fillText('memory-tree · ' + new Date().toLocaleDateString('zh-CN'), out.width / 2, 72);
+  const sid = store.user && store.user.id;
+  items.forEach((e, idx) => {
+    const col = idx % perRow, row = (idx / perRow) | 0;
+    const x = pad + col * (cellW + pad), y = headerH + pad + row * (cellH + pad);
+    roundRectPath(g, x, y, cellW, cellH, 18);
+    const cbg = g.createLinearGradient(x, y, x, y + cellH);
+    cbg.addColorStop(0, 'rgba(255,255,255,.09)'); cbg.addColorStop(1, 'rgba(255,255,255,.02)');
+    g.fillStyle = cbg; g.fill(); g.strokeStyle = 'rgba(255,255,255,.16)'; g.lineWidth = 1.5; g.stroke();
+    const mh = Math.floor(cellW * 1.02);
+    const tmp = document.createElement('canvas'); tmp.width = cellW * 2; tmp.height = mh * 2;
+    drawMiniTree(tmp.getContext('2d'), cellW, mh, 2, e);
+    g.save(); roundRectPath(g, x, y, cellW, cellH, 18); g.clip(); g.drawImage(tmp, x, y, cellW, mh); g.restore();
+    const isSelf = e.id === sid;
+    g.textAlign = 'left'; g.textBaseline = 'middle';
+    g.font = '700 18px "PingFang SC","Microsoft YaHei",sans-serif'; g.fillStyle = '#f5f1ff';
+    g.fillText((e.nick || '') + (isSelf ? '（我）' : ''), x + 16, y + mh + 22);
+    if (!isSelf && store.user && store.user.hasTree && e.tags && e.tags.study) {
+      const sim = similarity(store.user.tags, store.user.identity, e.tags, e.identity);
+      g.font = '600 15px "PingFang SC",sans-serif'; g.fillStyle = '#e8c97a';
+      g.fillText('相似度 ' + sim + '%' + (sim === 100 ? '  🎆' : ''), x + 16, y + mh + 46);
+    } else {
+      g.font = '400 14px "PingFang SC",sans-serif'; g.fillStyle = 'rgba(255,255,255,.5)';
+      g.fillText(isSelf ? '你的树' : '', x + 16, y + mh + 46);
+    }
+  });
+  const url = out.toDataURL('image/png');
+  if (isWeChat()) showSaveSheet(url);
+  else { const a = document.createElement('a'); a.download = 'memory-forest-' + Date.now() + '.png'; a.href = url; document.body.appendChild(a); a.click(); a.remove(); }
+}
+
+/* ---- 树旁发光小木牌（微信名 / 相似度） ---- */
+function drawNamePlaque() {
+  if (state.stage < 6) return;
+  const owner = view.active ? view.user : store.user;
+  if (!owner) return;
+  const { baseY } = treeMetrics();
+  const name = owner.nick || 'Guest';
+  const sim = view.active ? view.sim : null;
+  const gold = (view.active && sim === 100) ? '255,92,140' : '255,206,122';
+  const boardW = Math.min(W * 0.40, 152);
+  const boardH = sim != null ? Math.min(W * 0.155, 60) : Math.min(W * 0.125, 48);
+  const bx = Math.max(boardW / 2 + 12, W * 0.166);
+  const by = H * 0.705;
+  const postTop = by + boardH * 0.5 - 2;
+  const postBot = Math.min(baseY - 2, H * 0.905);
+
+  ctx.save();
+  // 木桩
+  ctx.lineCap = 'round';
+  ctx.strokeStyle = 'rgba(74,50,30,.95)'; ctx.lineWidth = Math.max(5, boardW * 0.055);
+  ctx.beginPath(); ctx.moveTo(bx, postTop); ctx.lineTo(bx, postBot); ctx.stroke();
+  ctx.strokeStyle = 'rgba(120,86,52,.9)'; ctx.lineWidth = Math.max(2, boardW * 0.022);
+  ctx.beginPath(); ctx.moveTo(bx, postTop); ctx.lineTo(bx, postBot); ctx.stroke();
+
+  // 木板
+  ctx.shadowColor = 'rgba(0,0,0,.55)'; ctx.shadowBlur = 18; ctx.shadowOffsetY = 6;
+  const gg = ctx.createLinearGradient(bx - boardW / 2, by - boardH / 2, bx + boardW / 2, by + boardH / 2);
+  gg.addColorStop(0, '#82552f'); gg.addColorStop(0.5, '#5d3a1e'); gg.addColorStop(1, '#6f4926');
+  ctx.fillStyle = gg; roundRectPath(ctx, bx - boardW / 2, by - boardH / 2, boardW, boardH, 9); ctx.fill();
+  ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
+  // 木纹
+  ctx.strokeStyle = 'rgba(40,24,12,.35)'; ctx.lineWidth = 1;
+  for (let i = 1; i <= 2; i++) {
+    const yy = by - boardH / 2 + boardH * i / 3;
+    ctx.beginPath(); ctx.moveTo(bx - boardW / 2 + 8, yy); ctx.lineTo(bx + boardW / 2 - 8, yy); ctx.stroke();
+  }
+  // 发光描边
+  ctx.shadowColor = `rgba(${gold},.95)`; ctx.shadowBlur = 16;
+  ctx.strokeStyle = `rgba(${gold},.9)`; ctx.lineWidth = 1.8;
+  roundRectPath(ctx, bx - boardW / 2, by - boardH / 2, boardW, boardH, 9); ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  // 文本：微信名
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  let fs = Math.min(boardH * (sim != null ? 0.40 : 0.46), 21);
+  const setFont = (px, wgt) => { ctx.font = `${wgt} ${px}px "HangFont", "PingFang SC", "Microsoft YaHei", sans-serif`; };
+  setFont(fs, 700);
+  while (ctx.measureText(name).width > boardW - 20 && fs > 9) { fs--; setFont(fs, 700); }
+  const nameY = sim != null ? by - boardH * 0.17 : by;
+  ctx.shadowColor = `rgba(${gold},.95)`; ctx.shadowBlur = 10;
+  ctx.fillStyle = '#fff6e2';
+  ctx.fillText(name, bx, nameY);
+  if (sim != null) {
+    const f2 = Math.max(10, fs * 0.78);
+    ctx.font = `600 ${f2}px "EnOther", "PingFang SC", "Microsoft YaHei", sans-serif`;
+    ctx.fillStyle = `rgba(${gold},1)`;
+    ctx.fillText('相似度 ' + sim + '%', bx, by + boardH * 0.24);
+  }
+  ctx.shadowBlur = 0;
+  ctx.restore();
+}
+
+/* ---- 烟花（花火大会风格：升空拖尾 + 牡丹/柳树型炸开） ---- */
+const fw = { active: false, endAt: 0, next: 0, rockets: [], sparks: [], flash: 0 };
+const FW_COLORS = [
+  [255, 214, 120], [255, 92, 112], [120, 200, 255], [188, 128, 255],
+  [120, 255, 180], [255, 255, 255], [255, 156, 66], [96, 246, 220]
+];
+function startFireworks(sec) { fw.active = true; fw.endAt = time + (sec || 5); fw.next = time; fw.rockets = []; fw.sparks = []; }
+function explodeFirework(x, y) {
+  const willow = Math.random() < 0.30;
+  const c1 = FW_COLORS[(Math.random() * FW_COLORS.length) | 0];
+  const c2 = FW_COLORS[(Math.random() * FW_COLORS.length) | 0];
+  const n = willow ? 96 : 84 + ((Math.random() * 40) | 0);
+  const speed = willow ? 74 : 96 + Math.random() * 72;
+  for (let i = 0; i < n; i++) {
+    const a = Math.random() * Math.PI * 2;
+    const sp = speed * (0.24 + Math.random() * 0.86);
+    const isW = willow && Math.random() < 0.62;
+    const c = isW ? [255, 222, 150] : (Math.random() < 0.5 ? c1 : c2);
+    fw.sparks.push({
+      x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp,
+      g: isW ? 30 : 62, life: isW ? 1.9 + Math.random() * 1.0 : 1.15 + Math.random() * 0.75,
+      size: isW ? 1.6 : 1.8 + Math.random() * 1.2, color: c, willow: isW, hist: []
+    });
+  }
+  fw.flash = 0.5;
+}
+function updateFireworks(dt) {
+  if (!fw.active) return;
+  if (time < fw.endAt && time >= fw.next) {
+    fw.next = time + 0.42 + Math.random() * 0.4;
+    fw.rockets.push({ x: W * (0.18 + Math.random() * 0.64), y: H + 8, vx: (Math.random() - 0.5) * 26, vy: -(H * 0.56), targetY: H * (0.12 + Math.random() * 0.28), trail: [] });
+  }
+  for (let i = fw.rockets.length - 1; i >= 0; i--) {
+    const r = fw.rockets[i];
+    r.vy += 130 * dt; r.x += r.vx * dt; r.y += r.vy * dt;
+    r.trail.push({ x: r.x, y: r.y }); if (r.trail.length > 6) r.trail.shift();
+    if (r.y <= r.targetY || r.vy >= -24) { explodeFirework(r.x, r.y); fw.rockets.splice(i, 1); }
+  }
+  for (let i = fw.sparks.length - 1; i >= 0; i--) {
+    const s = fw.sparks[i];
+    s.vx *= (1 - 0.85 * dt); s.vy = s.vy * (1 - 0.85 * dt) + s.g * dt;
+    s.x += s.vx * dt; s.y += s.vy * dt; s.life -= dt;
+    s.hist.push({ x: s.x, y: s.y }); if (s.hist.length > (s.willow ? 11 : 6)) s.hist.shift();
+    if (s.life <= 0) fw.sparks.splice(i, 1);
+  }
+  if (fw.flash > 0) fw.flash = Math.max(0, fw.flash - dt * 2.6);
+  if (time > fw.endAt && !fw.rockets.length && !fw.sparks.length) fw.active = false;
+}
+function drawFireworks() {
+  if (!fw.active && !fw.sparks.length && !fw.rockets.length) return;
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+  for (const r of fw.rockets) {
+    for (let i = 0; i < r.trail.length; i++) {
+      const p = r.trail[i]; const a = (i + 1) / r.trail.length;
+      ctx.fillStyle = `rgba(255,220,150,${a * 0.42})`;
+      ctx.beginPath(); ctx.arc(p.x, p.y, 1.6, 0, 7); ctx.fill();
+    }
+    ctx.fillStyle = 'rgba(255,242,205,.95)'; ctx.shadowColor = 'rgba(255,205,120,1)'; ctx.shadowBlur = 12;
+    ctx.beginPath(); ctx.arc(r.x, r.y, 2.3, 0, 7); ctx.fill(); ctx.shadowBlur = 0;
+  }
+  for (const s of fw.sparks) {
+    const lf = Math.max(0, s.life / (s.willow ? 2.6 : 1.6));
+    const [r, g, b] = s.color;
+    if (s.hist.length > 1) {
+      for (let i = 1; i < s.hist.length; i++) {
+        const p0 = s.hist[i - 1], p1 = s.hist[i]; const a = (i / s.hist.length) * lf;
+        ctx.strokeStyle = `rgba(${r},${g},${b},${a * 0.62})`;
+        ctx.lineWidth = Math.max(0.5, s.size * (i / s.hist.length) * 0.9);
+        ctx.beginPath(); ctx.moveTo(p0.x, p0.y); ctx.lineTo(p1.x, p1.y); ctx.stroke();
+      }
+    }
+    ctx.fillStyle = `rgba(${r},${g},${b},${lf})`;
+    ctx.shadowColor = `rgba(${r},${g},${b},${lf})`; ctx.shadowBlur = 8;
+    ctx.beginPath(); ctx.arc(s.x, s.y, s.size * (0.45 + 0.55 * lf), 0, 7); ctx.fill();
+  }
+  ctx.shadowBlur = 0;
+  if (fw.flash > 0) { ctx.fillStyle = `rgba(255,255,240,${fw.flash * 0.22})`; ctx.fillRect(0, 0, W, H); }
+  ctx.restore();
+}
+
+/* ---- 事件绑定 ---- */
+$('loginNick').addEventListener('input', refreshLoginAvatar);
+$('loginNick').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+$('btnLogin').addEventListener('click', doLogin);
+$('btnOpenGallery').addEventListener('click', () => openGallery('friends', 'landing'));
+$('btnOpenGallery2').addEventListener('click', () => openGallery('friends', 'experience'));
+$('btnGalleryBack').addEventListener('click', () => showScreen(galleryReturn || 'landing'));
+$('btnGallerySave').addEventListener('click', saveGalleryImage);
+$('btnViewBack').addEventListener('click', exitView);
+document.querySelectorAll('.gal-tab').forEach(t => t.addEventListener('click', () => {
+  galleryTab = t.dataset.tab;
+  document.querySelectorAll('.gal-tab').forEach(x => x.classList.toggle('on', x === t));
+  renderGallery();
+}));
+$('btnShare').addEventListener('click', () => {
+  if (!store.user || !store.user.hasTree || !store.user.tags.study) { toast('先点亮你的树，再分享给好友吧', 'Light up your tree first'); return; }
+  $('shareLink').textContent = buildShareLink();
+  $('shareSheet').classList.add('show');
+});
+$('btnShareClose').addEventListener('click', () => $('shareSheet').classList.remove('show'));
+$('btnShareCopy').addEventListener('click', async () => {
+  const link = buildShareLink();
+  try { await navigator.clipboard.writeText(link); toast('链接已复制，去微信粘贴给好友吧', 'Link copied'); }
+  catch (e) {
+    const el = $('shareLink'); const r = document.createRange(); r.selectNodeContents(el);
+    const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+    toast('请长按上方链接手动复制', 'Long-press the link to copy');
+  }
+});
+$('shareSheet').addEventListener('click', e => { if (e.target === $('shareSheet')) $('shareSheet').classList.remove('show'); });
+
+/* ---- 启动登录门禁 ---- */
+function bootAuth() {
+  store.pendingRoom = parseRoom();
+  if (store.pendingRoom) addRoomLocal(store.pendingRoom);
+  store.pendingInvite = parseInvite();
+  refreshLoginAvatar();
+  if (loadSelf()) afterLogin();
+  else { showScreen('login'); setTimeout(() => { try { $('loginNick').focus(); } catch (e) {} }, 300); }
+}
+bootAuth();
 
 /* ---------- 启动 ---------- */
 function init() { tree.init(); requestAnimationFrame(render); }
